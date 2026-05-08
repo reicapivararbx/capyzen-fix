@@ -6,7 +6,7 @@ export default function Home() {
     coins: 0,
     level: 1,
     xp: 0,
-    food: 1,
+    food: 0,
     poop: 0,
     hunger: 100,
     happy: 100,
@@ -19,18 +19,18 @@ export default function Home() {
 
   const [cooldown, setCooldown] = useState(false);
   const [susCooldown, setSusCooldown] = useState(false);
-  const [message, setMessage] = useState("Oi!");
+  const [message, setMessage] = useState("Oi! Clique em 'Trabalhar' para ganhar moedas!");
   const [selectedFood, setSelectedFood] = useState(0);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showShop, setShowShop] = useState(false);
 
   const foods = [
-    { name: "🌱 grama", poop: 0 },
-    { name: "🥔 batata", poop: 2 },
-    { name: "🍔 hamburger", poop: 5 },
-    { name: "🥤 refri", poop: 20 },
-    { name: "🫘 feijão", poop: 10 },
-    { name: "🌭 hotdog", poop: 7 },
+    { name: "🌱 grama", poop: 0, cost: 2 },
+    { name: "🥔 batata", poop: 2, cost: 3 },
+    { name: "🍔 hamburger", poop: 5, cost: 5 },
+    { name: "🥤 refri", poop: 20, cost: 8 },
+    { name: "🫘 feijão", poop: 10, cost: 4 },
+    { name: "🌭 hotdog", poop: 7, cost: 6 },
   ];
 
   const gainXP = (v: number) => {
@@ -46,11 +46,20 @@ export default function Home() {
     });
   };
 
+  const work = () => {
+    setState((prev) => {
+      const earnedCoins = Math.floor(prev.level * 1.5) + 1;
+      setMessage(`💼 trabalhou! +${earnedCoins} moedas`);
+      gainXP(5);
+      return { ...prev, coins: prev.coins + earnedCoins, hunger: Math.max(0, prev.hunger - 10) };
+    });
+  };
+
   const feed = () => {
     setState((prev) => {
       if (!prev.alive) return prev;
       if (prev.food <= 0) {
-        setMessage("VAI COMPRAR COMIDA VAGABUNDO 💀🛒");
+        setMessage("🍔 sem comida! Compre na loja");
         return prev;
       }
 
@@ -58,12 +67,11 @@ export default function Home() {
       const newFood = prev.food - 1;
       const newPoop = prev.poop + f.poop;
       const newHunger = Math.min(100, prev.hunger + 20);
-      const newCoins = prev.coins + 1;
 
       setMessage(`🍔 comeu ${f.name}`);
       gainXP(10);
 
-      return { ...prev, food: newFood, poop: newPoop, hunger: newHunger, coins: newCoins };
+      return { ...prev, food: newFood, poop: newPoop, hunger: newHunger };
     });
   };
 
@@ -89,15 +97,30 @@ export default function Home() {
     });
   };
 
-  const buyFood = () => {
+  const revive = () => {
     setState((prev) => {
-      if (prev.coins < 5) {
-        setMessage("💸 sem moedas (precisa de 5)");
+      setMessage("✨ ressuscitado!");
+      return {
+        ...prev,
+        alive: true,
+        hunger: 100,
+        happy: 100,
+        poop: 0,
+        sus: 0,
+      };
+    });
+  };
+
+  const buyFood = (foodIndex: number) => {
+    setState((prev) => {
+      const f = foods[foodIndex];
+      if (prev.coins < f.cost) {
+        setMessage(`💸 faltam ${f.cost - prev.coins} moedas`);
         return prev;
       }
-      setMessage("🛒 comida comprada");
-      gainXP(3);
-      return { ...prev, coins: prev.coins - 5, food: prev.food + 1 };
+      setMessage(`🛒 comprou ${f.name}`);
+      gainXP(2);
+      return { ...prev, coins: prev.coins - f.cost, food: prev.food + 1 };
     });
   };
 
@@ -159,7 +182,7 @@ export default function Home() {
     if (cooldown) return;
     action();
     setCooldown(true);
-    setTimeout(() => setCooldown(false), 5000);
+    setTimeout(() => setCooldown(false), 3000);
   };
 
   const handleAdminClick = () => {
@@ -214,7 +237,7 @@ export default function Home() {
             coins: 0,
             level: 1,
             xp: 0,
-            food: 1,
+            food: 0,
             poop: 0,
             hunger: 100,
             happy: 100,
@@ -316,43 +339,124 @@ export default function Home() {
     const draw = () => {
       ctx.clearRect(0, 0, 300, 320);
 
-      // Cor baseada no estado
-      if (!state.alive) {
-        ctx.fillStyle = "#888888";
-      } else if (
-        state.poop > 70 ||
-        state.hunger < 20 ||
-        state.happy < 20
-      ) {
-        ctx.fillStyle = "#c0392b";
-      } else if (
-        state.poop > 40 ||
-        state.hunger < 50 ||
-        state.happy < 50
-      ) {
-        ctx.fillStyle = "#e67e22";
+      if (state.alive) {
+        // Cor baseada no estado
+        let bodyColor = "#a47148";
+        if (state.poop > 70 || state.hunger < 20 || state.happy < 20) {
+          bodyColor = "#c0392b";
+        } else if (state.poop > 40 || state.hunger < 50 || state.happy < 50) {
+          bodyColor = "#e67e22";
+        }
+
+        // Corpo principal (mais arredondado)
+        ctx.fillStyle = bodyColor;
+        ctx.beginPath();
+        ctx.ellipse(state.x, state.y, 75, 55, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cabeça (círculo separado)
+        ctx.fillStyle = bodyColor;
+        ctx.beginPath();
+        ctx.arc(state.x, state.y - 35, 45, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Orelhas
+        ctx.fillStyle = bodyColor;
+        ctx.beginPath();
+        ctx.arc(state.x - 35, state.y - 65, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(state.x + 35, state.y - 65, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Olhos (maiores e mais expressivos)
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.arc(state.x - 20, state.y - 40, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(state.x + 20, state.y - 40, 7, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Brilho nos olhos
+        ctx.fillStyle = "#fff";
+        ctx.beginPath();
+        ctx.arc(state.x - 18, state.y - 42, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(state.x + 22, state.y - 42, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Nariz (maior e mais detalhado)
+        ctx.fillStyle = "#8B4513";
+        ctx.beginPath();
+        ctx.ellipse(state.x, state.y - 15, 12, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Narinas
+        ctx.fillStyle = "#654321";
+        ctx.beginPath();
+        ctx.arc(state.x - 5, state.y - 18, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(state.x + 5, state.y - 18, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Boca (sorriso)
+        ctx.strokeStyle = "#654321";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(state.x, state.y - 5, 15, 0, Math.PI, false);
+        ctx.stroke();
+
+        // Patas dianteiras
+        ctx.fillStyle = bodyColor;
+        ctx.fillRect(state.x - 40, state.y + 50, 20, 25);
+        ctx.fillRect(state.x + 20, state.y + 50, 20, 25);
+
+        // Patas traseiras
+        ctx.fillStyle = bodyColor;
+        ctx.fillRect(state.x - 60, state.y + 35, 18, 20);
+        ctx.fillRect(state.x + 42, state.y + 35, 18, 20);
+
+        // Cauda
+        ctx.fillStyle = bodyColor;
+        ctx.beginPath();
+        ctx.ellipse(state.x + 70, state.y + 20, 20, 15, 0.3, 0, Math.PI * 2);
+        ctx.fill();
       } else {
-        ctx.fillStyle = "#a47148";
+        // Capivara morta (X nos olhos)
+        ctx.fillStyle = "#888888";
+        ctx.beginPath();
+        ctx.ellipse(state.x, state.y, 75, 55, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#000";
+        ctx.beginPath();
+        ctx.arc(state.x, state.y - 35, 45, 0, Math.PI * 2);
+        ctx.fill();
+
+        // X nos olhos
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(state.x - 30, state.y - 50);
+        ctx.lineTo(state.x - 10, state.y - 30);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(state.x - 10, state.y - 50);
+        ctx.lineTo(state.x - 30, state.y - 30);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(state.x + 10, state.y - 50);
+        ctx.lineTo(state.x + 30, state.y - 30);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(state.x + 30, state.y - 50);
+        ctx.lineTo(state.x + 10, state.y - 30);
+        ctx.stroke();
       }
-
-      ctx.beginPath();
-      ctx.ellipse(state.x, state.y, 70, 50, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Olhos
-      ctx.fillStyle = state.alive ? "#000" : "#555";
-      ctx.beginPath();
-      ctx.arc(state.x + 20, state.y - 10, 5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(state.x - 20, state.y - 10, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Nariz
-      ctx.fillStyle = "#5a3010";
-      ctx.beginPath();
-      ctx.arc(state.x, state.y, 8, 0, Math.PI * 2);
-      ctx.fill();
 
       // Barras de status
       drawBar(10, 10, state.hunger, "#27ae60", "🍔");
@@ -412,65 +516,97 @@ export default function Home() {
 
           <div className="space-y-2 mb-4">
             <button
-              onClick={() => useCooldown(feed)}
-              className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold transition"
+              onClick={() => useCooldown(work)}
+              disabled={!state.alive}
+              className="w-full bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition"
+            >
+              💼 Trabalhar
+            </button>
+            <button
+              onClick={feed}
+              disabled={!state.alive}
+              className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition"
             >
               🍔 Comer
             </button>
             <button
               onClick={() => useCooldown(useBathroom)}
-              className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2 rounded font-semibold transition"
+              disabled={!state.alive}
+              className="w-full bg-cyan-500 hover:bg-cyan-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition"
             >
               🚽 Banheiro
             </button>
             <button
               onClick={() => useCooldown(giveAffection)}
-              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded font-semibold transition"
+              disabled={!state.alive}
+              className="w-full bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition"
             >
               ❤️ Carinho
             </button>
+
+            {!state.alive && (
+              <button
+                onClick={() => useCooldown(revive)}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition animate-pulse"
+              >
+                ✨ Reviver
+              </button>
+            )}
           </div>
 
           <button
             onClick={() => setShowShop(!showShop)}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition mb-4"
+            disabled={!state.alive}
+            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition mb-4"
           >
             🛒 Loja ({state.coins} moedas)
           </button>
 
           {showShop && (
-            <div className="bg-blue-50 p-4 rounded mb-4 border-2 border-blue-300 space-y-2">
-              <h3 className="font-bold text-center mb-3">🛍️ LOJA</h3>
-              <button
-                onClick={() => useCooldown(buyFood)}
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-1 rounded text-sm font-semibold transition"
-              >
-                🍖 Comida (5 moedas)
-              </button>
-              <button
-                onClick={() => useCooldown(buyRoblox)}
-                className="w-full bg-purple-500 hover:bg-purple-600 text-white py-1 rounded text-sm font-semibold transition"
-              >
-                Roblox 🎮 (50 moedas)
-              </button>
-              <button
-                onClick={() => useCooldown(buyMinecraft)}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-1 rounded text-sm font-semibold transition"
-              >
-                Minecraft ⛏️ (100 moedas)
-              </button>
-              <button
-                onClick={() => useCooldown(buyBrawl)}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded text-sm font-semibold transition"
-              >
-                Brawl Stars 🔥 (500 moedas)
-              </button>
+            <div className="bg-blue-50 p-4 rounded mb-4 border-2 border-blue-300 space-y-2 max-h-48 overflow-y-auto">
+              <h3 className="font-bold text-center mb-3">🍖 COMIDAS</h3>
+              {foods.map((f, i) => (
+                <button
+                  key={i}
+                  onClick={() => useCooldown(() => buyFood(i))}
+                  disabled={!state.alive}
+                  className="w-full bg-orange-400 hover:bg-orange-500 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition"
+                >
+                  {f.name} ({f.cost} moedas)
+                </button>
+              ))}
+              
+              <div className="border-t pt-2 mt-2">
+                <h3 className="font-bold text-center mb-2">🎮 JOGOS</h3>
+                <button
+                  onClick={() => useCooldown(buyRoblox)}
+                  disabled={!state.alive}
+                  className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                >
+                  Roblox 🎮 (50 moedas)
+                </button>
+                <button
+                  onClick={() => useCooldown(buyMinecraft)}
+                  disabled={!state.alive}
+                  className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                >
+                  Minecraft ⛏️ (100 moedas)
+                </button>
+                <button
+                  onClick={() => useCooldown(buyBrawl)}
+                  disabled={!state.alive}
+                  className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition"
+                >
+                  Brawl Stars 🔥 (500 moedas)
+                </button>
+              </div>
             </div>
           )}
 
           <button
             onClick={iAmNotSus}
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded font-semibold transition mb-4"
+            disabled={!state.alive}
+            className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition mb-4"
           >
             I AM NOT SUS
           </button>
