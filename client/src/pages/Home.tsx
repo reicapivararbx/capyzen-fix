@@ -480,25 +480,18 @@ export default function Home() {
     }
 
     try {
-      const formData = new FormData();
-      formData.append("email", "acontasecundaria222@gmail.com");
-      formData.append("message", `Bug Report:\n${bugText}\n\nGame State: ${JSON.stringify(state)}\nTimestamp: ${new Date().toISOString()}`);
-
-      const response = await fetch("https://formspree.io/f/xyzgwqvl", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok) {
-        setMessage("✅ Bug reportado com sucesso!");
-        setBugText("");
-        setShowBugReport(false);
-      } else {
-        setMessage("❌ Erro ao enviar bug. Tente novamente!");
-      }
+      const emailContent = `Bug Report:\n${bugText}\n\nGame State: ${JSON.stringify(state)}\nTimestamp: ${new Date().toISOString()}`;
+      
+      // Usar mailto como fallback
+      const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=CapyZen Bug Report&body=${encodeURIComponent(emailContent)}`;
+      window.location.href = mailtoLink;
+      
+      setMessage("✅ Email de bug aberto! Envie para confirmar.");
+      setBugText("");
+      setShowBugReport(false);
     } catch (error) {
       console.error(error);
-      setMessage("❌ Erro de conexão!");
+      setMessage("❌ Erro ao enviar bug!");
     }
   };
 
