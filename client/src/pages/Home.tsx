@@ -1,20 +1,43 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [state, setState] = useState({
-    coins: 0,
-    level: 1,
-    xp: 0,
-    food: 0,
-    poop: 0,
-    hunger: 100,
-    happy: 100,
-    sus: 0,
-    x: 150,
-    y: 150,
-    speed: 3,
-    alive: true,
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  // Carregar estado do localStorage
+  const [state, setState] = useState(() => {
+    const saved = localStorage.getItem("capyzen_state");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return getInitialState();
+      }
+    }
+    return getInitialState();
+  });
+
+  function getInitialState() {
+    return {
+      coins: 0,
+      level: 1,
+      xp: 0,
+      food: 0,
+      poop: 0,
+      hunger: 100,
+      happy: 100,
+      sus: 0,
+      x: 150,
+      y: 150,
+      speed: 3,
+      alive: true,
+    };
+  }
+
+  // Achievements
+  const [achievements, setAchievements] = useState(() => {
+    const saved = localStorage.getItem("capyzen_achievements");
+    return saved ? JSON.parse(saved) : {};
   });
 
   const [cooldown, setCooldown] = useState(false);
@@ -24,6 +47,104 @@ export default function Home() {
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [godMode, setGodMode] = useState(false);
+  const [showBugReport, setShowBugReport] = useState(false);
+  const [bugText, setBugText] = useState("");
+
+  // Salvar estado no localStorage
+  useEffect(() => {
+    localStorage.setItem("capyzen_state", JSON.stringify(state));
+  }, [state]);
+
+  // Salvar achievements
+  useEffect(() => {
+    localStorage.setItem("capyzen_achievements", JSON.stringify(achievements));
+  }, [achievements]);
+
+  // Função para tocar sons
+  const playSound = (type: "eat" | "work" | "levelup" | "achievement") => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+
+    const ctx = audioContextRef.current;
+    const now = ctx.currentTime;
+
+    try {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      switch (type) {
+        case "eat":
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.setValueAtTime(600, now + 0.1);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.setValueAtTime(0, now + 0.15);
+          osc.start(now);
+          osc.stop(now + 0.15);
+          break;
+        case "work":
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.setValueAtTime(400, now + 0.05);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.setValueAtTime(0, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+          break;
+        case "levelup":
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.setValueAtTime(1000, now + 0.1);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.setValueAtTime(0, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+          break;
+        case "achievement":
+          osc.frequency.setValueAtTime(600, now);
+          osc.frequency.setValueAtTime(800, now + 0.1);
+          osc.frequency.setValueAtTime(1000, now + 0.2);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.setValueAtTime(0, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+          break;
+      }
+    } catch (e) {
+      console.log("Som desabilitado");
+    }
+  };
+
+  // Sistema de achievements
+  const checkAchievements = (newState: any) => {
+    const newAchievements = { ...achievements };
+
+    if (newState.level >= 10 && !newAchievements.level10) {
+      newAchievements.level10 = true;
+      setMessage("🏆 Achievement: Atingiu nível 10!");
+      playSound("achievement");
+    }
+
+    if (newState.coins >= 1000 && !newAchievements.coins1000) {
+      newAchievements.coins1000 = true;
+      setMessage("🏆 Achievement: Ganhou 1000 moedas!");
+      playSound("achievement");
+    }
+
+    if (newState.level >= 50 && !newAchievements.level50) {
+      newAchievements.level50 = true;
+      setMessage("🏆 Achievement: Atingiu nível 50!");
+      playSound("achievement");
+    }
+
+    if (newState.coins >= 5000 && !newAchievements.coins5000) {
+      newAchievements.coins5000 = true;
+      setMessage("🏆 Achievement: Ganhou 5000 moedas!");
+      playSound("achievement");
+    }
+
+    setAchievements(newAchievements);
+  };
 
   const foods = [
     { name: "🌱 grama", poop: 0, cost: 2 },
@@ -42,39 +163,44 @@ export default function Home() {
         newXp -= 100;
         newLevel++;
         setMessage("⭐ LEVEL UP!");
+        playSound("levelup");
       }
-      return { ...prev, xp: newXp, level: newLevel };
+      const newState = { ...prev, xp: newXp, level: newLevel };
+      checkAchievements(newState);
+      return newState;
     });
   };
 
   const work = () => {
     setState((prev) => {
-      const earnedCoins = 15; // Valor fixo de 15 moedas
+      const earnedCoins = 15;
       setMessage(`💼 trabalhou! +${earnedCoins} moedas`);
+      playSound("work");
       gainXP(5);
-      return { ...prev, coins: prev.coins + earnedCoins, hunger: Math.max(0, prev.hunger - 10) };
+      const newState = { ...prev, coins: prev.coins + earnedCoins, hunger: Math.max(0, prev.hunger - 10) };
+      checkAchievements(newState);
+      return newState;
     });
     setCooldown(true);
-    setTimeout(() => setCooldown(false), 10000); // 10 segundos de cooldown
+    setTimeout(() => setCooldown(false), 10000);
   };
 
   const feed = () => {
     setState((prev) => {
-      if (!prev.alive) return prev;
-      if (prev.food <= 0) {
-        setMessage("🍔 sem comida! Compre na loja");
+      if (!prev.alive || prev.food <= 0) {
+        setMessage("🍔 sem comida!");
         return prev;
       }
-
-      const f = foods[selectedFood];
+      const food = foods[selectedFood];
+      setMessage(`🍔 comeu ${food.name}! +1 moeda`);
+      playSound("eat");
+      gainXP(3);
       const newFood = prev.food - 1;
-      const newPoop = prev.poop + f.poop;
-      const newHunger = Math.min(100, prev.hunger + 20);
-
-      setMessage(`🍔 comeu ${f.name}`);
-      gainXP(10);
-
-      return { ...prev, food: newFood, poop: newPoop, hunger: newHunger };
+      const newPoop = Math.min(100, prev.poop + food.poop);
+      const newHunger = Math.min(100, prev.hunger + 30);
+      const newState = { ...prev, food: newFood, poop: newPoop, hunger: newHunger, coins: prev.coins + 1 };
+      checkAchievements(newState);
+      return newState;
     });
   };
 
@@ -86,6 +212,7 @@ export default function Home() {
         return prev;
       }
       setMessage("🚽 foi ao banheiro");
+      playSound("eat");
       gainXP(5);
       return { ...prev, poop: Math.max(0, prev.poop - 50) };
     });
@@ -97,6 +224,7 @@ export default function Home() {
     setState((prev) => {
       if (!prev.alive) return prev;
       setMessage("❤️ capivara feliz!");
+      playSound("eat");
       gainXP(8);
       return { ...prev, happy: Math.min(100, prev.happy + 25) };
     });
@@ -105,113 +233,35 @@ export default function Home() {
   };
 
   const revive = () => {
-    setState((prev) => {
-      setMessage("✨ ressuscitado!");
-      return {
-        ...prev,
-        alive: true,
-        hunger: 100,
-        happy: 100,
-        poop: 0,
-        sus: 0,
-      };
-    });
+    setState((prev) => ({
+      ...prev,
+      alive: true,
+      hunger: 100,
+      happy: 100,
+      poop: 0,
+    }));
+    setMessage("✨ Revivido!");
+    playSound("levelup");
   };
 
-  const buyFood = (foodIndex: number) => {
-    setState((prev) => {
-      const f = foods[foodIndex];
-      if (prev.coins < f.cost) {
-        setMessage(`💸 faltam ${f.cost - prev.coins} moedas`);
-        return prev;
-      }
-      setMessage(`🛒 comprou ${f.name}`);
-      gainXP(2);
-      return { ...prev, coins: prev.coins - f.cost, food: prev.food + 1 };
-    });
-  };
-
-  const buyRoblox = () => {
-    setState((prev) => {
-      if (prev.coins < 50) {
-        setMessage("💸 sem moedas (precisa 50)");
-        return prev;
-      }
-      setMessage("🎮 Roblox + felicidade");
-      gainXP(15);
-      return {
-        ...prev,
-        coins: prev.coins - 50,
-        happy: Math.min(100, prev.happy + 30),
-      };
-    });
-  };
-
-  const buyMinecraft = () => {
-    setState((prev) => {
-      if (prev.coins < 100) {
-        setMessage("💸 sem moedas (precisa 100)");
-        return prev;
-      }
-      setMessage("⛏️ Minecraft boost");
-      gainXP(20);
-      return {
-        ...prev,
-        coins: prev.coins - 100,
-        happy: Math.min(100, prev.happy + 50),
-        hunger: Math.min(100, prev.hunger + 10),
-      };
-    });
-  };
-
-  const buyBrawl = () => {
-    setState((prev) => {
-      if (prev.coins < 500) {
-        setMessage("💸 sem moedas (precisa 500)");
-        return prev;
-      }
-      setMessage("🔥 modo deus 20s");
-      gainXP(30);
-      setTimeout(() => setMessage("⛔ acabou"), 20000);
-      return { ...prev, coins: prev.coins - 500, happy: 100, hunger: 100 };
-    });
-  };
-
-  const iAmNotSus = () => {
-    if (susCooldown) return;
-    setMessage("I AM NOT SUS 😭");
-    setSusCooldown(true);
-    setState((prev) => ({ ...prev, sus: Math.min(100, prev.sus + 50) }));
-    setTimeout(() => setSusCooldown(false), 10000);
-  };
-
-  const useCooldown = (action: () => void) => {
-    if (cooldown) return;
-    action();
-    // Cooldown removido de aqui pois está na função work()
-  };
-
-  // Ganho passivo de moedas a cada 5 segundos
-  useEffect(() => {
-    const passiveInterval = setInterval(() => {
-      setState((prev) => {
-        if (!prev.alive) return prev;
-        return { ...prev, coins: prev.coins + 3 };
-      });
-    }, 5000); // A cada 5 segundos
-
-    return () => clearInterval(passiveInterval);
-  }, []);
-
-  // Função para exibir ∞ quando o valor é infinito
-  const displayValue = (value: number, maxValue: number = 100) => {
-    if (value >= maxValue) return "∞";
-    return value.toString();
+  const buyFood = () => {
+    const food = foods[selectedFood];
+    if (state.coins < food.cost) {
+      setMessage(`💰 precisa ${food.cost} moedas!`);
+      return;
+    }
+    setState((prev) => ({
+      ...prev,
+      coins: prev.coins - food.cost,
+      food: prev.food + 1,
+    }));
+    setMessage(`✅ Comprou ${food.name}`);
+    playSound("work");
   };
 
   const handleAdminClick = () => {
     const pass = window.prompt("Senha:");
-    if (pass === null) return; // Usuário cancelou
+    if (pass === null) return;
     if (pass === "capivarassaomuitofofas404") {
       setShowAdminPanel(true);
     } else {
@@ -239,21 +289,18 @@ export default function Home() {
         updated.hunger = Math.max(0, updated.hunger - 20);
 
       if (cmd === "+sus") updated.sus = Math.min(100, updated.sus + 20);
-      if (cmd === "-sus") updated.sus = Math.max(0, updated.sus - 20);
-
-      if (cmd === "addCoins") updated.coins += askNum("quantos?");
-      if (cmd === "removeCoins")
-        updated.coins = Math.max(0, updated.coins - askNum("quantos?"));
-      if (cmd === "setCoins") updated.coins = askNum("valor");
+      if (cmd === "-sus") {
+        setMessage("✅ Sus removido");
+        updated.sus = 0;
+      }
 
       if (cmd === "+poop") updated.poop = Math.min(100, updated.poop + 20);
       if (cmd === "-poop") updated.poop = Math.max(0, updated.poop - 20);
 
-      if (cmd === "addLevel") updated.level++;
-      if (cmd === "removeLevel")
-        updated.level = Math.max(1, updated.level - askNum("quantos?"));
+      if (cmd === "setCoins")
+        updated.coins = Math.max(0, askNum("quantas moedas?"));
       if (cmd === "setLevel")
-        updated.level = Math.max(1, askNum("valor"));
+        updated.level = Math.max(1, askNum("qual level?"));
 
       if (cmd === "∞coins") {
         updated.coins = 999999;
@@ -358,7 +405,7 @@ export default function Home() {
             speed: 3,
             alive: true,
           };
-          setMessage("🔄 resetado");
+          setMessage("🔄 RESETADO!");
         }
       }
 
@@ -366,25 +413,72 @@ export default function Home() {
     });
   };
 
-  // Movimento com setas
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      setState((prev) => {
-        if (e.key === "ArrowUp")
-          return { ...prev, y: Math.max(50, prev.y - prev.speed) };
-        if (e.key === "ArrowDown")
-          return { ...prev, y: Math.min(250, prev.y + prev.speed) };
-        if (e.key === "ArrowLeft")
-          return { ...prev, x: Math.max(70, prev.x - prev.speed) };
-        if (e.key === "ArrowRight")
-          return { ...prev, x: Math.min(230, prev.x + prev.speed) };
-        return prev;
-      });
-    };
+  const useCooldown = (action: () => void) => {
+    if (cooldown) return;
+    action();
+  };
 
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!state.alive) return;
+    setState((prev) => {
+      let newX = prev.x;
+      let newY = prev.y;
+      if (e.key === "ArrowUp") newY = Math.max(50, newY - prev.speed);
+      if (e.key === "ArrowDown") newY = Math.min(270, newY + prev.speed);
+      if (e.key === "ArrowLeft") newX = Math.max(50, newX - prev.speed);
+      if (e.key === "ArrowRight") newX = Math.min(250, newX + prev.speed);
+      return { ...prev, x: newX, y: newY };
+    });
+  };
+
+  const handleSusClick = () => {
+    if (susCooldown) return;
+    setMessage("I AM NOT SUS 😭");
+    setSusCooldown(true);
+    setState((prev) => ({ ...prev, sus: Math.min(100, prev.sus + 50) }));
+    setTimeout(() => setSusCooldown(false), 10000);
+  };
+
+  const useCooldown2 = (action: () => void) => {
+    if (cooldown) return;
+    action();
+  };
+
+  const displayValue = (value: number, maxValue: number = 100) => {
+    if (value >= maxValue) return "∞";
+    return value.toString();
+  };
+
+  const sendBugReport = async () => {
+    if (!bugText.trim()) {
+      alert("Por favor, descreva o bug!");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://formspree.io/f/xyzgwqvl", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: "acontasecundaria222@gmail.com",
+          message: bugText,
+          timestamp: new Date().toISOString(),
+          gameState: JSON.stringify(state),
+        }),
+      });
+
+      if (response.ok) {
+        setMessage("✅ Bug reportado com sucesso!");
+        setBugText("");
+        setShowBugReport(false);
+      } else {
+        alert("Erro ao enviar. Tente novamente!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erro de conexão!");
+    }
+  };
 
   // Game loop
   useEffect(() => {
@@ -399,7 +493,6 @@ export default function Home() {
         if (!prev.alive) return prev;
 
         let updated = { ...prev };
-        // Não aumenta cocô em god mode
         if (!godMode) {
           updated.poop += 0.05;
         }
@@ -423,6 +516,18 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, [godMode]);
+
+  // Ganho passivo de moedas a cada 5 segundos
+  useEffect(() => {
+    const passiveInterval = setInterval(() => {
+      setState((prev) => {
+        if (!prev.alive) return prev;
+        return { ...prev, coins: prev.coins + 3 };
+      });
+    }, 5000);
+
+    return () => clearInterval(passiveInterval);
+  }, []);
 
   // Draw loop
   useEffect(() => {
@@ -454,24 +559,34 @@ export default function Home() {
       ctx.clearRect(0, 0, 300, 320);
 
       if (state.alive) {
-        // Cor baseada no estado
-        let bodyColor = "#a47148";
-        if (state.poop > 70 || state.hunger < 20 || state.happy < 20) {
-          bodyColor = "#c0392b";
-        } else if (state.poop > 40 || state.hunger < 50 || state.happy < 50) {
-          bodyColor = "#e67e22";
-        }
+        // Barras de status
+        drawBar(10, 10, state.hunger, "#4CAF50", "Fome");
+        drawBar(10, 25, state.happy, "#FF9800", "Feliz");
+        drawBar(10, 40, state.poop, "#8B4513", "Coco");
+        drawBar(10, 55, state.sus, "#FF0000", "Sus");
 
-        // Corpo principal (mais arredondado)
+        // Cor da capivara baseada em saúde
+        let bodyColor = "#8B6914";
+        if (state.hunger < 30 || state.happy < 30) bodyColor = "#FF6B35";
+        if (state.hunger < 10 || state.happy < 10) bodyColor = "#DC143C";
+
+        // Corpo
         ctx.fillStyle = bodyColor;
         ctx.beginPath();
-        ctx.ellipse(state.x, state.y, 75, 55, 0, 0, Math.PI * 2);
+        ctx.ellipse(state.x, state.y, 50, 45, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Cabeça (círculo separado)
+        // Patas
+        ctx.fillStyle = bodyColor;
+        ctx.fillRect(state.x - 35, state.y + 35, 15, 20);
+        ctx.fillRect(state.x - 10, state.y + 35, 15, 20);
+        ctx.fillRect(state.x + 10, state.y + 35, 15, 20);
+        ctx.fillRect(state.x + 35, state.y + 35, 15, 20);
+
+        // Cauda
         ctx.fillStyle = bodyColor;
         ctx.beginPath();
-        ctx.arc(state.x, state.y - 35, 45, 0, Math.PI * 2);
+        ctx.arc(state.x + 55, state.y + 10, 12, 0, Math.PI * 2);
         ctx.fill();
 
         // Orelhas
@@ -483,7 +598,7 @@ export default function Home() {
         ctx.arc(state.x + 35, state.y - 65, 18, 0, Math.PI * 2);
         ctx.fill();
 
-        // Olhos (maiores e mais expressivos)
+        // Olhos
         ctx.fillStyle = "#000";
         ctx.beginPath();
         ctx.arc(state.x - 20, state.y - 40, 7, 0, Math.PI * 2);
@@ -501,7 +616,7 @@ export default function Home() {
         ctx.arc(state.x + 22, state.y - 42, 2.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // Nariz (maior e mais detalhado)
+        // Nariz
         ctx.fillStyle = "#8B4513";
         ctx.beginPath();
         ctx.ellipse(state.x, state.y - 15, 12, 10, 0, 0, Math.PI * 2);
@@ -516,79 +631,38 @@ export default function Home() {
         ctx.arc(state.x + 5, state.y - 18, 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Boca (sorriso)
+        // Sorriso
         ctx.strokeStyle = "#654321";
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(state.x, state.y - 5, 15, 0, Math.PI, false);
+        ctx.arc(state.x, state.y - 5, 15, 0, Math.PI);
         ctx.stroke();
 
-        // Patas dianteiras
-        ctx.fillStyle = bodyColor;
-        ctx.fillRect(state.x - 40, state.y + 50, 20, 25);
-        ctx.fillRect(state.x + 20, state.y + 50, 20, 25);
-
-        // Patas traseiras
-        ctx.fillStyle = bodyColor;
-        ctx.fillRect(state.x - 60, state.y + 35, 18, 20);
-        ctx.fillRect(state.x + 42, state.y + 35, 18, 20);
-
-        // Cauda
-        ctx.fillStyle = bodyColor;
-        ctx.beginPath();
-        ctx.ellipse(state.x + 70, state.y + 20, 20, 15, 0.3, 0, Math.PI * 2);
-        ctx.fill();
+        // Info no canvas
+        ctx.fillStyle = "#333";
+        ctx.font = "bold 14px Arial";
+        ctx.fillText(`Lv1 ${state.level} | XP ${state.xp}/100`, 10, 290);
       } else {
-        // Capivara morta (X nos olhos)
-        ctx.fillStyle = "#888888";
-        ctx.beginPath();
-        ctx.ellipse(state.x, state.y, 75, 55, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.arc(state.x, state.y - 35, 45, 0, Math.PI * 2);
-        ctx.fill();
-
-        // X nos olhos
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(state.x - 30, state.y - 50);
-        ctx.lineTo(state.x - 10, state.y - 30);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(state.x - 10, state.y - 50);
-        ctx.lineTo(state.x - 30, state.y - 30);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(state.x + 10, state.y - 50);
-        ctx.lineTo(state.x + 30, state.y - 30);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(state.x + 30, state.y - 50);
-        ctx.lineTo(state.x + 10, state.y - 30);
-        ctx.stroke();
+        // Capivara morta
+        ctx.fillStyle = "#888";
+        ctx.font = "bold 40px Arial";
+        ctx.fillText("💀", state.x - 20, state.y);
+        ctx.fillStyle = "#333";
+        ctx.font = "16px Arial";
+        ctx.fillText("Morreu!", state.x - 30, state.y + 50);
       }
-
-      // Barras de status
-      drawBar(10, 10, state.hunger, "#27ae60", "🍔");
-      drawBar(10, 28, state.happy, "#2980b9", "😊");
-      drawBar(10, 46, 100 - state.poop, "#8e44ad", "💩");
-      drawBar(10, 64, state.sus, "#e74c3c", "😱");
-      
-      // Info do level
-      ctx.fillStyle = "#333";
-      ctx.font = "bold 12px Arial";
-      ctx.fillText(`Lvl ${state.level} | XP ${state.xp}/100`, 10, 290);
     };
 
     draw();
   }, [state]);
 
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 p-4">
       <div className="flex gap-6 flex-wrap justify-center">
         <div className="bg-blue-100 rounded-lg p-4 shadow-lg">
           <canvas
@@ -611,6 +685,17 @@ export default function Home() {
           <div className="bg-yellow-50 p-3 rounded mb-4 text-center font-semibold text-sm">
             💬 {message}
           </div>
+
+          {/* Achievements */}
+          {Object.keys(achievements).length > 0 && (
+            <div className="bg-purple-50 p-3 rounded mb-4 text-xs">
+              <div className="font-bold mb-1">🏆 Achievements:</div>
+              {achievements.level10 && <div>✅ Atingiu nível 10</div>}
+              {achievements.coins1000 && <div>✅ Ganhou 1000 moedas</div>}
+              {achievements.level50 && <div>✅ Atingiu nível 50</div>}
+              {achievements.coins5000 && <div>✅ Ganhou 5000 moedas</div>}
+            </div>
+          )}
 
           {/* Seletor de Comida */}
           <div className="bg-blue-50 p-3 rounded mb-4 border border-blue-200">
@@ -657,84 +742,72 @@ export default function Home() {
             >
               ❤️ Carinho
             </button>
-
-            {!state.alive && (
-              <button
-                onClick={() => useCooldown(revive)}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition animate-pulse"
-              >
-                ✨ Reviver
-              </button>
-            )}
-          </div>
-
-          <button
-            onClick={() => setShowShop(!showShop)}
-            disabled={!state.alive}
-            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition mb-4"
-          >
-            🛒 Loja ({state.coins} moedas)
-          </button>
-
-          {showShop && (
-            <div className="bg-blue-50 p-4 rounded mb-4 border-2 border-blue-300 space-y-2 max-h-48 overflow-y-auto">
-              <h3 className="font-bold text-center mb-3">🍖 COMIDAS</h3>
-              {foods.map((f, i) => (
-                <button
-                  key={i}
-                  onClick={() => useCooldown(() => buyFood(i))}
-                  disabled={!state.alive}
-                  className="w-full bg-orange-400 hover:bg-orange-500 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition"
-                >
-                  {f.name} ({f.cost} moedas)
-                </button>
-              ))}
-              
-              <div className="border-t pt-2 mt-2">
-                <h3 className="font-bold text-center mb-2">🎮 JOGOS</h3>
-                <button
-                  onClick={() => useCooldown(buyRoblox)}
-                  disabled={!state.alive}
-                  className="w-full bg-purple-500 hover:bg-purple-600 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                >
-                  Roblox 🎮 (50 moedas)
-                </button>
-                <button
-                  onClick={() => useCooldown(buyMinecraft)}
-                  disabled={!state.alive}
-                  className="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                >
-                  Minecraft ⛏️ (100 moedas)
-                </button>
-                <button
-                  onClick={() => useCooldown(buyBrawl)}
-                  disabled={!state.alive}
-                  className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white py-1 rounded text-xs font-semibold transition"
-                >
-                  Brawl Stars 🔥 (500 moedas)
-                </button>
-              </div>
-            </div>
-          )}
-
-          <button
-            onClick={iAmNotSus}
-            disabled={!state.alive}
-            className="w-full bg-pink-500 hover:bg-pink-600 disabled:bg-gray-400 text-white py-2 rounded font-semibold transition mb-4"
-          >
-            I AM NOT SUS
-          </button>
-
-          <div className="border-t pt-4">
+            <button
+              onClick={() => setShowShop(!showShop)}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition"
+            >
+              🛒 Loja ({state.coins} moedas)
+            </button>
+            <button
+              onClick={handleSusClick}
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded font-semibold transition"
+            >
+              I AM NOT SUS
+            </button>
             <button
               onClick={handleAdminClick}
               className="w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded font-semibold transition"
             >
               ⚙️ Painel Admin
             </button>
+            <button
+              onClick={() => setShowBugReport(!showBugReport)}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded font-semibold transition"
+            >
+              🐛 Reportar Bug
+            </button>
+            {!state.alive && (
+              <button
+                onClick={revive}
+                className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded font-semibold transition"
+              >
+                ✨ Reviver
+              </button>
+            )}
           </div>
 
-          {/* Admin Panel Modal */}
+          {/* Shop */}
+          {showShop && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
+                <h2 className="text-2xl font-bold mb-4">🛒 Loja</h2>
+                <div className="space-y-2 mb-4">
+                  {foods.map((f, i) => (
+                    <div key={i} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                      <span>{f.name} - {f.cost} moedas</span>
+                      <button
+                        onClick={() => {
+                          setSelectedFood(i);
+                          buyFood();
+                        }}
+                        className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm"
+                      >
+                        Comprar
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowShop(false)}
+                  className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded font-semibold"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Admin Panel */}
           {showAdminPanel && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto">
@@ -790,51 +863,26 @@ export default function Home() {
 
                   <button
                     onClick={() => applyAdminCommand("+poop")}
-                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     +20 Coco
                   </button>
                   <button
                     onClick={() => applyAdminCommand("-poop")}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     -20 Coco
                   </button>
 
-                  <button
-                    onClick={() => applyAdminCommand("addCoins")}
-                    className="w-full bg-purple-500 hover:bg-purple-600 text-white py-1 rounded text-xs font-semibold transition"
-                  >
-                    ➕ Adicionar Moedas
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("removeCoins")}
-                    className="w-full bg-purple-700 hover:bg-purple-800 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ➖ Remover Moedas
-                  </button>
                   <button
                     onClick={() => applyAdminCommand("setCoins")}
                     className="w-full bg-purple-600 hover:bg-purple-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     💰 Setar Moedas (valor)
                   </button>
-
-                  <button
-                    onClick={() => applyAdminCommand("addLevel")}
-                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-1 rounded text-xs font-semibold transition"
-                  >
-                    ⬆️ +1 Nível
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("removeLevel")}
-                    className="w-full bg-indigo-700 hover:bg-indigo-800 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ⬇️ -1 Nível
-                  </button>
                   <button
                     onClick={() => applyAdminCommand("setLevel")}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-blue-700 hover:bg-blue-800 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     ⭐ Setar Level (valor)
                   </button>
@@ -943,10 +991,39 @@ export default function Home() {
 
                 <button
                   onClick={() => setShowAdminPanel(false)}
-                  className="w-full bg-gray-400 hover:bg-gray-500 text-white py-2 rounded font-semibold transition"
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
                 >
-                  ✕ Fechar
+                  Fechar
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Bug Report */}
+          {showBugReport && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
+                <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
+                <textarea
+                  value={bugText}
+                  onChange={(e) => setBugText(e.target.value)}
+                  placeholder="Descreva o bug aqui..."
+                  className="w-full p-3 border border-gray-300 rounded mb-4 h-24"
+                />
+                <div className="space-y-2">
+                  <button
+                    onClick={sendBugReport}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded font-semibold"
+                  >
+                    📧 Enviar
+                  </button>
+                  <button
+                    onClick={() => setShowBugReport(false)}
+                    className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
+                  >
+                    Fechar
+                  </button>
+                </div>
               </div>
             </div>
           )}
