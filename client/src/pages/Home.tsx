@@ -10,6 +10,7 @@ export default function Home() {
     poop: 0,
     hunger: 100,
     happy: 100,
+    sus: 0,
     x: 150,
     y: 150,
     speed: 3,
@@ -19,6 +20,9 @@ export default function Home() {
   const [cooldown, setCooldown] = useState(false);
   const [susCooldown, setSusCooldown] = useState(false);
   const [message, setMessage] = useState("Oi!");
+  const [selectedFood, setSelectedFood] = useState(0);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
+  const [showShop, setShowShop] = useState(false);
 
   const foods = [
     { name: "🌱 grama", poop: 0 },
@@ -33,8 +37,8 @@ export default function Home() {
     setState((prev) => {
       let newXp = prev.xp + v;
       let newLevel = prev.level;
-      if (newXp >= 100) {
-        newXp = 0;
+      while (newXp >= 100) {
+        newXp -= 100;
         newLevel++;
         setMessage("⭐ LEVEL UP!");
       }
@@ -50,15 +54,38 @@ export default function Home() {
         return prev;
       }
 
-      const f = foods[Math.floor(Math.random() * foods.length)];
+      const f = foods[selectedFood];
       const newFood = prev.food - 1;
       const newPoop = prev.poop + f.poop;
       const newHunger = Math.min(100, prev.hunger + 20);
+      const newCoins = prev.coins + 1;
 
       setMessage(`🍔 comeu ${f.name}`);
       gainXP(10);
 
-      return { ...prev, food: newFood, poop: newPoop, hunger: newHunger };
+      return { ...prev, food: newFood, poop: newPoop, hunger: newHunger, coins: newCoins };
+    });
+  };
+
+  const useBathroom = () => {
+    setState((prev) => {
+      if (!prev.alive) return prev;
+      if (prev.poop <= 0) {
+        setMessage("💩 já limpinho!");
+        return prev;
+      }
+      setMessage("🚽 foi ao banheiro");
+      gainXP(5);
+      return { ...prev, poop: Math.max(0, prev.poop - 50) };
+    });
+  };
+
+  const giveAffection = () => {
+    setState((prev) => {
+      if (!prev.alive) return prev;
+      setMessage("❤️ capivara feliz!");
+      gainXP(8);
+      return { ...prev, happy: Math.min(100, prev.happy + 25) };
     });
   };
 
@@ -69,21 +96,19 @@ export default function Home() {
         return prev;
       }
       setMessage("🛒 comida comprada");
+      gainXP(3);
       return { ...prev, coins: prev.coins - 5, food: prev.food + 1 };
     });
   };
 
   const buyRoblox = () => {
     setState((prev) => {
-      if (prev.level < 2) {
-        setMessage("🔒 lvl baixo");
-        return prev;
-      }
       if (prev.coins < 50) {
-        setMessage("💸 sem moedas");
+        setMessage("💸 sem moedas (precisa 50)");
         return prev;
       }
       setMessage("🎮 Roblox + felicidade");
+      gainXP(15);
       return {
         ...prev,
         coins: prev.coins - 50,
@@ -94,15 +119,12 @@ export default function Home() {
 
   const buyMinecraft = () => {
     setState((prev) => {
-      if (prev.level < 3) {
-        setMessage("🔒 lvl baixo");
-        return prev;
-      }
       if (prev.coins < 100) {
-        setMessage("💸 sem moedas");
+        setMessage("💸 sem moedas (precisa 100)");
         return prev;
       }
       setMessage("⛏️ Minecraft boost");
+      gainXP(20);
       return {
         ...prev,
         coins: prev.coins - 100,
@@ -114,15 +136,12 @@ export default function Home() {
 
   const buyBrawl = () => {
     setState((prev) => {
-      if (prev.level < 5) {
-        setMessage("🔒 lvl baixo");
-        return prev;
-      }
       if (prev.coins < 500) {
-        setMessage("💸 sem moedas");
+        setMessage("💸 sem moedas (precisa 500)");
         return prev;
       }
       setMessage("🔥 modo deus 20s");
+      gainXP(30);
       setTimeout(() => setMessage("⛔ acabou"), 20000);
       return { ...prev, coins: prev.coins - 500, happy: 100, hunger: 100 };
     });
@@ -132,6 +151,7 @@ export default function Home() {
     if (susCooldown) return;
     setMessage("I AM NOT SUS 😭");
     setSusCooldown(true);
+    setState((prev) => ({ ...prev, sus: Math.min(100, prev.sus + 50) }));
     setTimeout(() => setSusCooldown(false), 10000);
   };
 
@@ -142,36 +162,17 @@ export default function Home() {
     setTimeout(() => setCooldown(false), 5000);
   };
 
-  const openAdmin = () => {
+  const handleAdminClick = () => {
     const pass = prompt("Senha:");
-    if (pass !== "capivarassaomuitofofas404") {
+    if (pass === "capivarassaomuitofofas404") {
+      setShowAdminPanel(true);
+    } else {
       alert("❌ negado");
-      return;
     }
+  };
 
-    const cmd = prompt(
-      `FELICIDADE:
-+happy / -happy
-
-FOME:
-+hunger / -hunger
-
-SUS:
-+sus / -sus
-
-MOEDAS:
-addCoins / removeCoins / setCoins
-
-POOP:
-+poop / -poop
-
-LEVEL:
-addLevel / removeLevel / setLevel
-
-RESET`
-    );
-
-    if (cmd === null) return;
+  const applyAdminCommand = (cmd: string) => {
+    if (!cmd) return;
 
     const askNum = (t: string) => {
       let n = Number(prompt(t));
@@ -189,8 +190,8 @@ RESET`
       if (cmd === "-hunger")
         updated.hunger = Math.max(0, updated.hunger - 20);
 
-      if (cmd === "+sus") setMessage("I AM NOT SUS 😭");
-      if (cmd === "-sus") setMessage("Sus removido ✅");
+      if (cmd === "+sus") updated.sus = Math.min(100, updated.sus + 20);
+      if (cmd === "-sus") updated.sus = Math.max(0, updated.sus - 20);
 
       if (cmd === "addCoins") updated.coins += askNum("quantos?");
       if (cmd === "removeCoins")
@@ -217,6 +218,7 @@ RESET`
             poop: 0,
             hunger: 100,
             happy: 100,
+            sus: 0,
             x: 150,
             y: 150,
             speed: 3,
@@ -266,6 +268,7 @@ RESET`
         updated.poop += 0.05;
         updated.hunger = Math.max(0, updated.hunger - 0.05);
         updated.happy = Math.max(0, updated.happy - 0.03);
+        updated.sus = Math.max(0, updated.sus - 0.02);
 
         if (updated.poop >= 100) {
           updated.alive = false;
@@ -311,7 +314,7 @@ RESET`
     };
 
     const draw = () => {
-      ctx.clearRect(0, 0, 300, 300);
+      ctx.clearRect(0, 0, 300, 320);
 
       // Cor baseada no estado
       if (!state.alive) {
@@ -355,6 +358,12 @@ RESET`
       drawBar(10, 10, state.hunger, "#27ae60", "🍔");
       drawBar(10, 28, state.happy, "#2980b9", "😊");
       drawBar(10, 46, 100 - state.poop, "#8e44ad", "💩");
+      drawBar(10, 64, state.sus, "#e74c3c", "😱");
+      
+      // Info do level
+      ctx.fillStyle = "#333";
+      ctx.font = "bold 12px Arial";
+      ctx.fillText(`Lvl ${state.level} | XP ${state.xp}/100`, 10, 290);
     };
 
     draw();
@@ -367,21 +376,38 @@ RESET`
           <canvas
             ref={canvasRef}
             width={300}
-            height={300}
+            height={320}
             className="bg-blue-50 rounded border-2 border-blue-300"
           />
         </div>
 
-        <div className="bg-white rounded-lg p-6 shadow-lg w-64">
+        <div className="bg-white rounded-lg p-6 shadow-lg w-80">
           <div className="space-y-2 mb-4 text-sm">
             <div>💰 Moedas: <span className="font-bold">{state.coins}</span></div>
             <div>⭐ Nível: <span className="font-bold">{state.level}</span></div>
+            <div>📊 XP: <span className="font-bold">{state.xp}/100</span></div>
             <div>🍔 Comida: <span className="font-bold">{state.food}</span></div>
             <div>💩 Coco: <span className="font-bold">{Math.floor(state.poop)}</span></div>
           </div>
 
           <div className="bg-yellow-50 p-3 rounded mb-4 text-center font-semibold text-sm">
             💬 {message}
+          </div>
+
+          {/* Seletor de Comida */}
+          <div className="bg-blue-50 p-3 rounded mb-4 border border-blue-200">
+            <label className="block text-sm font-semibold mb-2">🍽️ Selecionar Comida:</label>
+            <select
+              value={selectedFood}
+              onChange={(e) => setSelectedFood(Number(e.target.value))}
+              className="w-full p-2 border border-blue-300 rounded bg-white text-sm"
+            >
+              {foods.map((f, i) => (
+                <option key={i} value={i}>
+                  {f.name} (💩 {f.poop})
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="space-y-2 mb-4">
@@ -392,36 +418,55 @@ RESET`
               🍔 Comer
             </button>
             <button
-              onClick={() => useCooldown(buyFood)}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition"
+              onClick={() => useCooldown(useBathroom)}
+              className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2 rounded font-semibold transition"
             >
-              🛒 Loja
+              🚽 Banheiro
+            </button>
+            <button
+              onClick={() => useCooldown(giveAffection)}
+              className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded font-semibold transition"
+            >
+              ❤️ Carinho
             </button>
           </div>
 
-          <div className="mb-4">
-            <div className="font-semibold text-sm mb-2">🎮 Jogos:</div>
-            <div className="space-y-2">
+          <button
+            onClick={() => setShowShop(!showShop)}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition mb-4"
+          >
+            🛒 Loja ({state.coins} moedas)
+          </button>
+
+          {showShop && (
+            <div className="bg-blue-50 p-4 rounded mb-4 border-2 border-blue-300 space-y-2">
+              <h3 className="font-bold text-center mb-3">🛍️ LOJA</h3>
+              <button
+                onClick={() => useCooldown(buyFood)}
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-1 rounded text-sm font-semibold transition"
+              >
+                🍖 Comida (5 moedas)
+              </button>
               <button
                 onClick={() => useCooldown(buyRoblox)}
-                className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded font-semibold transition text-sm"
+                className="w-full bg-purple-500 hover:bg-purple-600 text-white py-1 rounded text-sm font-semibold transition"
               >
-                Roblox 🎮
+                Roblox 🎮 (50 moedas)
               </button>
               <button
                 onClick={() => useCooldown(buyMinecraft)}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded font-semibold transition text-sm"
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-1 rounded text-sm font-semibold transition"
               >
-                Minecraft ⛏️
+                Minecraft ⛏️ (100 moedas)
               </button>
               <button
                 onClick={() => useCooldown(buyBrawl)}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded font-semibold transition text-sm"
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded text-sm font-semibold transition"
               >
-                Brawl Stars 🔥
+                Brawl Stars 🔥 (500 moedas)
               </button>
             </div>
-          </div>
+          )}
 
           <button
             onClick={iAmNotSus}
@@ -431,28 +476,116 @@ RESET`
           </button>
 
           <div className="border-t pt-4">
-            <div className="font-semibold text-sm mb-2">🔐 ADMIN:</div>
             <button
-              onClick={openAdmin}
+              onClick={handleAdminClick}
               className="w-full bg-gray-700 hover:bg-gray-800 text-white py-2 rounded font-semibold transition"
             >
               ⚙️ Painel Admin
             </button>
           </div>
 
-          <div className="mt-4 bg-gray-50 p-3 rounded text-xs">
-            <div className="font-semibold mb-2">🐛 Achou um bug?</div>
-            <label className="flex items-center gap-2 mb-2">
-              <input type="checkbox" id="bugToggle" />
-              <span>Ativar envio</span>
-            </label>
-            <div className="text-gray-600">📧 Conta:</div>
-            <input
-              value="acontasecundaria222@gmail.com"
-              readOnly
-              className="w-full text-xs p-1 border rounded bg-white mt-1"
-            />
-          </div>
+          {/* Admin Panel Modal */}
+          {showAdminPanel && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto">
+                <h2 className="text-2xl font-bold mb-4">⚙️ Painel Admin</h2>
+
+                <div className="space-y-2 mb-6">
+                  <button
+                    onClick={() => applyAdminCommand("+happy")}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    +20 Felicidade
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-happy")}
+                    className="w-full bg-red-500 hover:bg-red-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    -20 Felicidade
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("+hunger")}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    +20 Fome
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-hunger")}
+                    className="w-full bg-red-500 hover:bg-red-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    -20 Fome
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("+sus")}
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    +20 Sus
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-sus")}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    -20 Sus
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("+poop")}
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    +20 Coco
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-poop")}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    -20 Coco
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("addCoins")}
+                    className="w-full bg-purple-500 hover:bg-purple-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    ➕ Adicionar Moedas
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("removeCoins")}
+                    className="w-full bg-purple-700 hover:bg-purple-800 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    ➖ Remover Moedas
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("addLevel")}
+                    className="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    ⬆️ +1 Nível
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("removeLevel")}
+                    className="w-full bg-indigo-700 hover:bg-indigo-800 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    ⬇️ -1 Nível
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("RESET")}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    🔄 Reset Jogo
+                  </button>
+                </div>
+
+                <button
+                  onClick={() => setShowAdminPanel(false)}
+                  className="w-full bg-gray-400 hover:bg-gray-500 text-white py-2 rounded font-semibold transition"
+                >
+                  ✕ Fechar
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
