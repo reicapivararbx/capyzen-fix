@@ -48,11 +48,13 @@ export default function Home() {
 
   const work = () => {
     setState((prev) => {
-      const earnedCoins = Math.floor(prev.level * 1.5) + 1;
+      const earnedCoins = 15; // Valor fixo de 15 moedas
       setMessage(`💼 trabalhou! +${earnedCoins} moedas`);
       gainXP(5);
       return { ...prev, coins: prev.coins + earnedCoins, hunger: Math.max(0, prev.hunger - 10) };
     });
+    setCooldown(true);
+    setTimeout(() => setCooldown(false), 10000); // 10 segundos de cooldown
   };
 
   const feed = () => {
@@ -86,6 +88,8 @@ export default function Home() {
       gainXP(5);
       return { ...prev, poop: Math.max(0, prev.poop - 50) };
     });
+    setCooldown(true);
+    setTimeout(() => setCooldown(false), 3000);
   };
 
   const giveAffection = () => {
@@ -95,6 +99,8 @@ export default function Home() {
       gainXP(8);
       return { ...prev, happy: Math.min(100, prev.happy + 25) };
     });
+    setCooldown(true);
+    setTimeout(() => setCooldown(false), 3000);
   };
 
   const revive = () => {
@@ -181,16 +187,28 @@ export default function Home() {
   const useCooldown = (action: () => void) => {
     if (cooldown) return;
     action();
-    setCooldown(true);
-    setTimeout(() => setCooldown(false), 3000);
+    // Cooldown removido de aqui pois está na função work()
   };
 
+  // Ganho passivo de moedas a cada 5 segundos
+  useEffect(() => {
+    const passiveInterval = setInterval(() => {
+      setState((prev) => {
+        if (!prev.alive) return prev;
+        return { ...prev, coins: prev.coins + 3 };
+      });
+    }, 5000); // A cada 5 segundos
+
+    return () => clearInterval(passiveInterval);
+  }, []);
+
   const handleAdminClick = () => {
-    const pass = prompt("Senha:");
+    const pass = window.prompt("Senha:");
+    if (pass === null) return; // Usuário cancelou
     if (pass === "capivarassaomuitofofas404") {
       setShowAdminPanel(true);
     } else {
-      alert("❌ negado");
+      window.alert("❌ Senha incorreta!");
     }
   };
 
