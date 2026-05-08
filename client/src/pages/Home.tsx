@@ -687,9 +687,15 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => applyAdminCommand("removeCoins")}
-                    className="w-full bg-purple-700 hover:bg-purple-800 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-purple-700 hover:bg-purple-800 text-white py-1 rounded text-xs font-semibold transition mb-1"
                   >
                     ➖ Remover Moedas
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("setCoins")}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    💰 Setar Moedas (valor)
                   </button>
 
                   <button
@@ -700,9 +706,15 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => applyAdminCommand("removeLevel")}
-                    className="w-full bg-indigo-700 hover:bg-indigo-800 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-indigo-700 hover:bg-indigo-800 text-white py-1 rounded text-xs font-semibold transition mb-1"
                   >
                     ⬇️ -1 Nível
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("setLevel")}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    ⭐ Setar Level (valor)
                   </button>
 
                   <button
