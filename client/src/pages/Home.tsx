@@ -490,7 +490,7 @@ export default function Home() {
             <div>💰 Moedas: <span className="font-bold">{state.coins}</span></div>
             <div>⭐ Nível: <span className="font-bold">{state.level}</span></div>
             <div>📊 XP: <span className="font-bold">{state.xp}/100</span></div>
-            <div>🍔 Comida: <span className="font-bold">{state.food}</span></div>
+            <div>🍔 Comida Total: <span className="font-bold">{state.food}</span></div>
             <div>💩 Coco: <span className="font-bold">{Math.floor(state.poop)}</span></div>
           </div>
 
