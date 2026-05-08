@@ -23,6 +23,7 @@ export default function Home() {
   const [selectedFood, setSelectedFood] = useState(0);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showShop, setShowShop] = useState(false);
+  const [godMode, setGodMode] = useState(false);
 
   const foods = [
     { name: "🌱 grama", poop: 0, cost: 2 },
@@ -202,6 +203,12 @@ export default function Home() {
     return () => clearInterval(passiveInterval);
   }, []);
 
+  // Função para exibir ∞ quando o valor é infinito
+  const displayValue = (value: number, maxValue: number = 100) => {
+    if (value >= maxValue) return "∞";
+    return value.toString();
+  };
+
   const handleAdminClick = () => {
     const pass = window.prompt("Senha:");
     if (pass === null) return; // Usuário cancelou
@@ -247,6 +254,92 @@ export default function Home() {
         updated.level = Math.max(1, updated.level - askNum("quantos?"));
       if (cmd === "setLevel")
         updated.level = Math.max(1, askNum("valor"));
+
+      if (cmd === "∞coins") {
+        updated.coins = 999999;
+        setMessage("💰 Moedas = ∞");
+      }
+      if (cmd === "∞happy") {
+        updated.happy = 100;
+        setMessage("😊 Felicidade = ∞");
+      }
+      if (cmd === "∞hunger") {
+        updated.hunger = 100;
+        setMessage("🍽️ Fome = ∞");
+      }
+      if (cmd === "∞level") {
+        updated.level = 999;
+        setMessage("⭐ Level = ∞");
+      }
+      if (cmd === "∞xp") {
+        updated.xp = 99;
+        setMessage("📊 XP = ∞");
+      }
+      if (cmd === "∞food") {
+        updated.food = 999;
+        setMessage("🍔 Comida = ∞");
+      }
+
+      if (cmd === "-∞coins") {
+        updated.coins = 0;
+        setMessage("💰 Moedas removidas");
+      }
+      if (cmd === "-∞happy") {
+        updated.happy = 50;
+        setMessage("😊 Felicidade removida");
+      }
+      if (cmd === "-∞hunger") {
+        updated.hunger = 50;
+        setMessage("🍽️ Fome removida");
+      }
+      if (cmd === "-∞level") {
+        updated.level = 1;
+        setMessage("⭐ Level removido");
+      }
+      if (cmd === "-∞xp") {
+        updated.xp = 0;
+        setMessage("📊 XP removido");
+      }
+      if (cmd === "-∞food") {
+        updated.food = 0;
+        setMessage("🍔 Comida removida");
+      }
+
+      if (cmd === "-∞all") {
+        updated.coins = 0;
+        updated.happy = 50;
+        updated.hunger = 50;
+        updated.level = 1;
+        updated.xp = 0;
+        updated.food = 0;
+        setMessage("🔄 Todos os infinitos removidos");
+      }
+
+      if (cmd === "godmode") {
+        updated.coins = 999999;
+        updated.happy = 100;
+        updated.hunger = 100;
+        updated.level = 999;
+        updated.xp = 99;
+        updated.food = 999;
+        updated.sus = 0;
+        updated.poop = 0;
+        setGodMode(true);
+        setMessage("👻 GOD MODE ATIVADO!");
+      }
+
+      if (cmd === "normal") {
+        updated.coins = 0;
+        updated.happy = 50;
+        updated.hunger = 50;
+        updated.level = 1;
+        updated.xp = 0;
+        updated.food = 0;
+        updated.sus = 0;
+        updated.poop = 1;
+        setGodMode(false);
+        setMessage("😄 Modo Normal ativado");
+      }
 
       if (cmd === "RESET") {
         const c = prompt("Escreva reset para confirmar");
@@ -306,7 +399,10 @@ export default function Home() {
         if (!prev.alive) return prev;
 
         let updated = { ...prev };
-        updated.poop += 0.05;
+        // Não aumenta cocô em god mode
+        if (!godMode) {
+          updated.poop += 0.05;
+        }
         updated.hunger = Math.max(0, updated.hunger - 0.05);
         updated.happy = Math.max(0, updated.happy - 0.03);
         updated.sus = Math.max(0, updated.sus - 0.02);
@@ -326,7 +422,7 @@ export default function Home() {
     }, 50);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [godMode]);
 
   // Draw loop
   useEffect(() => {
@@ -505,10 +601,10 @@ export default function Home() {
 
         <div className="bg-white rounded-lg p-6 shadow-lg w-80">
           <div className="space-y-2 mb-4 text-sm">
-            <div>💰 Moedas: <span className="font-bold">{state.coins}</span></div>
-            <div>⭐ Nível: <span className="font-bold">{state.level}</span></div>
-            <div>📊 XP: <span className="font-bold">{state.xp}/100</span></div>
-            <div>🍔 Comida Total: <span className="font-bold">{state.food}</span></div>
+            <div>💰 Moedas: <span className="font-bold">{displayValue(state.coins, 999999)}</span></div>
+            <div>⭐ Nível: <span className="font-bold">{displayValue(state.level, 999)}</span></div>
+            <div>📊 XP: <span className="font-bold">{state.xp >= 99 ? "∞" : state.xp}/100</span></div>
+            <div>🍔 Comida Total: <span className="font-bold">{displayValue(state.food, 999)}</span></div>
             <div>💩 Coco: <span className="font-bold">{Math.floor(state.poop)}</span></div>
           </div>
 
@@ -642,7 +738,15 @@ export default function Home() {
           {showAdminPanel && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto">
-                <h2 className="text-2xl font-bold mb-4">⚙️ Painel Admin</h2>
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold">⚙️ Painel Admin</h2>
+                  <button
+                    onClick={() => setShowAdminPanel(false)}
+                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
 
                 <div className="space-y-2 mb-6">
                   <button
@@ -736,10 +840,104 @@ export default function Home() {
                   </button>
 
                   <button
+                    onClick={() => applyAdminCommand("∞coins")}
+                    className="w-full bg-purple-500 hover:bg-purple-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    💰 Moedas = ∞
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("∞happy")}
+                    className="w-full bg-pink-500 hover:bg-pink-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    😊 Felicidade = ∞
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("∞hunger")}
+                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    🍽️ Fome = ∞
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("∞level")}
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ⭐ Level = ∞
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("∞xp")}
+                    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    📊 XP = ∞
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("∞food")}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    🍔 Comida = ∞
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("-∞coins")}
+                    className="w-full bg-purple-400 hover:bg-purple-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ❌ Remover ∞ Moedas
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-∞happy")}
+                    className="w-full bg-pink-400 hover:bg-pink-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ❌ Remover ∞ Felicidade
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-∞hunger")}
+                    className="w-full bg-orange-400 hover:bg-orange-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ❌ Remover ∞ Fome
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-∞level")}
+                    className="w-full bg-blue-400 hover:bg-blue-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ❌ Remover ∞ Level
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-∞xp")}
+                    className="w-full bg-cyan-400 hover:bg-cyan-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ❌ Remover ∞ XP
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("-∞food")}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    ❌ Remover ∞ Comida
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("-∞all")}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    🔄 Remover ∞ Todos
+                  </button>
+
+                  <button
+                    onClick={() => applyAdminCommand("godmode")}
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    👻 GOD MODE
+                  </button>
+                  <button
+                    onClick={() => applyAdminCommand("normal")}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                  >
+                    😄 Modo Normal
+                  </button>
+
+                  <button
                     onClick={() => applyAdminCommand("RESET")}
                     className="w-full bg-gray-600 hover:bg-gray-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
-                    🔄 Reset Jogo
+                    🔄 RESET
                   </button>
                 </div>
 
