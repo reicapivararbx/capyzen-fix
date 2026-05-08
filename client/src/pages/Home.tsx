@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 
 export default function Home() {
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
@@ -62,6 +63,7 @@ export default function Home() {
   const [minigameType, setMinigameType] = useState("");
   const [showCustomize, setShowCustomize] = useState(false);
   const [playerName, setPlayerName] = useState(() => localStorage.getItem("capyzen_player_name") || "Anônimo");
+  const [minigameCooldown, setMinigameCooldown] = useState(false);
 
   // Salvar estado no localStorage
   useEffect(() => {
@@ -223,7 +225,7 @@ export default function Home() {
       playSound("eat");
       gainXP(3);
       const newFood = prev.food - 1;
-      const newPoop = Math.min(100, prev.poop + food.poop);
+      const newPoop = godMode ? 0 : Math.min(100, prev.poop + food.poop);
       const newHunger = Math.min(100, prev.hunger + 30);
       const newState = { ...prev, food: newFood, poop: newPoop, hunger: newHunger, coins: prev.coins + 1, totalScore: prev.totalScore + 3 };
       checkAchievements(newState);
@@ -302,6 +304,10 @@ export default function Home() {
   };
 
   const completeMinigame = (reward: number) => {
+    if (minigameCooldown) {
+      setMessage("⏱️ Aguarde 1 minuto para jogar novamente!");
+      return;
+    }
     setState((prev: any) => {
       const newState = { ...prev, coins: prev.coins + reward, totalScore: prev.totalScore + reward };
       checkAchievements(newState);
@@ -310,6 +316,8 @@ export default function Home() {
     setMessage(`🎮 Minigame completo! +${reward} moedas`);
     playSound("levelup");
     setShowMinigame(false);
+    setMinigameCooldown(true);
+    setTimeout(() => setMinigameCooldown(false), 60000);
   };
 
   const handleAdminClick = () => {
@@ -482,16 +490,37 @@ export default function Home() {
     try {
       const emailContent = `Bug Report:\n${bugText}\n\nGame State: ${JSON.stringify(state)}\nTimestamp: ${new Date().toISOString()}`;
       
-      // Usar mailto como fallback
-      const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=CapyZen Bug Report&body=${encodeURIComponent(emailContent)}`;
-      window.location.href = mailtoLink;
-      
-      setMessage("✅ Email de bug aberto! Envie para confirmar.");
-      setBugText("");
-      setShowBugReport(false);
+      // Tentar enviar via API backend
+      const response = await fetch('/api/send-bug-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: 'maio123232222222111@gmail.com',
+          subject: 'CapyZen Bug Report',
+          message: emailContent,
+          playerName: playerName || 'Anônimo'
+        })
+      });
+
+      if (response.ok) {
+        setMessage("✅ Bug reportado com sucesso!");
+        setBugText("");
+        setShowBugReport(false);
+      } else {
+        // Fallback para mailto se API falhar
+        const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=CapyZen Bug Report&body=${encodeURIComponent(emailContent)}`;
+        window.location.href = mailtoLink;
+        setMessage("✅ Abrindo cliente de email...");
+      }
     } catch (error) {
       console.error(error);
-      setMessage("❌ Erro ao enviar bug!");
+      // Fallback para mailto
+      const emailContent = `Bug Report:\n${bugText}\n\nGame State: ${JSON.stringify(state)}\nTimestamp: ${new Date().toISOString()}`;
+      const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=CapyZen Bug Report&body=${encodeURIComponent(emailContent)}`;
+      window.location.href = mailtoLink;
+      setMessage("✅ Abrindo cliente de email...");
     }
   };
 
