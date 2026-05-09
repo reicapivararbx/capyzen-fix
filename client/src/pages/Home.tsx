@@ -5,6 +5,14 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
+  // Login state
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("capyzen_logged_in") === "true";
+  });
+  const [loginUsername, setLoginUsername] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+
   // Carregar estado do localStorage
   const [state, setState] = useState(() => {
     const saved = localStorage.getItem("capyzen_state");
@@ -753,6 +761,79 @@ export default function Home() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  // Funcao de login
+  const handleLogin = () => {
+    if (loginUsername === "apenas_umusuario" && loginPassword === "queriatestarojogo") {
+      setIsLoggedIn(true);
+      localStorage.setItem("capyzen_logged_in", "true");
+      setLoginError("");
+      setLoginUsername("");
+      setLoginPassword("");
+    } else {
+      setLoginError("Usuario ou senha incorretos!");
+    }
+  };
+
+  // Funcao de logout
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("capyzen_logged_in");
+    setLoginUsername("");
+    setLoginPassword("");
+    setLoginError("");
+  };
+
+  // Se nao esta logado, mostrar tela de login
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 p-4 flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 shadow-lg w-full max-w-md">
+          <h1 className="text-3xl font-bold text-center mb-2 text-blue-600">Capyzen</h1>
+          <p className="text-center text-gray-600 mb-6">Bem-vindo ao jogo da capivara!</p>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold mb-2">Usuario:</label>
+              <input
+                type="text"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Digite seu usuario"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold mb-2">Senha:</label>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Digite sua senha"
+              />
+            </div>
+            
+            {loginError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
+                {loginError}
+              </div>
+            )}
+            
+            <button
+              onClick={handleLogin}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition"
+            >
+              Entrar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 p-4">
       <div className="flex gap-6 flex-wrap justify-center">
@@ -896,6 +977,12 @@ export default function Home() {
                 ✨ Reviver
               </button>
             )}
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded font-semibold transition"
+            >
+              🚪 Sair
+            </button>
           </div>
 
           {/* Shop */}
