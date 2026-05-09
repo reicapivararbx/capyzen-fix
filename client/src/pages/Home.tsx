@@ -329,14 +329,17 @@ export default function Home() {
     }
     const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog"];
     const foodName = foodNames[selectedFood];
-    setState((prev: any) => ({
-      ...prev,
-      coins: prev.coins - food.cost,
-      inventory: {
-        ...prev.inventory,
-        [foodName]: (prev.inventory[foodName] || 0) + 1,
-      },
-    }));
+    setState((prev: any) => {
+      const inv = prev.inventory || {};
+      return {
+        ...prev,
+        coins: prev.coins - food.cost,
+        inventory: {
+          ...inv,
+          [foodName]: (inv[foodName] || 0) + 1,
+        },
+      };
+    });
     setMessage(`✅ Comprou ${food.name}`);
     playSound("work");
   };
