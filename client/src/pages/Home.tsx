@@ -255,32 +255,32 @@ export default function Home() {
   };
 
   const foods = [
-    { name: "🌱 Grama", poop: 0, cost: 2 },
-    { name: "🥔 Batata", poop: 2, cost: 3 },
-    { name: "🍔 Hamburger", poop: 5, cost: 5 },
-    { name: "🥤 Refri", poop: 20, cost: 8 },
-    { name: "🫘 Feijão", poop: 10, cost: 4 },
-    { name: "🌭 Hotdog", poop: 7, cost: 6 },
-    { name: "🍕 Pizza", poop: 12, cost: 10 },
-    { name: "🍣 Sushi", poop: 3, cost: 15 },
-    { name: "🌮 Tacos", poop: 8, cost: 7 },
-    { name: "🍦 Sorvete", poop: 15, cost: 9 },
-    { name: "🎂 Bolo", poop: 18, cost: 12 },
-    { name: "🍫 Chocolate", poop: 14, cost: 8 },
-    { name: "🍎 Maçã", poop: 1, cost: 2 },
-    { name: "🍌 Banana", poop: 2, cost: 2 },
-    { name: "🍉 Melancia", poop: 3, cost: 4 },
-    { name: "🍓 Morango", poop: 1, cost: 5 },
-    { name: "🍇 Uva", poop: 2, cost: 3 },
-    { name: "🥕 Cenoura", poop: 1, cost: 2 },
-    { name: "🥦 Brócolis", poop: 4, cost: 3 },
-    { name: "🥬 Espinafre", poop: 3, cost: 2 },
-    { name: "🍅 Tomate", poop: 2, cost: 2 },
-    { name: "🧀 Queijo", poop: 6, cost: 5 },
-    { name: "🥛 Iogurte", poop: 4, cost: 4 },
-    { name: "🥛 Leite", poop: 3, cost: 3 },
-    { name: "🍞 Pão", poop: 5, cost: 3 },
-    { name: "🍚 Arroz", poop: 8, cost: 4 },
+    { name: "🌱 Grama", poop: 0, hunger: 10, cost: 2 },
+    { name: "🥔 Batata", poop: 2, hunger: 15, cost: 3 },
+    { name: "🍔 Hamburger", poop: 5, hunger: 25, cost: 5 },
+    { name: "🥤 Refri", poop: 20, hunger: 5, cost: 8 },
+    { name: "🫘 Feijão", poop: 10, hunger: 20, cost: 4 },
+    { name: "🌭 Hotdog", poop: 7, hunger: 22, cost: 6 },
+    { name: "🍕 Pizza", poop: 12, hunger: 30, cost: 10 },
+    { name: "🍣 Sushi", poop: 3, hunger: 18, cost: 15 },
+    { name: "🌮 Tacos", poop: 8, hunger: 24, cost: 7 },
+    { name: "🍦 Sorvete", poop: 15, hunger: 12, cost: 9 },
+    { name: "🎂 Bolo", poop: 18, hunger: 20, cost: 12 },
+    { name: "🍫 Chocolate", poop: 14, hunger: 8, cost: 8 },
+    { name: "🍎 Maçã", poop: 1, hunger: 8, cost: 2 },
+    { name: "🍌 Banana", poop: 2, hunger: 12, cost: 2 },
+    { name: "🍉 Melancia", poop: 3, hunger: 15, cost: 4 },
+    { name: "🍓 Morango", poop: 1, hunger: 10, cost: 5 },
+    { name: "🍇 Uva", poop: 2, hunger: 10, cost: 3 },
+    { name: "🥕 Cenoura", poop: 1, hunger: 12, cost: 2 },
+    { name: "🥦 Brócolis", poop: 4, hunger: 14, cost: 3 },
+    { name: "🥬 Espinafre", poop: 3, hunger: 13, cost: 2 },
+    { name: "🍅 Tomate", poop: 2, hunger: 11, cost: 2 },
+    { name: "🧀 Queijo", poop: 6, hunger: 16, cost: 5 },
+    { name: "🥛 Iogurte", poop: 4, hunger: 14, cost: 4 },
+    { name: "🥛 Leite", poop: 3, hunger: 13, cost: 3 },
+    { name: "🍞 Pão", poop: 5, hunger: 18, cost: 3 },
+    { name: "🍚 Arroz", poop: 8, hunger: 20, cost: 4 },
   ];
 
   const games = [
@@ -441,11 +441,11 @@ export default function Home() {
         return prev;
       }
       const food = foods[selectedFood];
-      setMessage(`🍔 comeu ${food.name}! +1 moeda`);
+      setMessage(`🍔 comeu ${food.name}! +${food.poop} 💩, +${food.hunger} 🍽️`);
       playSound("eat");
       gainXP(3);
       const newPoop = godMode ? 0 : Math.min(100, prev.poop + food.poop);
-      const newHunger = Math.min(100, prev.hunger + 30);
+      const newHunger = Math.min(100, prev.hunger + food.hunger);
       const newState = {
         ...prev,
         poop: newPoop,
@@ -1059,17 +1059,20 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">🛒 Loja</h2>
             <div className="space-y-2 mb-4">
               {foods.map((f, i) => (
-                <div key={i} className="flex justify-between items-center p-3 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl border-2 border-pink-300">
-                  <span className="font-bold text-sm">{f.name} - {f.cost} 💰</span>
-                  <button
-                    onClick={() => {
-                      setSelectedFood(i);
-                      buyFood();
-                    }}
-                    className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white px-3 py-1 rounded-lg text-sm font-bold transition transform hover:scale-105"
-                  >
-                    Comprar
-                  </button>
+                <div key={i} className="p-3 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl border-2 border-pink-300">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-sm">{f.name} - {f.cost} 💰</span>
+                    <button
+                      onClick={() => {
+                        setSelectedFood(i);
+                        buyFood();
+                      }}
+                      className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white px-3 py-1 rounded-lg text-xs font-bold transition transform hover:scale-105"
+                    >
+                      Comprar
+                    </button>
+                  </div>
+                  <div className="text-xs text-gray-700">💩 +{f.poop} | 🍽️ +{f.hunger}</div>
                 </div>
               ))}
             </div>
