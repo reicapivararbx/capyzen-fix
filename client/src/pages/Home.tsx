@@ -5,17 +5,23 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  // Login state
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("capyzen_logged_in") === "true";
+  // User system
+  const [currentUser, setCurrentUser] = useState<{ username: string; password: string } | null>(() => {
+    const saved = localStorage.getItem("capyzen_current_user");
+    return saved ? JSON.parse(saved) : null;
   });
   const [loginUsername, setLoginUsername] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [createUsername, setCreateUsername] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [createError, setCreateError] = useState("");
 
   // Carregar estado do localStorage
   const [state, setState] = useState(() => {
-    const saved = localStorage.getItem("capyzen_state");
+    const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
+    const saved = localStorage.getItem(userKey);
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -41,6 +47,7 @@ export default function Home() {
       speed: 3,
       alive: true,
       capyColor: "#8B6914",
+      capySize: 1,
       totalScore: 0,
       inventory: {
         grama: 0,
@@ -55,7 +62,8 @@ export default function Home() {
 
   // Achievements
   const [achievements, setAchievements] = useState(() => {
-    const saved = localStorage.getItem("capyzen_achievements");
+    const userKey = currentUser ? `capyzen_achievements_${currentUser.username}` : "capyzen_achievements";
+    const saved = localStorage.getItem(userKey);
     return saved ? JSON.parse(saved) : {};
   });
 
@@ -69,7 +77,8 @@ export default function Home() {
   const [susCooldown, setSusCooldown] = useState(false);
   const [message, setMessage] = useState("Oi! Clique em 'Trabalhar' para ganhar moedas!");
   const [selectedFood, setSelectedFood] = useState(() => {
-    const saved = localStorage.getItem("capyzen_selected_food");
+    const userKey = currentUser ? `capyzen_selected_food_${currentUser.username}` : "capyzen_selected_food";
+    const saved = localStorage.getItem(userKey);
     return saved ? Number(saved) : 0;
   });
   const [showAdminPanel, setShowAdminPanel] = useState(false);
@@ -81,28 +90,42 @@ export default function Home() {
   const [showMinigame, setShowMinigame] = useState(false);
   const [minigameType, setMinigameType] = useState("");
   const [showCustomize, setShowCustomize] = useState(false);
-  const [playerName, setPlayerName] = useState(() => localStorage.getItem("capyzen_player_name") || "Anônimo");
+  const [playerName, setPlayerName] = useState(() => {
+    const userKey = currentUser ? `capyzen_player_name_${currentUser.username}` : "capyzen_player_name";
+    return localStorage.getItem(userKey) || "Anônimo";
+  });
   const [minigameCooldown, setMinigameCooldown] = useState(false);
+  const [adminPassword, setAdminPassword] = useState("");
+  const [showAdminPasswordPrompt, setShowAdminPasswordPrompt] = useState(false);
 
   // Salvar estado no localStorage
   useEffect(() => {
-    localStorage.setItem("capyzen_state", JSON.stringify(state));
-  }, [state]);
+    const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
+    localStorage.setItem(userKey, JSON.stringify(state));
+  }, [state, currentUser]);
 
   // Salvar comida selecionada
   useEffect(() => {
-    localStorage.setItem("capyzen_selected_food", String(selectedFood));
-  }, [selectedFood]);
+    const userKey = currentUser ? `capyzen_selected_food_${currentUser.username}` : "capyzen_selected_food";
+    localStorage.setItem(userKey, String(selectedFood));
+  }, [selectedFood, currentUser]);
 
   // Salvar achievements
   useEffect(() => {
-    localStorage.setItem("capyzen_achievements", JSON.stringify(achievements));
-  }, [achievements]);
+    const userKey = currentUser ? `capyzen_achievements_${currentUser.username}` : "capyzen_achievements";
+    localStorage.setItem(userKey, JSON.stringify(achievements));
+  }, [achievements, currentUser]);
 
   // Salvar leaderboard
   useEffect(() => {
     localStorage.setItem("capyzen_leaderboard", JSON.stringify(leaderboard));
   }, [leaderboard]);
+
+  // Salvar player name
+  useEffect(() => {
+    const userKey = currentUser ? `capyzen_player_name_${currentUser.username}` : "capyzen_player_name";
+    localStorage.setItem(userKey, playerName);
+  }, [playerName, currentUser]);
 
   // Função para tocar sons
   const playSound = (type: "eat" | "work" | "levelup" | "achievement") => {
@@ -199,26 +222,207 @@ export default function Home() {
     { name: "🌭 hotdog", poop: 7, cost: 6 },
   ];
 
-  const capyColors = [
-    { name: "Marrom", color: "#8B6914" },
-    { name: "Dourado", color: "#FFD700" },
-    { name: "Cinza", color: "#808080" },
-    { name: "Vermelho", color: "#DC143C" },
-    { name: "Verde", color: "#228B22" },
-    { name: "Azul", color: "#4169E1" },
+  const games = [
+    { name: "🎮 Brawl Stars", minLevel: 1, cost: 10, reward: 50 },
+    { name: "🎮 Roblox", minLevel: 3, cost: 15, reward: 75 },
+    { name: "🎮 Gacha Life", minLevel: 5, cost: 20, reward: 100 },
+    { name: "🎮 Minecraft", minLevel: 2, cost: 12, reward: 60 },
+    { name: "🎮 Fortnite", minLevel: 4, cost: 18, reward: 85 },
+    { name: "🎮 Among Us", minLevel: 1, cost: 8, reward: 40 },
+    { name: "🎮 Clash Royale", minLevel: 6, cost: 25, reward: 120 },
+    { name: "🎮 Candy Crush", minLevel: 2, cost: 10, reward: 55 },
   ];
+
+  // Funções de login/registro
+  const handleLogin = () => {
+    if (loginUsername === "root" && loginPassword === "root") {
+      setCurrentUser({ username: loginUsername, password: loginPassword });
+      localStorage.setItem("capyzen_current_user", JSON.stringify({ username: loginUsername, password: loginPassword }));
+      setLoginError("");
+      setLoginUsername("");
+      setLoginPassword("");
+    } else {
+      setLoginError("Usuário ou senha incorretos!");
+    }
+  };
+
+  const handleCreateUser = () => {
+    if (!createUsername.trim()) {
+      setCreateError("Nome de usuário não pode estar vazio!");
+      return;
+    }
+    if (!createPassword.trim()) {
+      setCreateError("Senha não pode estar vazia!");
+      return;
+    }
+    if (createPassword.length < 3) {
+      setCreateError("Senha deve ter pelo menos 3 caracteres!");
+      return;
+    }
+
+    // Verificar se usuário já existe
+    const users = JSON.parse(localStorage.getItem("capyzen_users") || "[]");
+    if (users.find((u: any) => u.username === createUsername)) {
+      setCreateError("Usuário já existe!");
+      return;
+    }
+
+    // Criar novo usuário
+    users.push({ username: createUsername, password: createPassword });
+    localStorage.setItem("capyzen_users", JSON.stringify(users));
+
+    setCurrentUser({ username: createUsername, password: createPassword });
+    localStorage.setItem("capyzen_current_user", JSON.stringify({ username: createUsername, password: createPassword }));
+    setCreateError("");
+    setCreateUsername("");
+    setCreatePassword("");
+    setIsCreatingUser(false);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem("capyzen_current_user");
+    setLoginUsername("");
+    setLoginPassword("");
+    setLoginError("");
+  };
+
+  const handleAdminClick = () => {
+    setShowAdminPasswordPrompt(true);
+  };
+
+  const handleAdminPasswordSubmit = () => {
+    if (adminPassword === "capivarassaomuitofofas404") {
+      setShowAdminPanel(true);
+      setShowAdminPasswordPrompt(false);
+      setAdminPassword("");
+    } else {
+      setLoginError("Senha de admin incorreta!");
+      setAdminPassword("");
+    }
+  };
+
+  // Se não está logado, mostrar tela de login
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 p-4 flex items-center justify-center">
+        <div className="bg-white rounded-lg p-8 shadow-lg w-full max-w-md">
+          <h1 className="text-3xl font-bold text-center mb-2 text-blue-600">Capyzen</h1>
+          <p className="text-center text-gray-600 mb-6">Bem-vindo ao jogo da capivara!</p>
+
+          {!isCreatingUser ? (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-2">Usuário:</label>
+                <input
+                  type="text"
+                  value={loginUsername}
+                  onChange={(e) => setLoginUsername(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Digite seu usuário"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2">Senha:</label>
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Digite sua senha"
+                />
+              </div>
+
+              {loginError && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
+                  {loginError}
+                </div>
+              )}
+
+              <button
+                onClick={handleLogin}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition"
+              >
+                Entrar
+              </button>
+
+              <button
+                onClick={() => setIsCreatingUser(true)}
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold transition"
+              >
+                Criar Usuário
+              </button>
+
+              <p className="text-center text-xs text-gray-600 mt-4">
+                Usuário de teste: <strong>root</strong> / Senha: <strong>root</strong>
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold mb-2">Novo Usuário:</label>
+                <input
+                  type="text"
+                  value={createUsername}
+                  onChange={(e) => setCreateUsername(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Escolha um usuário"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2">Senha:</label>
+                <input
+                  type="password"
+                  value={createPassword}
+                  onChange={(e) => setCreatePassword(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Escolha uma senha"
+                />
+              </div>
+
+              {createError && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
+                  {createError}
+                </div>
+              )}
+
+              <button
+                onClick={handleCreateUser}
+                className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold transition"
+              >
+                Criar Conta
+              </button>
+
+              <button
+                onClick={() => setIsCreatingUser(false)}
+                className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold transition"
+              >
+                Voltar
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   const gainXP = (v: number) => {
     setState((prev: any) => {
       let newXp = prev.xp + v;
       let newLevel = prev.level;
+      let newSize = prev.capySize;
       while (newXp >= 100) {
         newXp -= 100;
         newLevel++;
+        newSize += 0.15;
         setMessage("⭐ LEVEL UP!");
         playSound("levelup");
       }
-      const newState = { ...prev, xp: newXp, level: newLevel, totalScore: prev.totalScore + v };
+      const newState = { ...prev, xp: newXp, level: newLevel, capySize: newSize, totalScore: prev.totalScore + v };
       checkAchievements(newState);
       return newState;
     });
@@ -244,7 +448,7 @@ export default function Home() {
       const foodName = foodNames[selectedFood];
       const inv = prev.inventory || {};
       const foodCount = (inv && inv[foodName]) || 0;
-      
+
       if (!prev.alive || foodCount <= 0) {
         setMessage("🍔 sem comida!");
         return prev;
@@ -255,11 +459,11 @@ export default function Home() {
       gainXP(3);
       const newPoop = godMode ? 0 : Math.min(100, prev.poop + food.poop);
       const newHunger = Math.min(100, prev.hunger + 30);
-      const newState = { 
-        ...prev, 
-        poop: newPoop, 
-        hunger: newHunger, 
-        coins: prev.coins + 1, 
+      const newState = {
+        ...prev,
+        poop: newPoop,
+        hunger: newHunger,
+        coins: prev.coins + 1,
         totalScore: prev.totalScore + 3,
         inventory: {
           ...prev.inventory,
@@ -278,44 +482,38 @@ export default function Home() {
         setMessage("💩 já limpinho!");
         return prev;
       }
-      setMessage("🚽 foi ao banheiro");
-      playSound("eat");
-      gainXP(5);
-      return { ...prev, poop: Math.max(0, prev.poop - 50), totalScore: prev.totalScore + 5 };
+      setMessage("🚽 usou banheiro!");
+      playSound("work");
+      gainXP(2);
+      const newState = { ...prev, poop: 0, totalScore: prev.totalScore + 2 };
+      checkAchievements(newState);
+      return newState;
     });
     setCooldown(true);
-    setTimeout(() => setCooldown(false), 3000);
+    setTimeout(() => setCooldown(false), 5000);
   };
 
   const giveAffection = () => {
     setState((prev: any) => {
       if (!prev.alive) return prev;
-      setMessage("❤️ capivara feliz!");
+      setMessage("❤️ recebeu carinho!");
       playSound("eat");
-      gainXP(8);
-      return { ...prev, happy: Math.min(100, prev.happy + 25), totalScore: prev.totalScore + 8 };
+      gainXP(4);
+      const newState = { ...prev, happy: Math.min(100, prev.happy + 25), totalScore: prev.totalScore + 4 };
+      checkAchievements(newState);
+      return newState;
     });
     setCooldown(true);
-    setTimeout(() => setCooldown(false), 3000);
+    setTimeout(() => setCooldown(false), 5000);
   };
 
   const revive = () => {
-    // Salvar score no leaderboard
-    const newScore = { name: playerName, score: state.totalScore, level: state.level, date: new Date().toLocaleDateString() };
-    const newLeaderboard = [...leaderboard, newScore].sort((a: any, b: any) => b.score - a.score).slice(0, 10);
-    setLeaderboard(newLeaderboard);
-
     setState((prev: any) => ({
       ...prev,
       alive: true,
       hunger: 100,
       happy: 100,
       poop: 0,
-      totalScore: 0,
-      level: 1,
-      xp: 0,
-      coins: 0,
-      food: 0,
     }));
     setMessage("✨ Revivido!");
     playSound("levelup");
@@ -361,45 +559,43 @@ export default function Home() {
     });
     setMessage(`🎮 Minigame completo! +${reward} moedas`);
     playSound("levelup");
-    setShowMinigame(false);
     setMinigameCooldown(true);
     setTimeout(() => setMinigameCooldown(false), 60000);
+    setShowMinigame(false);
   };
 
-  const handleAdminClick = () => {
-    const pass = window.prompt("Senha:");
-    if (pass === null) return;
-    if (pass === "capivarassaomuitofofas404") {
-      setShowAdminPanel(true);
-    } else {
-      window.alert("❌ Senha incorreta!");
+  const playGame = (gameIndex: number) => {
+    const game = games[gameIndex];
+    if (state.level < game.minLevel) {
+      setMessage(`🎮 Precisa estar no nível ${game.minLevel} para jogar!`);
+      return;
     }
+    if (state.coins < game.cost) {
+      setMessage(`💰 Precisa de ${game.cost} moedas!`);
+      return;
+    }
+    setState((prev: any) => ({
+      ...prev,
+      coins: prev.coins - game.cost,
+    }));
+    completeMinigame(game.reward);
   };
 
   const applyAdminCommand = (cmd: string) => {
-    if (!cmd) return;
-
-    const askNum = (t: string) => {
-      let n = Number(prompt(t));
-      return isNaN(n) ? 0 : Math.max(0, n);
-    };
-
     setState((prev: any) => {
       let updated = { ...prev };
+
+      if (cmd === "+coins") updated.coins = Math.min(999999, updated.coins + 100);
+      if (cmd === "-coins") updated.coins = Math.max(0, updated.coins - 100);
 
       if (cmd === "+happy") updated.happy = Math.min(100, updated.happy + 20);
       if (cmd === "-happy") updated.happy = Math.max(0, updated.happy - 20);
 
-      if (cmd === "+hunger")
-        updated.hunger = Math.min(100, updated.hunger + 20);
-      if (cmd === "-hunger")
-        updated.hunger = Math.max(0, updated.hunger - 20);
+      if (cmd === "+hunger") updated.hunger = Math.min(100, updated.hunger + 20);
+      if (cmd === "-hunger") updated.hunger = Math.max(0, updated.hunger - 20);
 
       if (cmd === "+sus") updated.sus = Math.min(100, updated.sus + 20);
-      if (cmd === "-sus") {
-        setMessage("✅ Sus removido");
-        updated.sus = 0;
-      }
+      if (cmd === "-sus") updated.sus = Math.max(0, updated.sus - 20);
 
       if (cmd === "+poop") updated.poop = Math.min(100, updated.poop + 20);
       if (cmd === "-poop") updated.poop = Math.max(0, updated.poop - 20);
@@ -459,16 +655,6 @@ export default function Home() {
         setMessage("🍔 Comida removida");
       }
 
-      if (cmd === "-∞all") {
-        updated.coins = 0;
-        updated.happy = 50;
-        updated.hunger = 50;
-        updated.level = 1;
-        updated.xp = 0;
-        updated.food = 0;
-        setMessage("🔄 Todos os infinitos removidos");
-      }
-
       if (cmd === "godmode") {
         updated.coins = 999999;
         updated.happy = 100;
@@ -512,7 +698,16 @@ export default function Home() {
             speed: 3,
             alive: true,
             capyColor: "#8B6914",
+            capySize: 1,
             totalScore: 0,
+            inventory: {
+              grama: 0,
+              batata: 0,
+              hamburger: 0,
+              refri: 0,
+              feijao: 0,
+              hotdog: 0,
+            },
           };
           setMessage("🔄 RESETADO!");
         }
@@ -520,6 +715,11 @@ export default function Home() {
 
       return updated;
     });
+  };
+
+  const askNum = (msg: string) => {
+    const ans = prompt(msg);
+    return ans ? parseInt(ans) : 0;
   };
 
   const displayValue = (value: number, maxValue: number = 100) => {
@@ -532,92 +732,11 @@ export default function Home() {
       alert("Por favor, descreva o bug!");
       return;
     }
-
-    try {
-      const emailContent = `Bug Report:\n${bugText}\n\nGame State: ${JSON.stringify(state)}\nTimestamp: ${new Date().toISOString()}`;
-      
-      // Tentar enviar via API backend
-      const response = await fetch('/api/send-bug-report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: 'maio123232222222111@gmail.com',
-          subject: 'CapyZen Bug Report',
-          message: emailContent,
-          playerName: playerName || 'Anônimo'
-        })
-      });
-
-      if (response.ok) {
-        setMessage("✅ Bug reportado com sucesso!");
-        setBugText("");
-        setShowBugReport(false);
-      } else {
-        // Fallback para mailto se API falhar
-        const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=CapyZen Bug Report&body=${encodeURIComponent(emailContent)}`;
-        window.location.href = mailtoLink;
-        setMessage("✅ Abrindo cliente de email...");
-      }
-    } catch (error) {
-      console.error(error);
-      // Fallback para mailto
-      const emailContent = `Bug Report:\n${bugText}\n\nGame State: ${JSON.stringify(state)}\nTimestamp: ${new Date().toISOString()}`;
-      const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=CapyZen Bug Report&body=${encodeURIComponent(emailContent)}`;
-      window.location.href = mailtoLink;
-      setMessage("✅ Abrindo cliente de email...");
-    }
+    const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=Bug Report CapyZen&body=${encodeURIComponent(bugText)}`;
+    window.location.href = mailtoLink;
+    setBugText("");
+    setShowBugReport(false);
   };
-
-  // Game loop
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const interval = setInterval(() => {
-      setState((prev: any) => {
-        if (!prev.alive) return prev;
-
-        let updated = { ...prev };
-        if (!godMode) {
-          updated.poop += 0.05;
-        }
-        updated.hunger = Math.max(0, updated.hunger - 0.05);
-        updated.happy = Math.max(0, updated.happy - 0.03);
-        updated.sus = Math.max(0, updated.sus - 0.02);
-
-        if (updated.poop >= 100) {
-          updated.alive = false;
-          setMessage("💀 Morreu por não ter cagado...");
-        }
-
-        if (updated.hunger <= 0 || updated.happy <= 0) {
-          updated.alive = false;
-          setMessage("💀 Morreu de fome e tristeza...");
-        }
-
-        return updated;
-      });
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [godMode]);
-
-  // Ganho passivo de moedas a cada 5 segundos
-  useEffect(() => {
-    const passiveInterval = setInterval(() => {
-      setState((prev: any) => {
-        if (!prev.alive) return prev;
-        return { ...prev, coins: prev.coins + 3 };
-      });
-    }, 5000);
-
-    return () => clearInterval(passiveInterval);
-  }, []);
 
   // Draw loop
   useEffect(() => {
@@ -660,78 +779,71 @@ export default function Home() {
         if (state.hunger < 30 || state.happy < 30) bodyColor = "#FF6B35";
         if (state.hunger < 10 || state.happy < 10) bodyColor = "#DC143C";
 
+        const size = state.capySize || 1;
+
         // Corpo
         ctx.fillStyle = bodyColor;
         ctx.beginPath();
-        ctx.ellipse(state.x, state.y, 50, 45, 0, 0, Math.PI * 2);
+        ctx.ellipse(state.x, state.y, 50 * size, 45 * size, 0, 0, Math.PI * 2);
         ctx.fill();
 
         // Patas
         ctx.fillStyle = bodyColor;
-        ctx.fillRect(state.x - 35, state.y + 35, 15, 20);
-        ctx.fillRect(state.x - 10, state.y + 35, 15, 20);
-        ctx.fillRect(state.x + 10, state.y + 35, 15, 20);
-        ctx.fillRect(state.x + 35, state.y + 35, 15, 20);
+        ctx.fillRect(state.x - 35 * size, state.y + 35 * size, 15 * size, 20 * size);
+        ctx.fillRect(state.x - 10 * size, state.y + 35 * size, 15 * size, 20 * size);
+        ctx.fillRect(state.x + 10 * size, state.y + 35 * size, 15 * size, 20 * size);
+        ctx.fillRect(state.x + 35 * size, state.y + 35 * size, 15 * size, 20 * size);
 
         // Cauda
         ctx.fillStyle = bodyColor;
         ctx.beginPath();
-        ctx.arc(state.x + 55, state.y + 10, 12, 0, Math.PI * 2);
+        ctx.arc(state.x + 55 * size, state.y + 10 * size, 12 * size, 0, Math.PI * 2);
         ctx.fill();
 
         // Orelhas
         ctx.fillStyle = bodyColor;
         ctx.beginPath();
-        ctx.arc(state.x - 35, state.y - 65, 18, 0, Math.PI * 2);
+        ctx.arc(state.x - 35 * size, state.y - 40 * size, 12 * size, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(state.x + 35, state.y - 65, 18, 0, Math.PI * 2);
+        ctx.arc(state.x + 35 * size, state.y - 40 * size, 12 * size, 0, Math.PI * 2);
         ctx.fill();
 
         // Olhos
         ctx.fillStyle = "#000";
         ctx.beginPath();
-        ctx.arc(state.x - 20, state.y - 40, 7, 0, Math.PI * 2);
+        ctx.arc(state.x - 22 * size, state.y - 42 * size, 2.5 * size, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(state.x + 20, state.y - 40, 7, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Brilho nos olhos
-        ctx.fillStyle = "#fff";
-        ctx.beginPath();
-        ctx.arc(state.x - 18, state.y - 42, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(state.x + 22, state.y - 42, 2.5, 0, Math.PI * 2);
+        ctx.arc(state.x + 22 * size, state.y - 42 * size, 2.5 * size, 0, Math.PI * 2);
         ctx.fill();
 
         // Nariz
         ctx.fillStyle = "#8B4513";
         ctx.beginPath();
-        ctx.ellipse(state.x, state.y - 15, 12, 10, 0, 0, Math.PI * 2);
+        ctx.ellipse(state.x, state.y - 15 * size, 12 * size, 10 * size, 0, 0, Math.PI * 2);
         ctx.fill();
 
         // Narinas
         ctx.fillStyle = "#654321";
         ctx.beginPath();
-        ctx.arc(state.x - 5, state.y - 18, 2, 0, Math.PI * 2);
+        ctx.arc(state.x - 5 * size, state.y - 18 * size, 2 * size, 0, Math.PI * 2);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(state.x + 5, state.y - 18, 2, 0, Math.PI * 2);
+        ctx.arc(state.x + 5 * size, state.y - 18 * size, 2 * size, 0, Math.PI * 2);
         ctx.fill();
 
         // Sorriso
         ctx.strokeStyle = "#654321";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2 * size;
         ctx.beginPath();
-        ctx.arc(state.x, state.y - 5, 15, 0, Math.PI);
+        ctx.arc(state.x, state.y - 5 * size, 15 * size, 0, Math.PI);
         ctx.stroke();
 
         // Info no canvas
         ctx.fillStyle = "#333";
         ctx.font = "bold 14px Arial";
-        ctx.fillText(`Lv1 ${state.level} | XP ${state.xp}/100`, 10, 290);
+        ctx.fillText(`Lv ${state.level} | XP ${state.xp}/100 | Tamanho: ${(state.capySize * 100).toFixed(0)}%`, 10, 290);
       } else {
         // Capivara morta
         ctx.fillStyle = "#888";
@@ -764,78 +876,19 @@ export default function Home() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Funcao de login
-  const handleLogin = () => {
-    if (loginUsername === "apenas_umusuario" && loginPassword === "queriatestarojogo") {
-      setIsLoggedIn(true);
-      localStorage.setItem("capyzen_logged_in", "true");
-      setLoginError("");
-      setLoginUsername("");
-      setLoginPassword("");
-    } else {
-      setLoginError("Usuario ou senha incorretos!");
-    }
-  };
+  // Ganho passivo de moedas
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (state.alive) {
+        setState((prev: any) => ({
+          ...prev,
+          coins: prev.coins + 3,
+        }));
+      }
+    }, 5000);
 
-  // Funcao de logout
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("capyzen_logged_in");
-    setLoginUsername("");
-    setLoginPassword("");
-    setLoginError("");
-  };
-
-  // Se nao esta logado, mostrar tela de login
-  if (!isLoggedIn) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 p-4 flex items-center justify-center">
-        <div className="bg-white rounded-lg p-8 shadow-lg w-full max-w-md">
-          <h1 className="text-3xl font-bold text-center mb-2 text-blue-600">Capyzen</h1>
-          <p className="text-center text-gray-600 mb-6">Bem-vindo ao jogo da capivara!</p>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold mb-2">Usuario:</label>
-              <input
-                type="text"
-                value={loginUsername}
-                onChange={(e) => setLoginUsername(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite seu usuario"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-semibold mb-2">Senha:</label>
-              <input
-                type="password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && handleLogin()}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Digite sua senha"
-              />
-            </div>
-            
-            {loginError && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
-                {loginError}
-              </div>
-            )}
-            
-            <button
-              onClick={handleLogin}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold transition"
-            >
-              Entrar
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    return () => clearInterval(interval);
+  }, [state.alive]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 p-4">
@@ -851,12 +904,12 @@ export default function Home() {
 
         <div className="bg-white rounded-lg p-6 shadow-lg w-80">
           <div className="text-center mb-3">
+            <div className="text-sm text-gray-600 mb-2">👤 {currentUser?.username}</div>
             <input
               type="text"
               value={playerName}
               onChange={(e) => {
                 setPlayerName(e.target.value);
-                localStorage.setItem("capyzen_player_name", e.target.value);
               }}
               className="w-full p-2 border border-gray-300 rounded text-center font-bold mb-2"
               placeholder="Seu nome"
@@ -867,7 +920,7 @@ export default function Home() {
             <div>💰 Moedas: <span className="font-bold">{displayValue(state.coins, 999999)}</span></div>
             <div>⭐ Nível: <span className="font-bold">{displayValue(state.level, 999)}</span></div>
             <div>📊 XP: <span className="font-bold">{state.xp >= 99 ? "∞" : state.xp}/100</span></div>
-            <div>🍔 Comida Total: <span className="font-bold">{displayValue(state.food, 999)}</span></div>
+            <div>📏 Tamanho: <span className="font-bold">{(state.capySize * 100).toFixed(0)}%</span></div>
             <div>💩 Coco: <span className="font-bold">{Math.floor(state.poop)}</span></div>
             <div>📈 Score: <span className="font-bold">{state.totalScore}</span></div>
           </div>
@@ -1011,34 +1064,7 @@ export default function Home() {
                 </div>
                 <button
                   onClick={() => setShowShop(false)}
-                  className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded font-semibold"
-                >
-                  Fechar
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Customization */}
-          {showCustomize && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
-                <h2 className="text-2xl font-bold mb-4">🎨 Customizar Capivara</h2>
-                <div className="space-y-2 mb-4">
-                  {capyColors.map((c, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setState((prev: any) => ({ ...prev, capyColor: c.color }))}
-                      className="w-full p-2 rounded text-white font-semibold transition"
-                      style={{ backgroundColor: c.color }}
-                    >
-                      {c.name}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setShowCustomize(false)}
-                  className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded font-semibold"
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
                 >
                   Fechar
                 </button>
@@ -1049,78 +1075,70 @@ export default function Home() {
           {/* Minigames */}
           {showMinigame && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto">
+                <h2 className="text-2xl font-bold mb-4">🎮 Jogos</h2>
+                <div className="space-y-2 mb-4">
+                  {games.map((g, i) => (
+                    <div key={i} className="p-2 bg-gray-50 rounded">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-semibold">{g.name}</div>
+                          <div className="text-xs text-gray-600">Nível: {g.minLevel} | Custo: {g.cost} moedas | Prêmio: {g.reward} moedas</div>
+                          {state.level < g.minLevel && (
+                            <div className="text-xs text-red-600">Bloqueado até nível {g.minLevel}</div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => playGame(i)}
+                          disabled={state.level < g.minLevel || state.coins < g.cost}
+                          className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-3 py-1 rounded text-sm"
+                        >
+                          Jogar
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowMinigame(false)}
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Customizar */}
+          {showCustomize && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
-                <h2 className="text-2xl font-bold mb-4">🎮 Minigames</h2>
-                {minigameType === "" ? (
-                  <div className="space-y-2 mb-4">
+                <h2 className="text-2xl font-bold mb-4">🎨 Customizar Capivara</h2>
+                <div className="space-y-2">
+                  {[
+                    { name: "Marrom", color: "#8B6914" },
+                    { name: "Dourado", color: "#FFD700" },
+                    { name: "Cinza", color: "#808080" },
+                    { name: "Vermelho", color: "#DC143C" },
+                    { name: "Verde", color: "#228B22" },
+                    { name: "Azul", color: "#4169E1" },
+                  ].map((c) => (
                     <button
-                      onClick={() => setMinigameType("memory")}
-                      className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded font-semibold"
+                      key={c.color}
+                      onClick={() => setState((prev: any) => ({ ...prev, capyColor: c.color }))}
+                      className="w-full p-2 rounded font-semibold text-white transition"
+                      style={{ backgroundColor: c.color }}
                     >
-                      🧠 Jogo da Memória (+50 moedas)
+                      {c.name}
                     </button>
-                    <button
-                      onClick={() => setMinigameType("clicker")}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold"
-                    >
-                      🖱️ Clicker (+30 moedas)
-                    </button>
-                    <button
-                      onClick={() => setMinigameType("quiz")}
-                      className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded font-semibold"
-                    >
-                      ❓ Quiz (+40 moedas)
-                    </button>
-                  </div>
-                ) : minigameType === "memory" ? (
-                  <div className="text-center">
-                    <p className="mb-4">Clique nos botões na sequência correta!</p>
-                    <button
-                      onClick={() => completeMinigame(50)}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold mb-2"
-                    >
-                      ✅ Completar
-                    </button>
-                    <button
-                      onClick={() => { setMinigameType(""); setShowMinigame(false); }}
-                      className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
-                    >
-                      ❌ Desistir
-                    </button>
-                  </div>
-                ) : minigameType === "clicker" ? (
-                  <div className="text-center">
-                    <p className="mb-4">Clique o máximo que conseguir em 10 segundos!</p>
-                    <button
-                      onClick={() => completeMinigame(30)}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold mb-2"
-                    >
-                      ✅ Completar
-                    </button>
-                    <button
-                      onClick={() => { setMinigameType(""); setShowMinigame(false); }}
-                      className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
-                    >
-                      ❌ Desistir
-                    </button>
-                  </div>
-                ) : (
-                  <div className="text-center">
-                    <p className="mb-4">Responda as perguntas corretamente!</p>
-                    <button
-                      onClick={() => completeMinigame(40)}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded font-semibold mb-2"
-                    >
-                      ✅ Completar
-                    </button>
-                    <button
-                      onClick={() => { setMinigameType(""); setShowMinigame(false); }}
-                      className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
-                    >
-                      ❌ Desistir
-                    </button>
-                  </div>
-                )}
+                  ))}
+                </div>
+                <button
+                  onClick={() => setShowCustomize(false)}
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded mt-4"
+                >
+                  Fechar
+                </button>
               </div>
             </div>
           )}
@@ -1130,27 +1148,94 @@ export default function Home() {
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto">
                 <h2 className="text-2xl font-bold mb-4">🏅 Ranking</h2>
-                {leaderboard.length === 0 ? (
-                  <p className="text-center text-gray-500">Nenhum score ainda!</p>
-                ) : (
-                  <div className="space-y-2">
-                    {leaderboard.map((entry: any, i: number) => (
-                      <div key={i} className="flex justify-between p-2 bg-gray-50 rounded">
-                        <span className="font-bold">#{i + 1} {entry.name}</span>
-                        <span className="text-right">
-                          <div>{entry.score} pts</div>
-                          <div className="text-xs text-gray-500">Lv {entry.level}</div>
-                        </span>
+                <div className="space-y-2">
+                  {leaderboard.length === 0 ? (
+                    <p className="text-gray-600">Sem jogadores no ranking ainda</p>
+                  ) : (
+                    leaderboard.map((entry: any, i: number) => (
+                      <div key={i} className="p-2 bg-gray-50 rounded flex justify-between">
+                        <span>#{i + 1} {entry.name}</span>
+                        <span className="font-bold">Score: {entry.score}</span>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    ))
+                  )}
+                </div>
                 <button
                   onClick={() => setShowLeaderboard(false)}
-                  className="w-full bg-gray-600 hover:bg-gray-700 text-white py-2 rounded font-semibold mt-4"
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded mt-4"
                 >
                   Fechar
                 </button>
+              </div>
+            </div>
+          )}
+
+          {/* Bug Report */}
+          {showBugReport && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
+                <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
+                <textarea
+                  value={bugText}
+                  onChange={(e) => setBugText(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  placeholder="Descreva o bug..."
+                  rows={4}
+                />
+                <div className="space-y-2">
+                  <button
+                    onClick={sendBugReport}
+                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded"
+                  >
+                    Enviar
+                  </button>
+                  <button
+                    onClick={() => setShowBugReport(false)}
+                    className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
+                  >
+                    Fechar
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Admin Password Prompt */}
+          {showAdminPasswordPrompt && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
+                <h2 className="text-2xl font-bold mb-4">🔐 Painel Admin</h2>
+                <input
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  onKeyPress={(e) => e.key === "Enter" && handleAdminPasswordSubmit()}
+                  className="w-full p-2 border border-gray-300 rounded mb-4"
+                  placeholder="Digite a senha do admin"
+                />
+                {loginError && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm mb-4">
+                    {loginError}
+                  </div>
+                )}
+                <div className="space-y-2">
+                  <button
+                    onClick={handleAdminPasswordSubmit}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
+                  >
+                    Entrar
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowAdminPasswordPrompt(false);
+                      setAdminPassword("");
+                      setLoginError("");
+                    }}
+                    className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
+                  >
+                    Cancelar
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -1159,17 +1244,21 @@ export default function Home() {
           {showAdminPanel && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
               <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold">⚙️ Painel Admin</h2>
+                <h2 className="text-2xl font-bold mb-4">⚙️ Painel Admin</h2>
+                <div className="grid grid-cols-2 gap-2 mb-4">
                   <button
-                    onClick={() => setShowAdminPanel(false)}
-                    className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+                    onClick={() => applyAdminCommand("+coins")}
+                    className="w-full bg-green-500 hover:bg-green-600 text-white py-1 rounded text-xs font-semibold transition"
                   >
-                    ✕
+                    +100 Moedas
                   </button>
-                </div>
+                  <button
+                    onClick={() => applyAdminCommand("-coins")}
+                    className="w-full bg-red-500 hover:bg-red-600 text-white py-1 rounded text-xs font-semibold transition"
+                  >
+                    -100 Moedas
+                  </button>
 
-                <div className="space-y-2 mb-6">
                   <button
                     onClick={() => applyAdminCommand("+happy")}
                     className="w-full bg-green-500 hover:bg-green-600 text-white py-1 rounded text-xs font-semibold transition"
@@ -1230,148 +1319,37 @@ export default function Home() {
                   </button>
                   <button
                     onClick={() => applyAdminCommand("setLevel")}
-                    className="w-full bg-blue-700 hover:bg-blue-800 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     ⭐ Setar Level (valor)
                   </button>
 
                   <button
-                    onClick={() => applyAdminCommand("∞coins")}
-                    className="w-full bg-purple-500 hover:bg-purple-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    💰 Moedas = ∞
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("∞happy")}
-                    className="w-full bg-pink-500 hover:bg-pink-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    😊 Felicidade = ∞
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("∞hunger")}
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    🍽️ Fome = ∞
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("∞level")}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ⭐ Level = ∞
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("∞xp")}
-                    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    📊 XP = ∞
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("∞food")}
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    🍔 Comida = ∞
-                  </button>
-
-                  <button
-                    onClick={() => applyAdminCommand("-∞coins")}
-                    className="w-full bg-purple-400 hover:bg-purple-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ❌ Remover ∞ Moedas
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("-∞happy")}
-                    className="w-full bg-pink-400 hover:bg-pink-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ❌ Remover ∞ Felicidade
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("-∞hunger")}
-                    className="w-full bg-orange-400 hover:bg-orange-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ❌ Remover ∞ Fome
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("-∞level")}
-                    className="w-full bg-blue-400 hover:bg-blue-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ❌ Remover ∞ Level
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("-∞xp")}
-                    className="w-full bg-cyan-400 hover:bg-cyan-500 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ❌ Remover ∞ XP
-                  </button>
-                  <button
-                    onClick={() => applyAdminCommand("-∞food")}
-                    className="w-full bg-green-500 hover:bg-green-600 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    ❌ Remover ∞ Comida
-                  </button>
-
-                  <button
-                    onClick={() => applyAdminCommand("-∞all")}
-                    className="w-full bg-red-600 hover:bg-red-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
-                  >
-                    🔄 Remover ∞ Todos
-                  </button>
-
-                  <button
                     onClick={() => applyAdminCommand("godmode")}
-                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                    className="w-full bg-pink-600 hover:bg-pink-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     👻 GOD MODE
                   </button>
                   <button
                     onClick={() => applyAdminCommand("normal")}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-1 rounded text-xs font-semibold transition mb-1"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-1 rounded text-xs font-semibold transition"
                   >
                     😄 Modo Normal
                   </button>
 
                   <button
                     onClick={() => applyAdminCommand("RESET")}
-                    className="w-full bg-gray-600 hover:bg-gray-700 text-white py-1 rounded text-xs font-semibold transition"
+                    className="w-full bg-red-700 hover:bg-red-800 text-white py-1 rounded text-xs font-semibold transition col-span-2"
                   >
-                    🔄 RESET
+                    🔄 RESET TOTAL
                   </button>
                 </div>
-
                 <button
                   onClick={() => setShowAdminPanel(false)}
-                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
+                  className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded"
                 >
                   Fechar
                 </button>
-              </div>
-            </div>
-          )}
-
-          {/* Bug Report */}
-          {showBugReport && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-              <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-2xl">
-                <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
-                <textarea
-                  value={bugText}
-                  onChange={(e) => setBugText(e.target.value)}
-                  placeholder="Descreva o bug aqui..."
-                  className="w-full p-3 border border-gray-300 rounded mb-4 h-24"
-                />
-                <div className="space-y-2">
-                  <button
-                    onClick={sendBugReport}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 rounded font-semibold"
-                  >
-                    📧 Enviar
-                  </button>
-                  <button
-                    onClick={() => setShowBugReport(false)}
-                    className="w-full bg-gray-500 hover:bg-gray-600 text-white py-2 rounded font-semibold"
-                  >
-                    Fechar
-                  </button>
-                </div>
               </div>
             </div>
           )}
