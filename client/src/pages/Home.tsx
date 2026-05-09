@@ -586,9 +586,10 @@ export default function Home() {
     return ans ? parseInt(ans) : 0;
   };
 
-  const displayValue = (value: number, maxValue: number = 100) => {
+  const displayValue = (value: number | null | undefined, maxValue: number = 100) => {
+    if (value == null) return "0";
     if (value >= maxValue) return "∞";
-    return value.toString();
+    return String(value);
   };
 
   const sendBugReport = async () => {
