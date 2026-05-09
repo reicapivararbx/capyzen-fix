@@ -465,7 +465,7 @@ export default function Home() {
   const useBathroom = () => {
     setState((prev: any) => {
       if (!prev.alive) return prev;
-      setMessage("💩 Usou o banheiro! -20 coco");
+      setMessage("💩 Deu uma cagada remunerada! -20 coco");
       playSound("work");
       gainXP(2);
       const newState = { ...prev, poop: Math.max(0, prev.poop - 20), totalScore: prev.totalScore + 2 };
