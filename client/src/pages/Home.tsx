@@ -619,17 +619,97 @@ export default function Home() {
       label: string
     ) => {
       const w = 120;
-      const h = 10;
-      ctx.fillStyle = "#ddd";
-      ctx.fillRect(x, y, w, h);
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, (w * value) / 100, h);
-      ctx.strokeStyle = "#333";
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, y, w, h);
+      const h = 14;
+      const radius = 7;
+      
+      // Fundo arredondado com sombra
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 2;
+      
+      // Desenhar fundo com cantos arredondados
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + w - radius, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+      ctx.lineTo(x + w, y + h - radius);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+      ctx.lineTo(x + radius, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.fillStyle = "#f0f0f0";
+      ctx.fill();
+      
+      // Desenhar barra preenchida com gradiente
+      const fillWidth = (w * value) / 100;
+      if (fillWidth > 0) {
+        const gradient = ctx.createLinearGradient(x, y, x, y + h);
+        gradient.addColorStop(0, color);
+        gradient.addColorStop(1, adjustBrightness(color, -20));
+        
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + Math.min(fillWidth - radius, w - radius), y);
+        if (fillWidth >= w - radius) {
+          ctx.quadraticCurveTo(x + fillWidth, y, x + fillWidth, y + radius);
+        }
+        ctx.lineTo(x + fillWidth, y + h - radius);
+        if (fillWidth >= w - radius) {
+          ctx.quadraticCurveTo(x + fillWidth, y + h, x + fillWidth - radius, y + h);
+        }
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fillStyle = gradient;
+        ctx.fill();
+      }
+      
+      // Borda com cor mais clara
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.15)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + w - radius, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+      ctx.lineTo(x + w, y + h - radius);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+      ctx.lineTo(x + radius, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+      ctx.stroke();
+      
+      // Label com fonte melhorada
+      ctx.shadowColor = "transparent";
       ctx.fillStyle = "#333";
-      ctx.font = "10px Arial";
-      ctx.fillText(label, x + w + 5, y + 8);
+      ctx.font = "bold 11px Arial";
+      ctx.textAlign = "left";
+      ctx.fillText(label, x + w + 8, y + 10);
+      
+      // Valor da barra
+      ctx.font = "bold 9px Arial";
+      ctx.fillStyle = "#666";
+      ctx.textAlign = "right";
+      ctx.fillText(Math.floor(value) + "%", x + w - 4, y + 10);
+    };
+    
+    const adjustBrightness = (color: string, percent: number): string => {
+      const num = parseInt(color.replace("#", ""), 16);
+      const amt = Math.round(2.55 * percent);
+      const R = (num >> 16) + amt;
+      const G = (num >> 8 & 0x00FF) + amt;
+      const B = (num & 0x0000FF) + amt;
+      return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+        (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+        (B < 255 ? B < 1 ? 0 : B : 255))
+        .toString(16).slice(1);
     };
 
     const draw = () => {
