@@ -34,6 +34,14 @@ export default function Home() {
       alive: true,
       capyColor: "#8B6914",
       totalScore: 0,
+      inventory: {
+        grama: 0,
+        batata: 0,
+        hamburger: 0,
+        refri: 0,
+        feijao: 0,
+        hotdog: 0,
+      },
     };
   }
 
@@ -52,7 +60,10 @@ export default function Home() {
   const [cooldown, setCooldown] = useState(false);
   const [susCooldown, setSusCooldown] = useState(false);
   const [message, setMessage] = useState("Oi! Clique em 'Trabalhar' para ganhar moedas!");
-  const [selectedFood, setSelectedFood] = useState(0);
+  const [selectedFood, setSelectedFood] = useState(() => {
+    const saved = localStorage.getItem("capyzen_selected_food");
+    return saved ? Number(saved) : 0;
+  });
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [godMode, setGodMode] = useState(false);
@@ -69,6 +80,11 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("capyzen_state", JSON.stringify(state));
   }, [state]);
+
+  // Salvar comida selecionada
+  useEffect(() => {
+    localStorage.setItem("capyzen_selected_food", String(selectedFood));
+  }, [selectedFood]);
 
   // Salvar achievements
   useEffect(() => {
@@ -216,7 +232,12 @@ export default function Home() {
 
   const feed = () => {
     setState((prev: any) => {
-      if (!prev.alive || prev.food <= 0) {
+      const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog"];
+      const foodName = foodNames[selectedFood];
+      const inv = prev.inventory || {};
+      const foodCount = (inv && inv[foodName]) || 0;
+      
+      if (!prev.alive || foodCount <= 0) {
         setMessage("🍔 sem comida!");
         return prev;
       }
@@ -224,10 +245,19 @@ export default function Home() {
       setMessage(`🍔 comeu ${food.name}! +1 moeda`);
       playSound("eat");
       gainXP(3);
-      const newFood = prev.food - 1;
       const newPoop = godMode ? 0 : Math.min(100, prev.poop + food.poop);
       const newHunger = Math.min(100, prev.hunger + 30);
-      const newState = { ...prev, food: newFood, poop: newPoop, hunger: newHunger, coins: prev.coins + 1, totalScore: prev.totalScore + 3 };
+      const newState = { 
+        ...prev, 
+        poop: newPoop, 
+        hunger: newHunger, 
+        coins: prev.coins + 1, 
+        totalScore: prev.totalScore + 3,
+        inventory: {
+          ...prev.inventory,
+          [foodName]: foodCount - 1,
+        },
+      };
       checkAchievements(newState);
       return newState;
     });
@@ -289,10 +319,15 @@ export default function Home() {
       setMessage(`💰 precisa ${food.cost} moedas!`);
       return;
     }
+    const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog"];
+    const foodName = foodNames[selectedFood];
     setState((prev: any) => ({
       ...prev,
       coins: prev.coins - food.cost,
-      food: prev.food + 1,
+      inventory: {
+        ...prev.inventory,
+        [foodName]: (prev.inventory[foodName] || 0) + 1,
+      },
     }));
     setMessage(`✅ Comprou ${food.name}`);
     playSound("work");
@@ -772,15 +807,19 @@ export default function Home() {
           <div className="bg-blue-50 p-3 rounded mb-4 border border-blue-200">
             <label className="block text-sm font-semibold mb-2">🍽️ Selecionar Comida:</label>
             <select
-              value={selectedFood}
+              value={String(selectedFood)}
               onChange={(e) => setSelectedFood(Number(e.target.value))}
               className="w-full p-2 border border-blue-300 rounded bg-white text-sm"
             >
-              {foods.map((f, i) => (
-                <option key={i} value={i}>
-                  {f.name} (💩 {f.poop})
-                </option>
-              ))}
+              {foods.map((f, i) => {
+                const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog"];
+                const count = (state.inventory && state.inventory[foodNames[i]]) || 0;
+                return (
+                  <option key={i} value={i}>
+                    {f.name} (💩 {f.poop}) - {count}x
+                  </option>
+                );
+              })}
             </select>
           </div>
 
@@ -826,7 +865,7 @@ export default function Home() {
               🎨 Customizar
             </button>
             <button
-              onClick={() => playMinigame("memory")}
+              onClick={() => setShowMinigame(true)}
               className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded font-semibold transition"
             >
               🎮 Minigames
