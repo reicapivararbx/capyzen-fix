@@ -729,8 +729,8 @@ export default function Home() {
     const lifeLoop = setInterval(() => {
       setState((prev: any) => {
         if (!prev.alive) return prev;
-        let newHunger = Math.max(0, prev.hunger - 2);
-        let newHappy = Math.max(0, prev.happy - 1);
+        let newHunger = Math.max(0, prev.hunger - 0.5);
+        let newHappy = Math.max(0, prev.happy - 0.25);
         let newAlive = prev.alive;
 
         if (newHunger <= 0 || newHappy <= 0) {
@@ -745,7 +745,7 @@ export default function Home() {
           alive: newAlive,
         };
       });
-    }, 3000);
+    }, 500);
 
     return () => {
       clearInterval(gameLoop);
