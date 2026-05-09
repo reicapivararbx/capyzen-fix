@@ -21,16 +21,21 @@ export default function Home() {
 
   // Carregar estado do localStorage
   const [state, setState] = useState(() => {
-    const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
-    const saved = localStorage.getItem(userKey);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return getInitialState();
+    try {
+      const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
+      const saved = localStorage.getItem(userKey);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          return parsed || getInitialState();
+        } catch {
+          return getInitialState();
+        }
       }
+      return getInitialState();
+    } catch {
+      return getInitialState();
     }
-    return getInitialState();
   });
 
   function getInitialState() {
@@ -62,24 +67,36 @@ export default function Home() {
 
   // Achievements
   const [achievements, setAchievements] = useState(() => {
-    const userKey = currentUser ? `capyzen_achievements_${currentUser.username}` : "capyzen_achievements";
-    const saved = localStorage.getItem(userKey);
-    return saved ? JSON.parse(saved) : {};
+    try {
+      const userKey = currentUser ? `capyzen_achievements_${currentUser.username}` : "capyzen_achievements";
+      const saved = localStorage.getItem(userKey);
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
   });
 
   // Leaderboard
   const [leaderboard, setLeaderboard] = useState(() => {
-    const saved = localStorage.getItem("capyzen_leaderboard");
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem("capyzen_leaderboard");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
 
   const [cooldown, setCooldown] = useState(false);
   const [susCooldown, setSusCooldown] = useState(false);
   const [message, setMessage] = useState("✨ Bem-vindo ao CapyZen! Clique em 'Trabalhar' para ganhar moedas!");
   const [selectedFood, setSelectedFood] = useState(() => {
-    const userKey = currentUser ? `capyzen_selected_food_${currentUser.username}` : "capyzen_selected_food";
-    const saved = localStorage.getItem(userKey);
-    return saved ? Number(saved) : 0;
+    try {
+      const userKey = currentUser ? `capyzen_selected_food_${currentUser.username}` : "capyzen_selected_food";
+      const saved = localStorage.getItem(userKey);
+      return saved ? Number(saved) : 0;
+    } catch {
+      return 0;
+    }
   });
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showShop, setShowShop] = useState(false);
@@ -91,8 +108,12 @@ export default function Home() {
   const [minigameType, setMinigameType] = useState("");
   const [showCustomize, setShowCustomize] = useState(false);
   const [playerName, setPlayerName] = useState(() => {
-    const userKey = currentUser ? `capyzen_player_name_${currentUser.username}` : "capyzen_player_name";
-    return localStorage.getItem(userKey) || "Anônimo";
+    try {
+      const userKey = currentUser ? `capyzen_player_name_${currentUser.username}` : "capyzen_player_name";
+      return localStorage.getItem(userKey) || "Anônimo";
+    } catch {
+      return "Anônimo";
+    }
   });
   const [minigameCooldown, setMinigameCooldown] = useState(false);
   const [adminPassword, setAdminPassword] = useState("");
