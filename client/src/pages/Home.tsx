@@ -1373,34 +1373,67 @@ export default function Home() {
 
       {/* Admin Panel */}
       {showAdminPanel && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto border-4 border-gray-400">
-            <h2 className="text-3xl font-bold mb-4 text-center text-gray-800">⚙️ Painel Admin</h2>
-            <div className="space-y-2 mb-4">
-              <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => applyAdminCommand("+coins")} className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">+100 💰</button>
-                <button onClick={() => applyAdminCommand("-coins")} className="bg-gradient-to-r from-red-400 to-red-600 hover:from-red-500 hover:to-red-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">-100 💰</button>
-                <button onClick={() => applyAdminCommand("+happy")} className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">+20 😄</button>
-                <button onClick={() => applyAdminCommand("-happy")} className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">-20 😢</button>
-                <button onClick={() => applyAdminCommand("+hunger")} className="bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">+20 🍔</button>
-                <button onClick={() => applyAdminCommand("-hunger")} className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">-20 🍔</button>
-                <button onClick={() => applyAdminCommand("+sus")} className="bg-gradient-to-r from-purple-400 to-pink-500 hover:from-purple-500 hover:to-pink-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">+20 🔴</button>
-                <button onClick={() => applyAdminCommand("-sus")} className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">-20 🔴</button>
-                <button onClick={() => applyAdminCommand("+poop")} className="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">+20 💩</button>
-                <button onClick={() => applyAdminCommand("-poop")} className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">-20 💩</button>
-                <button onClick={() => applyAdminCommand("setCoins")} className="bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">Moedas</button>
-                <button onClick={() => applyAdminCommand("setLevel")} className="bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">Level</button>
-                <button onClick={() => applyAdminCommand("godMode")} className="bg-gradient-to-r from-gray-700 to-gray-900 hover:from-gray-800 hover:to-black text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">GOD MODE</button>
-                <button onClick={() => applyAdminCommand("normalMode")} className="bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">Normal</button>
-                <button onClick={() => applyAdminCommand("∞coins")} className="bg-gradient-to-r from-yellow-500 to-yellow-700 hover:from-yellow-600 hover:to-yellow-800 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">∞ Moedas</button>
-                <button onClick={() => applyAdminCommand("RESET")} className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-black text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg">RESET</button>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
+          <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto border-4 border-purple-500 backdrop-blur-sm">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-black mb-3 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">⚙️ PAINEL ADMIN</h2>
+              <div className="h-1 w-40 mx-auto bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full"></div>
+            </div>
+            
+            {/* Seção de Moedas */}
+            <div className="mb-6 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-2xl p-4 border-2 border-green-500/50">
+              <h3 className="text-lg font-bold text-yellow-300 mb-3 flex items-center gap-2">💰 MOEDAS</h3>
+              <div className="grid grid-cols-3 gap-2">
+                <button onClick={() => applyAdminCommand("+coins")} className="bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-green-500/50 border-2 border-green-400">+100 💰</button>
+                <button onClick={() => applyAdminCommand("-coins")} className="bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-red-500/50 border-2 border-red-400">-100 💰</button>
+                <button onClick={() => applyAdminCommand("∞coins")} className="bg-gradient-to-br from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-yellow-500/50 border-2 border-yellow-400">∞ 💰</button>
               </div>
             </div>
+            
+            {/* Seção de Felicidade */}
+            <div className="mb-6 bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-2xl p-4 border-2 border-yellow-500/50">
+              <h3 className="text-lg font-bold text-orange-300 mb-3 flex items-center gap-2">😄 FELICIDADE</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={() => applyAdminCommand("+happy")} className="bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-yellow-500/50 border-2 border-yellow-300">+20 😄</button>
+                <button onClick={() => applyAdminCommand("-happy")} className="bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-red-500/50 border-2 border-red-400">-20 😢</button>
+              </div>
+            </div>
+            
+            {/* Seção de Fome */}
+            <div className="mb-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-2xl p-4 border-2 border-cyan-500/50">
+              <h3 className="text-lg font-bold text-cyan-300 mb-3 flex items-center gap-2">🍔 FOME</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <button onClick={() => applyAdminCommand("+hunger")} className="bg-gradient-to-br from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-blue-500/50 border-2 border-cyan-400">+20 🍔</button>
+                <button onClick={() => applyAdminCommand("-hunger")} className="bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-cyan-500/50 border-2 border-blue-400">-20 🍔</button>
+              </div>
+            </div>
+            
+            {/* Seção de Status */}
+            <div className="mb-6 bg-gradient-to-r from-amber-900/30 to-pink-900/30 rounded-2xl p-4 border-2 border-pink-500/50">
+              <h3 className="text-lg font-bold text-pink-300 mb-3 flex items-center gap-2">💩 STATUS</h3>
+              <div className="grid grid-cols-4 gap-2">
+                <button onClick={() => applyAdminCommand("+poop")} className="bg-gradient-to-br from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-amber-500/50 border-2 border-amber-400 text-sm">+20 💩</button>
+                <button onClick={() => applyAdminCommand("-poop")} className="bg-gradient-to-br from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-yellow-500/50 border-2 border-yellow-400 text-sm">-20 💩</button>
+                <button onClick={() => applyAdminCommand("+sus")} className="bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-purple-500/50 border-2 border-pink-400 text-sm">+20 🔴</button>
+                <button onClick={() => applyAdminCommand("-sus")} className="bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-pink-500/50 border-2 border-purple-400 text-sm">-20 🔴</button>
+              </div>
+            </div>
+            
+            {/* Seção de Modo */}
+            <div className="mb-6 bg-gradient-to-r from-indigo-900/30 to-gray-900/30 rounded-2xl p-4 border-2 border-indigo-500/50">
+              <h3 className="text-lg font-bold text-indigo-300 mb-3 flex items-center gap-2">🎮 MODO</h3>
+              <div className="grid grid-cols-3 gap-2">
+                <button onClick={() => applyAdminCommand("godMode")} className="bg-gradient-to-br from-gray-700 to-gray-900 hover:from-gray-800 hover:to-black text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-gray-500/50 border-2 border-gray-600">🌟 GOD</button>
+                <button onClick={() => applyAdminCommand("normalMode")} className="bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-gray-500/50 border-2 border-gray-500">⚖️ Normal</button>
+                <button onClick={() => applyAdminCommand("RESET")} className="bg-gradient-to-br from-red-700 to-red-900 hover:from-red-800 hover:to-black text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-red-500/50 border-2 border-red-600">🔄 RESET</button>
+              </div>
+            </div>
+            
             <button
               onClick={() => setShowAdminPanel(false)}
-              className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg hover:shadow-purple-500/50 border-2 border-purple-400"
             >
-              ❌ Fechar
+              ❌ Fechar Painel
             </button>
           </div>
         </div>
