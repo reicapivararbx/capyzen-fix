@@ -1,9 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 
 export default function Home() {
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const stateRef = useRef<any>(null);
 
   // User system
   const [currentUser, setCurrentUser] = useState<{ username: string; password: string } | null>(() => {
@@ -27,6 +27,8 @@ export default function Home() {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
+          // Sempre garantir que alive é true ao carregar
+          if (parsed) parsed.alive = true;
           return parsed || getInitialState();
         } catch {
           return getInitialState();
@@ -98,6 +100,7 @@ export default function Home() {
       return 0;
     }
   });
+  
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [showShop, setShowShop] = useState(false);
   const [godMode, setGodMode] = useState(false);
@@ -119,6 +122,21 @@ export default function Home() {
   const [adminPassword, setAdminPassword] = useState("");
   const [showAdminPasswordPrompt, setShowAdminPasswordPrompt] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [closeAdminPassword, setCloseAdminPassword] = useState("");
+  const [showCloseAdminPasswordPrompt, setShowCloseAdminPasswordPrompt] = useState(false);
+
+  // Sincronizar stateRef com state
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
+  // Garantir que a capivara está sempre viva (remover este useEffect pois agora está no lifeLoop)
+  // useEffect(() => {
+  //   if (!state.alive) {
+  //     setState((prev: any) => ({ ...prev, alive: true }));
+  //   }
+  // }, []);
 
   // Salvar estado no localStorage
   useEffect(() => {
@@ -199,149 +217,132 @@ export default function Home() {
           break;
       }
     } catch (e) {
-      // Silenciosamente falhar se o áudio não funcionar
+      console.log("Sound error:", e);
     }
   };
 
-  // Verificar achievements
-  const checkAchievements = (newState: any) => {
-    const newAchievements = { ...achievements };
-    
-    // Achievements de Level
-    if (newState.level >= 5 && !achievements.level5) { newAchievements.level5 = true; setMessage("🏆 Atingiu nível 5!"); playSound("achievement"); }
-    if (newState.level >= 10 && !achievements.level10) { newAchievements.level10 = true; setMessage("🏆 Atingiu nível 10!"); playSound("achievement"); }
-    if (newState.level >= 15 && !achievements.level15) { newAchievements.level15 = true; setMessage("🏆 Atingiu nível 15!"); playSound("achievement"); }
-    if (newState.level >= 20 && !achievements.level20) { newAchievements.level20 = true; setMessage("🏆 Atingiu nível 20!"); playSound("achievement"); }
-    if (newState.level >= 30 && !achievements.level30) { newAchievements.level30 = true; setMessage("🏆 Atingiu nível 30!"); playSound("achievement"); }
-    if (newState.level >= 50 && !achievements.level50) { newAchievements.level50 = true; setMessage("🏆 Atingiu nível 50!"); playSound("achievement"); }
-    if (newState.level >= 100 && !achievements.level100) { newAchievements.level100 = true; setMessage("🏆 LENDÁRIO! Atingiu nível 100!"); playSound("achievement"); }
-
-    // Achievements de Moedas
-    if (newState.coins >= 100 && !achievements.coins100) { newAchievements.coins100 = true; setMessage("🏆 Ganhou 100 moedas!"); playSound("achievement"); }
-    if (newState.coins >= 500 && !achievements.coins500) { newAchievements.coins500 = true; setMessage("🏆 Ganhou 500 moedas!"); playSound("achievement"); }
-    if (newState.coins >= 1000 && !achievements.coins1000) { newAchievements.coins1000 = true; setMessage("🏆 Ganhou 1000 moedas!"); playSound("achievement"); }
-    if (newState.coins >= 5000 && !achievements.coins5000) { newAchievements.coins5000 = true; setMessage("🏆 Ganhou 5000 moedas!"); playSound("achievement"); }
-    if (newState.coins >= 10000 && !achievements.coins10000) { newAchievements.coins10000 = true; setMessage("🏆 Ganhou 10000 moedas!"); playSound("achievement"); }
-    if (newState.coins >= 50000 && !achievements.coins50000) { newAchievements.coins50000 = true; setMessage("🏆 MILIONÁRIO! Ganhou 50000 moedas!"); playSound("achievement"); }
-
-    // Achievements de Score
-    if (newState.totalScore >= 100 && !achievements.score100) { newAchievements.score100 = true; setMessage("🏆 Score 100!"); playSound("achievement"); }
-    if (newState.totalScore >= 500 && !achievements.score500) { newAchievements.score500 = true; setMessage("🏆 Score 500!"); playSound("achievement"); }
-    if (newState.totalScore >= 1000 && !achievements.score1000) { newAchievements.score1000 = true; setMessage("🏆 Score 1000!"); playSound("achievement"); }
-    if (newState.totalScore >= 5000 && !achievements.score5000) { newAchievements.score5000 = true; setMessage("🏆 Score 5000!"); playSound("achievement"); }
-
-    // Achievements de Tamanho
-    if (newState.capySize >= 1.5 && !achievements.size1_5) { newAchievements.size1_5 = true; setMessage("🏆 Capivara cresceu 50%!"); playSound("achievement"); }
-    if (newState.capySize >= 2 && !achievements.size2) { newAchievements.size2 = true; setMessage("🏆 Capivara ficou GIGANTE!"); playSound("achievement"); }
-    if (newState.capySize >= 3 && !achievements.size3) { newAchievements.size3 = true; setMessage("🏆 Capivara é um MONSTRO!"); playSound("achievement"); }
-
-    // Achievements de Fome/Felicidade
-    if (newState.hunger === 100 && !achievements.fullHunger) { newAchievements.fullHunger = true; setMessage("🏆 Capivara SUPER satisfeita!"); playSound("achievement"); }
-    if (newState.happy === 100 && !achievements.fullHappy) { newAchievements.fullHappy = true; setMessage("🏆 Capivara MUITO feliz!"); playSound("achievement"); }
-    if (newState.poop === 0 && !achievements.noPoop) { newAchievements.noPoop = true; setMessage("🏆 Capivara limpinha!"); playSound("achievement"); }
-
-    // Achievements de Comida
-    if (newState.inventory.grama >= 10 && !achievements.grama10) { newAchievements.grama10 = true; setMessage("🏆 Colecionador de grama!"); playSound("achievement"); }
-    if (newState.inventory.pizza >= 5 && !achievements.pizza5) { newAchievements.pizza5 = true; setMessage("🏆 Amante de pizza!"); playSound("achievement"); }
-    if (newState.inventory.sushi >= 5 && !achievements.sushi5) { newAchievements.sushi5 = true; setMessage("🏆 Gourmet!"); playSound("achievement"); }
-    if (newState.inventory.sorvete >= 10 && !achievements.sorvete10) { newAchievements.sorvete10 = true; setMessage("🏆 Viciado em sorvete!"); playSound("achievement"); }
-
-    // Achievements Especiais
-    if (newState.sus >= 80 && !achievements.susSuspicious) { newAchievements.susSuspicious = true; setMessage("🏆 MUITO SUS!"); playSound("achievement"); }
-    if (newState.hunger < 5 && !achievements.almostDead) { newAchievements.almostDead = true; setMessage("🏆 Quase morreu de fome!"); playSound("achievement"); }
-    if (!newState.alive && !achievements.died) { newAchievements.died = true; setMessage("🏆 Primeira morte!"); playSound("achievement"); }
-
-    setAchievements(newAchievements);
-  };
-
   const foods = [
-    { name: "🌱 Grama", poop: 0, hunger: 10, cost: 2 },
-    { name: "🥔 Batata", poop: 2, hunger: 15, cost: 3 },
-    { name: "🍔 Hamburger", poop: 5, hunger: 25, cost: 5 },
-    { name: "🥤 Refri", poop: 20, hunger: 5, cost: 8 },
-    { name: "🫘 Feijão", poop: 10, hunger: 20, cost: 4 },
-    { name: "🌭 Hotdog", poop: 7, hunger: 22, cost: 6 },
-    { name: "🍕 Pizza", poop: 12, hunger: 30, cost: 10 },
-    { name: "🍣 Sushi", poop: 3, hunger: 18, cost: 15 },
-    { name: "🌮 Tacos", poop: 8, hunger: 24, cost: 7 },
-    { name: "🍦 Sorvete", poop: 15, hunger: 12, cost: 9 },
-    { name: "🎂 Bolo", poop: 18, hunger: 20, cost: 12 },
-    { name: "🍫 Chocolate", poop: 14, hunger: 8, cost: 8 },
-    { name: "🍎 Maçã", poop: 1, hunger: 8, cost: 2 },
-    { name: "🍌 Banana", poop: 2, hunger: 12, cost: 2 },
-    { name: "🍉 Melancia", poop: 3, hunger: 15, cost: 4 },
-    { name: "🍓 Morango", poop: 1, hunger: 10, cost: 5 },
-    { name: "🍇 Uva", poop: 2, hunger: 10, cost: 3 },
-    { name: "🥕 Cenoura", poop: 1, hunger: 12, cost: 2 },
-    { name: "🥦 Brócolis", poop: 4, hunger: 14, cost: 3 },
-    { name: "🥬 Espinafre", poop: 3, hunger: 13, cost: 2 },
-    { name: "🍅 Tomate", poop: 2, hunger: 11, cost: 2 },
-    { name: "🧀 Queijo", poop: 6, hunger: 16, cost: 5 },
-    { name: "🥛 Iogurte", poop: 4, hunger: 14, cost: 4 },
-    { name: "🥛 Leite", poop: 3, hunger: 13, cost: 3 },
-    { name: "🍞 Pão", poop: 5, hunger: 18, cost: 3 },
-    { name: "🍚 Arroz", poop: 8, hunger: 20, cost: 4 },
+    { name: "🌱 Grama", poop: 0, hunger: 10, cost: 0 },
+    { name: "🥔 Batata", poop: 2, hunger: 15, cost: 5 },
+    { name: "🍔 Hamburger", poop: 5, hunger: 25, cost: 15 },
+    { name: "🥤 Refri", poop: 20, hunger: 5, cost: 10 },
+    { name: "🫘 Feijão", poop: 10, hunger: 20, cost: 8 },
+    { name: "🌭 Hot Dog", poop: 8, hunger: 18, cost: 12 },
+    { name: "🍕 Pizza", poop: 12, hunger: 30, cost: 20 },
+    { name: "🍣 Sushi", poop: 3, hunger: 22, cost: 25 },
+    { name: "🌮 Tacos", poop: 7, hunger: 20, cost: 14 },
+    { name: "🍦 Sorvete", poop: 15, hunger: 12, cost: 18 },
+    { name: "🎂 Bolo", poop: 18, hunger: 25, cost: 22 },
+    { name: "🍫 Chocolate", poop: 16, hunger: 10, cost: 16 },
+    { name: "🍎 Maçã", poop: 1, hunger: 12, cost: 4 },
+    { name: "🍌 Banana", poop: 2, hunger: 14, cost: 5 },
+    { name: "🍉 Melancia", poop: 1, hunger: 16, cost: 6 },
+    { name: "🍓 Morango", poop: 1, hunger: 11, cost: 7 },
+    { name: "🍇 Uva", poop: 1, hunger: 13, cost: 6 },
+    { name: "🥕 Cenoura", poop: 3, hunger: 14, cost: 5 },
+    { name: "🥦 Brócolis", poop: 4, hunger: 16, cost: 6 },
+    { name: "🍃 Espinafre", poop: 2, hunger: 15, cost: 5 },
+    { name: "🍅 Tomate", poop: 2, hunger: 12, cost: 4 },
+    { name: "🧀 Queijo", poop: 6, hunger: 18, cost: 10 },
+    { name: "🥛 Iogurte", poop: 5, hunger: 14, cost: 8 },
+    { name: "🥛 Leite", poop: 4, hunger: 16, cost: 7 },
+    { name: "🍞 Pão", poop: 5, hunger: 17, cost: 6 },
+    { name: "🍚 Arroz", poop: 6, hunger: 19, cost: 8 },
   ];
 
   const games = [
-    { name: "🎮 Brawl Stars", minLevel: 1, cost: 10, reward: 50 },
-    { name: "🎮 Roblox", minLevel: 3, cost: 15, reward: 75 },
-    { name: "🎮 Gacha Life", minLevel: 5, cost: 20, reward: 100 },
-    { name: "🎮 Minecraft", minLevel: 2, cost: 12, reward: 60 },
-    { name: "🎮 Fortnite", minLevel: 4, cost: 18, reward: 85 },
-    { name: "🎮 Among Us", minLevel: 1, cost: 8, reward: 40 },
-    { name: "🎮 Clash Royale", minLevel: 6, cost: 25, reward: 120 },
-    { name: "🎮 Candy Crush", minLevel: 2, cost: 10, reward: 55 },
+    { name: "🎮 Brawl Stars", level: 1, cost: 50 },
+    { name: "🎮 Roblox", level: 3, cost: 100 },
+    { name: "🎮 Gacha Life", level: 5, cost: 150 },
+    { name: "🎮 Minecraft", level: 2, cost: 80 },
+    { name: "🎮 Fortnite", level: 4, cost: 120 },
+    { name: "🎮 Among Us", level: 2, cost: 60 },
+    { name: "🎮 Clash Royale", level: 3, cost: 90 },
+    { name: "🎮 Candy Crush", level: 1, cost: 40 },
   ];
 
-  // Funções de login/registro
+  const achievementsList = [
+    { id: "first_work", name: "🏆 Primeiro Trabalho", description: "Trabalhe pela primeira vez" },
+    { id: "first_feed", name: "🍽️ Primeira Refeição", description: "Alimente a capivara" },
+    { id: "level_5", name: "⭐ Nível 5", description: "Alcance nível 5" },
+    { id: "level_10", name: "⭐⭐ Nível 10", description: "Alcance nível 10" },
+    { id: "rich", name: "💰 Milionário", description: "Ganhe 1000 moedas" },
+    { id: "happy", name: "😄 Muito Feliz", description: "Deixe a capivara com 100% de felicidade" },
+    { id: "fed", name: "🍔 Bem Alimentado", description: "Deixe a capivara com 100% de fome" },
+    { id: "clean", name: "🚽 Limpo", description: "Reduza o coco para 0" },
+    { id: "gamer", name: "🎮 Gamer", description: "Jogue 5 minigames" },
+    { id: "collector", name: "🎁 Colecionador", description: "Coma 10 tipos diferentes de comida" },
+    { id: "speedrun", name: "⚡ Speedrun", description: "Alcance nível 5 em menos de 5 minutos" },
+    { id: "survivor", name: "🧟 Sobrevivente", description: "Mantenha a capivara viva por 10 minutos" },
+    { id: "rich_2", name: "💎 Bilionário", description: "Ganhe 10000 moedas" },
+    { id: "level_20", name: "🌟 Lenda", description: "Alcance nível 20" },
+    { id: "all_foods", name: "🍽️ Gourmand", description: "Coma todos os tipos de comida" },
+    { id: "no_poop", name: "✨ Higienista", description: "Mantenha coco em 0 por 1 minuto" },
+    { id: "sus_master", name: "🔴 Sus Master", description: "Acumule 100 de sus" },
+    { id: "affection_master", name: "❤️ Carinhoso", description: "Use carinho 50 vezes" },
+    { id: "work_master", name: "💼 Trabalhador", description: "Trabalhe 100 vezes" },
+    { id: "bathroom_master", name: "🚽 Banheiro Master", description: "Use o banheiro 50 vezes" },
+    { id: "level_50", name: "👑 Rei", description: "Alcance nível 50" },
+    { id: "rich_3", name: "🏦 Banco", description: "Ganhe 50000 moedas" },
+    { id: "perfect_day", name: "😇 Dia Perfeito", description: "Tenha 100% em todos os stats" },
+    { id: "resurrection", name: "🔄 Ressurreição", description: "Reviva a capivara 10 vezes" },
+    { id: "color_master", name: "🎨 Artista", description: "Mude a cor da capivara 5 vezes" },
+    { id: "score_1000", name: "📊 Score 1000", description: "Alcance score de 1000" },
+    { id: "score_5000", name: "📊 Score 5000", description: "Alcance score de 5000" },
+    { id: "score_10000", name: "📊 Score 10000", description: "Alcance score de 10000" },
+    { id: "marathon", name: "🏃 Maratona", description: "Jogue por 30 minutos seguidos" },
+    { id: "speedster", name: "⚡ Velocista", description: "Mova a capivara 1000 vezes" },
+    { id: "size_giant", name: "📏 Gigante", description: "Deixe a capivara com tamanho 500%" },
+    { id: "size_tiny", name: "📏 Minúsculo", description: "Deixe a capivara com tamanho 50%" },
+    { id: "xp_master", name: "✨ Mestre XP", description: "Ganhe 10000 XP total" },
+    { id: "game_master", name: "🎮 Mestre dos Jogos", description: "Jogue todos os 8 minigames" },
+    { id: "food_lover", name: "🍽️ Amante de Comida", description: "Coma 100 vezes" },
+    { id: "poop_collector", name: "💩 Colecionador", description: "Acumule 500 de coco" },
+    { id: "happy_collector", name: "😄 Felicidade", description: "Ganhe 1000 de felicidade total" },
+    { id: "hunger_collector", name: "🍔 Comilão", description: "Ganhe 1000 de fome total" },
+    { id: "level_100", name: "🔥 Lendário", description: "Alcance nível 100" },
+    { id: "coins_100k", name: "💰 Mega Riqueza", description: "Ganhe 100000 moedas" },
+    { id: "perfect_stats", name: "⚖️ Equilíbrio Perfeito", description: "Tenha todos os stats iguais" },
+    { id: "first_game", name: "🎮 Primeiro Jogo", description: "Jogue o primeiro minigame" },
+    { id: "first_color", name: "🎨 Primeira Cor", description: "Mude a cor da capivara" },
+    { id: "first_achievement", name: "🏅 Primeira Conquista", description: "Desbloqueie a primeira conquista" },
+    { id: "all_achievements", name: "🏆 Todas as Conquistas", description: "Desbloqueie todas as conquistas" },
+    { id: "time_master", name: "⏰ Mestre do Tempo", description: "Jogue por 1 hora" },
+    { id: "sus_collector", name: "🔴 Sus Collector", description: "Acumule 1000 de sus" },
+    { id: "affection_100", name: "❤️ Amor Infinito", description: "Deixe a capivara com 100% de felicidade 10 vezes" },
+  ];
+
   const handleLogin = () => {
-    if (loginUsername === "root" && loginPassword === "root") {
+    const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
+    if (users[loginUsername] && users[loginUsername] === loginPassword) {
       setCurrentUser({ username: loginUsername, password: loginPassword });
       localStorage.setItem("capyzen_current_user", JSON.stringify({ username: loginUsername, password: loginPassword }));
+      // Garantir que a capivara está viva ao fazer login
+      setState((prev: any) => ({ ...prev, alive: true }));
       setLoginError("");
       setLoginUsername("");
       setLoginPassword("");
     } else {
-      const users = JSON.parse(localStorage.getItem("capyzen_users") || "[]");
-      const user = users.find((u: any) => u.username === loginUsername && u.password === loginPassword);
-      if (user) {
-        setCurrentUser({ username: loginUsername, password: loginPassword });
-        localStorage.setItem("capyzen_current_user", JSON.stringify({ username: loginUsername, password: loginPassword }));
-        setLoginError("");
-        setLoginUsername("");
-        setLoginPassword("");
-      } else {
-        setLoginError("❌ Usuario ou senha incorretos!");
-      }
+      setLoginError("Usuario ou senha incorretos!");
     }
   };
 
   const handleCreateUser = () => {
-    if (!createUsername.trim()) {
-      setCreateError("❌ Nome de usuário não pode estar vazio!");
+    if (!createUsername || !createPassword) {
+      setMessage("Preencha usuário e senha!");
       return;
     }
-    if (!createPassword.trim()) {
-      setCreateError("❌ Senha não pode estar vazia!");
+    const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
+    if (users[createUsername]) {
+      setMessage("Usuário já existe!");
       return;
     }
-    if (createPassword.length < 3) {
-      setCreateError("❌ Senha deve ter pelo menos 3 caracteres!");
-      return;
-    }
-
-    const users = JSON.parse(localStorage.getItem("capyzen_users") || "[]");
-    if (users.find((u: any) => u.username === createUsername)) {
-      setCreateError("❌ Usuário já existe!");
-      return;
-    }
-
-    users.push({ username: createUsername, password: createPassword });
+    users[createUsername] = createPassword;
     localStorage.setItem("capyzen_users", JSON.stringify(users));
-
     setCurrentUser({ username: createUsername, password: createPassword });
     localStorage.setItem("capyzen_current_user", JSON.stringify({ username: createUsername, password: createPassword }));
+    // Garantir que a capivara está viva ao criar novo usuário
+    setState((prev: any) => ({ ...prev, alive: true }));
     setCreateError("");
     setCreateUsername("");
     setCreatePassword("");
@@ -351,607 +352,396 @@ export default function Home() {
   const handleLogout = () => {
     setCurrentUser(null);
     localStorage.removeItem("capyzen_current_user");
-    setLoginUsername("");
-    setLoginPassword("");
-    setLoginError("");
-  };
-
-  const handleDeleteProgress = () => {
-    if (confirm("⚠️ Tem certeza que quer DELETAR todo o progresso? Isso não pode ser desfeito!")) {
-      const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
-      localStorage.removeItem(userKey);
-      setState(getInitialState());
-      setMessage("🗑️ Progresso deletado!");
-      setShowSaveMenu(false);
-    }
-  };
-
-  const handleContinueProgress = () => {
-    setShowSaveMenu(false);
-    setMessage("✨ Progresso carregado!");
-  };
-
-  const handleAdminClick = () => {
-    setShowAdminPasswordPrompt(true);
-  };
-
-  const handleAdminPasswordSubmit = () => {
-    if (adminPassword === "capivarassaomuitofofas404") {
-      setShowAdminPanel(true);
-      setShowAdminPasswordPrompt(false);
-      setAdminPassword("");
-    } else {
-      alert("❌ Senha do admin incorreta!");
-      setAdminPassword("");
-    }
-  };
-
-  const gainXP = (v: number) => {
-    setState((prev: any) => {
-      let newXp = prev.xp + v;
-      let newLevel = prev.level;
-      let newSize = prev.capySize;
-      while (newXp >= 100) {
-        newXp -= 100;
-        newLevel++;
-        newSize += 0.15;
-        setMessage("⭐ LEVEL UP!");
-        playSound("levelup");
-      }
-      const newState = { ...prev, xp: newXp, level: newLevel, capySize: newSize, totalScore: prev.totalScore + v };
-      checkAchievements(newState);
-      return newState;
-    });
-  };
-
-  const completeMinigame = (reward: number) => {
-    setState((prev: any) => {
-      const newState = { ...prev, coins: prev.coins + reward, totalScore: prev.totalScore + reward };
-      setMessage(`🎮 Minigame completo! +${reward} moedas`);
-      checkAchievements(newState);
-      return newState;
-    });
-    setMinigameCooldown(true);
-    setTimeout(() => setMinigameCooldown(false), 3000);
+    setState(getInitialState());
+    setIsAdminAuthenticated(false);
   };
 
   const work = () => {
+    if (cooldown) return;
+    const coins = Math.floor(Math.random() * 30) + 10;
+    const xpGain = Math.floor(Math.random() * 15) + 5;
     setState((prev: any) => {
-      const earnedCoins = 15;
-      setMessage(`💼 trabalhou! +${earnedCoins} moedas`);
-      playSound("work");
-      gainXP(5);
-      const newState = { ...prev, coins: prev.coins + earnedCoins, hunger: Math.max(0, prev.hunger - 10), totalScore: prev.totalScore + 15 };
-      checkAchievements(newState);
+        let newXp = prev.xp + xpGain;
+        const newLevel = Math.floor(newXp / 100) + 1;
+        const newSize = 1 + (newLevel - 1) * 0.15;
+        let newState = {
+        ...prev,
+        coins: prev.coins + coins,
+        xp: newXp % 100,
+        level: newLevel,
+        capySize: newSize,
+        totalScore: prev.totalScore + coins + xpGain,
+      };
+      if (newLevel > prev.level) {
+        playSound("levelup");
+        setMessage(`🎉 Level Up! Nível ${newLevel}!`);
+      }
       return newState;
     });
+    setMessage(`💼 Trabalhou! +${coins} 💰 +${xpGain} XP`);
+    playSound("work");
     setCooldown(true);
-    setTimeout(() => setCooldown(false), 10000);
+    setTimeout(() => setCooldown(false), 1000);
   };
 
   const feed = () => {
-    setState((prev: any) => {
-      const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog", "pizza", "sushi", "tacos", "sorvete", "bolo", "chocolate", "maçã", "banana", "melancia", "morango", "uva", "cenoura", "brócolis", "espinafre", "tomate", "queijo", "iogurte", "leite", "pão", "arroz"];
-      const foodName = foodNames[selectedFood];
-      const inv = prev.inventory || {};
-      const foodCount = (inv && inv[foodName]) || 0;
-
-      if (!prev.alive || foodCount <= 0) {
-        setMessage("🍔 sem comida!");
-        return prev;
-      }
-      const food = foods[selectedFood];
-      setMessage(`🍔 comeu ${food.name}! +${food.poop} 💩, +${food.hunger} 🍽️`);
-      playSound("eat");
-      gainXP(3);
-      const newPoop = godMode ? 0 : Math.min(100, prev.poop + food.poop);
-      const newHunger = Math.min(100, prev.hunger + food.hunger);
-      const newState = {
-        ...prev,
-        poop: newPoop,
-        hunger: newHunger,
-        coins: prev.coins + 1,
-        totalScore: prev.totalScore + 3,
-        inventory: {
-          ...prev.inventory,
-          [foodName]: foodCount - 1,
-        },
-      };
-      checkAchievements(newState);
-      return newState;
-    });
-  };
-
-  const useBathroom = () => {
-    setState((prev: any) => {
-      if (!prev.alive) return prev;
-      setMessage("💩 Deu uma cagada remunerada! -20 coco");
-      playSound("work");
-      gainXP(2);
-      const newState = { ...prev, poop: Math.max(0, prev.poop - 20), totalScore: prev.totalScore + 2 };
-      checkAchievements(newState);
-      return newState;
-    });
-    setCooldown(true);
-    setTimeout(() => setCooldown(false), 5000);
-  };
-
-  const giveAffection = () => {
-    setState((prev: any) => {
-      if (!prev.alive) return prev;
-      setMessage("❤️ Carinho dado! +10 felicidade");
-      playSound("eat");
-      gainXP(2);
-      const newState = { ...prev, happy: Math.min(100, prev.happy + 10), totalScore: prev.totalScore + 5 };
-      checkAchievements(newState);
-      return newState;
-    });
-    setCooldown(true);
-    setTimeout(() => setCooldown(false), 5000);
-  };
-
-  const buyFood = () => {
+    if (!state.alive || state.inventory[foods[selectedFood]?.name?.split(" ")[1]?.toLowerCase()] === 0) return;
     const food = foods[selectedFood];
-    if (state.coins < food.cost) {
-      setMessage(`💰 Precisa de ${food.cost} moedas!`);
-      return;
-    }
-
-    setState((prev: any) => {
-      const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog", "pizza", "sushi", "tacos", "sorvete", "bolo", "chocolate", "maçã", "banana", "melancia", "morango", "uva", "cenoura", "brócolis", "espinafre", "tomate", "queijo", "iogurte", "leite", "pão", "arroz"];
-      const foodName = foodNames[selectedFood];
-      const newState = {
-        ...prev,
-        coins: prev.coins - food.cost,
-        inventory: {
-          ...prev.inventory,
-          [foodName]: (prev.inventory[foodName] || 0) + 1,
-        },
-      };
-      setMessage(`🛒 Comprou ${food.name}!`);
-      return newState;
-    });
+    if (!food) return;
+    
+    const foodKey = food.name.split(" ")[1].toLowerCase();
+    setState((prev: any) => ({
+      ...prev,
+      hunger: Math.max(0, prev.hunger - food.hunger),
+      poop: prev.poop + food.poop,
+      happy: Math.min(100, prev.happy + 10),
+      totalScore: prev.totalScore + 5,
+      inventory: {
+        ...prev.inventory,
+        [foodKey]: (prev.inventory as any)[foodKey] - 1,
+      },
+    }));
+    setMessage(`🍔 comeu ${food.name}! +${food.poop} 💩, +${food.hunger} 🍽️`);
+    playSound("eat");
   };
 
-  const playGame = (gameIndex: number) => {
-    const game = games[gameIndex];
-    if (state.level < game.minLevel) {
-      setMessage(`🎮 Precisa estar no nível ${game.minLevel} para jogar!`);
-      return;
-    }
-    if (state.coins < game.cost) {
-      setMessage(`💰 Precisa de ${game.cost} moedas!`);
+  const bathroom = () => {
+    if (state.poop === 0) {
+      setMessage("💩 Já está limpo!");
       return;
     }
     setState((prev: any) => ({
       ...prev,
-      coins: prev.coins - game.cost,
+      poop: Math.max(0, prev.poop - 20),
+      coins: prev.coins + 50,
+      totalScore: prev.totalScore + 50,
     }));
-    completeMinigame(game.reward);
+    setMessage("💩 Deu uma cagada remunerada! -20 coco");
   };
 
-  const applyAdminCommand = (cmd: string) => {
-    setState((prev: any) => {
-      let updated = { ...prev };
+  const affection = () => {
+    if (susCooldown) return;
+    setState((prev: any) => ({
+      ...prev,
+      happy: Math.min(100, prev.happy + 15),
+      sus: Math.max(0, prev.sus - 5),
+      totalScore: prev.totalScore + 10,
+    }));
+    setMessage("❤️ Carinho! +15 😄");
+    setSusCooldown(true);
+    setTimeout(() => setSusCooldown(false), 2000);
+  };
 
-      if (cmd === "+coins") updated.coins = Math.min(999999, updated.coins + 100);
-      if (cmd === "-coins") updated.coins = Math.max(0, updated.coins - 100);
+  const buyFood = (index: number) => {
+    const food = foods[index];
+    if (!food || state.coins < food.cost) {
+      setMessage("💰 Moedas insuficientes!");
+      return;
+    }
+    const foodKey = food.name.split(" ")[1].toLowerCase();
+    setState((prev: any) => ({
+      ...prev,
+      coins: prev.coins - food.cost,
+      inventory: {
+        ...prev.inventory,
+        [foodKey]: ((prev.inventory as any)[foodKey] || 0) + 1,
+      },
+    }));
+    setMessage(`🛒 Comprou ${food.name}!`);
+  };
 
-      if (cmd === "+happy") updated.happy = Math.min(100, updated.happy + 20);
-      if (cmd === "-happy") updated.happy = Math.max(0, updated.happy - 20);
+  const playGame = (index: number) => {
+    const game = games[index];
+    if (!game || state.level < game.level || state.coins < game.cost) {
+      setMessage("❌ Nível ou moedas insuficientes!");
+      return;
+    }
+    if (minigameCooldown) return;
+    setState((prev: any) => ({
+      ...prev,
+      coins: prev.coins - game.cost,
+      happy: Math.min(100, prev.happy + 20),
+      totalScore: prev.totalScore + game.cost,
+    }));
+    setMessage(`🎮 Jogou ${game.name}! +20 😄`);
+    playSound("achievement");
+    setMinigameCooldown(true);
+    setTimeout(() => setMinigameCooldown(false), 2000);
+  };
 
-      if (cmd === "+hunger") updated.hunger = Math.min(100, updated.hunger + 20);
-      if (cmd === "-hunger") updated.hunger = Math.max(0, updated.hunger - 20);
+  const handleAdminCommand = (command: string) => {
+    if (command === "god") setGodMode(!godMode);
+    else if (command === "normal") setGodMode(false);
+    else if (command === "reset") {
+      setState(getInitialState());
+      setMessage("🔄 Jogo resetado!");
+    }
+  };
 
-      if (cmd === "+sus") updated.sus = Math.min(100, updated.sus + 20);
-      if (cmd === "-sus") updated.sus = Math.max(0, updated.sus - 20);
+  const draw = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const currentState = state; // Use state directly, not stateRef
 
-      if (cmd === "+poop") updated.poop = Math.min(100, updated.poop + 20);
-      if (cmd === "-poop") updated.poop = Math.max(0, updated.poop - 20);
+    ctx.fillStyle = "#f0f0f0";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (cmd === "setCoins")
-        updated.coins = Math.max(0, askNum("quantas moedas?"));
-      if (cmd === "setLevel")
-        updated.level = Math.max(1, askNum("qual level?"));
+    if (!currentState.alive) {
+      ctx.font = "bold 40px Arial";
+      ctx.fillStyle = "#000";
+      ctx.textAlign = "center";
+      ctx.fillText("💀", canvas.width / 2, canvas.height / 2);
+      ctx.font = "20px Arial";
+      ctx.fillText("Clique em 'Reviver' para trazer de volta", canvas.width / 2, canvas.height / 2 + 40);
+      return;
+    }
 
-      if (cmd === "∞coins") {
-        updated.coins = 999999;
-        setMessage("💰 Moedas = ∞");
-      }
+    // Draw capybara
+    const size = 30 * currentState.capySize;
+    ctx.fillStyle = currentState.capyColor;
+    ctx.beginPath();
+    ctx.ellipse(currentState.x, currentState.y, size, size * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-      if (cmd === "godMode") {
-        setGodMode(true);
-        setMessage("👻 GOD MODE ativado");
-      }
+    // Eyes
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(currentState.x - size * 0.3, currentState.y - size * 0.2, size * 0.15, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(currentState.x + size * 0.3, currentState.y - size * 0.2, size * 0.15, 0, Math.PI * 2);
+    ctx.fill();
 
-      if (cmd === "normalMode") {
-        setGodMode(false);
-        setMessage("😄 Modo Normal ativado");
-      }
+    // Nose
+    ctx.fillStyle = "#8B4513";
+    ctx.beginPath();
+    ctx.arc(currentState.x, currentState.y + size * 0.1, size * 0.1, 0, Math.PI * 2);
+    ctx.fill();
 
-      if (cmd === "RESET") {
-        const c = prompt("Escreva reset para confirmar");
-        if (c === "reset") {
-          updated = getInitialState();
-          setMessage("🔄 RESETADO!");
-        }
-      }
+    // Mouth
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(currentState.x, currentState.y + size * 0.2, size * 0.15, 0, Math.PI);
+    ctx.stroke();
 
-      return updated;
+    // Ears
+    ctx.fillStyle = currentState.capyColor;
+    ctx.beginPath();
+    ctx.ellipse(currentState.x - size * 0.4, currentState.y - size * 0.5, size * 0.15, size * 0.25, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(currentState.x + size * 0.4, currentState.y - size * 0.5, size * 0.15, size * 0.25, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Tail
+    ctx.strokeStyle = currentState.capyColor;
+    ctx.lineWidth = size * 0.2;
+    ctx.beginPath();
+    ctx.moveTo(currentState.x + size * 0.5, currentState.y);
+    ctx.quadraticCurveTo(currentState.x + size * 0.7, currentState.y + size * 0.3, currentState.x + size * 0.6, currentState.y + size * 0.6);
+    ctx.stroke();
+
+    // Paws
+    ctx.fillStyle = currentState.capyColor;
+    ctx.beginPath();
+    ctx.ellipse(currentState.x - size * 0.25, currentState.y + size * 0.5, size * 0.12, size * 0.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(currentState.x + size * 0.25, currentState.y + size * 0.5, size * 0.12, size * 0.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  const drawBars = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const currentState = state; // Use state directly, not stateRef
+
+    const barWidth = 120;
+    const barHeight = 16;
+    const startX = 10;
+    const startY = 10;
+    const spacing = 22;
+
+    const bars = [
+      { label: "🍽️", value: Math.max(0, 100 - currentState.hunger), color: "#10b981", max: 100 },
+      { label: "😄", value: currentState.happy, color: "#f59e0b", max: 100 },
+      { label: "💩", value: Math.min(100, currentState.poop), color: "#8b7355", max: 100 },
+      { label: "🔴", value: currentState.sus, color: "#ef4444", max: 100 },
+    ];
+
+    bars.forEach((bar, i) => {
+      const y = startY + i * spacing;
+      
+      // Background
+      ctx.fillStyle = "#e5e7eb";
+      ctx.beginPath();
+      ctx.roundRect(startX, y, barWidth, barHeight, 4);
+      ctx.fill();
+
+      // Bar with gradient
+      const gradient = ctx.createLinearGradient(startX, y, startX + barWidth, y);
+      gradient.addColorStop(0, bar.color);
+      gradient.addColorStop(1, bar.color + "80");
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.roundRect(startX, y, (bar.value / bar.max) * barWidth, barHeight, 4);
+      ctx.fill();
+
+      // Border
+      ctx.strokeStyle = bar.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(startX, y, barWidth, barHeight, 4);
+      ctx.stroke();
+
+      // Label and percentage
+      ctx.fillStyle = "#000";
+      ctx.font = "bold 12px Arial";
+      ctx.textAlign = "left";
+      ctx.fillText(bar.label, startX - 20, y + 12);
+      ctx.textAlign = "right";
+      ctx.fillText(`${Math.round(bar.value)}%`, startX + barWidth + 5, y + 12);
     });
   };
 
-  const askNum = (msg: string) => {
-    const ans = prompt(msg);
-    return ans ? parseInt(ans) : 0;
-  };
-
-  const displayValue = (value: number | null | undefined, maxValue: number = 100) => {
-    if (value == null) return "0";
-    if (value >= maxValue) return "∞";
-    return String(value);
-  };
-
-  const sendBugReport = async () => {
-    if (!bugText.trim()) {
-      alert("Por favor, descreva o bug!");
-      return;
-    }
-    const mailtoLink = `mailto:maio123232222222111@gmail.com?subject=Bug Report CapyZen&body=${encodeURIComponent(bugText)}`;
-    window.location.href = mailtoLink;
-    setBugText("");
-    setShowBugReport(false);
-  };
-
-  // Draw loop
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const gameLoop = setInterval(() => {
+      draw();
+      drawBars();
+    }, 1000 / 30);
 
-    const drawBar = (
-      x: number,
-      y: number,
-      value: number,
-      color: string,
-      label: string
-    ) => {
-      const w = 120;
-      const h = 14;
-      const radius = 7;
-      
-      // Fundo arredondado com sombra
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
-      ctx.shadowBlur = 4;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 2;
-      
-      // Desenhar fundo com cantos arredondados
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + w - radius, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
-      ctx.lineTo(x + w, y + h - radius);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
-      ctx.lineTo(x + radius, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      ctx.fillStyle = "#f0f0f0";
-      ctx.fill();
-      
-      // Desenhar barra preenchida com gradiente
-      const fillWidth = (w * value) / 100;
-      if (fillWidth > 0) {
-        const gradient = ctx.createLinearGradient(x, y, x, y + h);
-        gradient.addColorStop(0, color);
-        gradient.addColorStop(1, adjustBrightness(color, -20));
-        
-        ctx.beginPath();
-        ctx.moveTo(x + radius, y);
-        ctx.lineTo(x + Math.min(fillWidth - radius, w - radius), y);
-        if (fillWidth >= w - radius) {
-          ctx.quadraticCurveTo(x + fillWidth, y, x + fillWidth, y + radius);
-        }
-        ctx.lineTo(x + fillWidth, y + h - radius);
-        if (fillWidth >= w - radius) {
-          ctx.quadraticCurveTo(x + fillWidth, y + h, x + fillWidth - radius, y + h);
-        }
-        ctx.lineTo(x + radius, y + h);
-        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
-        ctx.lineTo(x, y + radius);
-        ctx.quadraticCurveTo(x, y, x + radius, y);
-        ctx.closePath();
-        ctx.fillStyle = gradient;
-        ctx.fill();
-      }
-      
-      // Borda com cor mais clara
-      ctx.strokeStyle = "rgba(0, 0, 0, 0.15)";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + w - radius, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
-      ctx.lineTo(x + w, y + h - radius);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
-      ctx.lineTo(x + radius, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      ctx.stroke();
-      
-      // Label com fonte melhorada
-      ctx.shadowColor = "transparent";
-      ctx.fillStyle = "#333";
-      ctx.font = "bold 11px Arial";
-      ctx.textAlign = "left";
-      ctx.fillText(label, x + w + 8, y + 10);
-      
-      // Valor da barra
-      ctx.font = "bold 9px Arial";
-      ctx.fillStyle = "#666";
-      ctx.textAlign = "right";
-      ctx.fillText(Math.floor(value) + "%", x + w - 4, y + 10);
-    };
-    
-    const adjustBrightness = (color: string, percent: number): string => {
-      const num = parseInt(color.replace("#", ""), 16);
-      const amt = Math.round(2.55 * percent);
-      const R = (num >> 16) + amt;
-      const G = (num >> 8 & 0x00FF) + amt;
-      const B = (num & 0x0000FF) + amt;
-      return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-        (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-        (B < 255 ? B < 1 ? 0 : B : 255))
-        .toString(16).slice(1);
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, 300, 320);
-
-      if (state.alive) {
-        // Barras de status
-        drawBar(10, 10, state.hunger, "#4CAF50", "Fome");
-        drawBar(10, 25, state.happy, "#FF9800", "Feliz");
-        drawBar(10, 40, state.poop, "#8B4513", "Coco");
-        drawBar(10, 55, state.sus, "#FF0000", "Sus");
-
-        // Cor da capivara baseada em saúde
-        let bodyColor = state.capyColor;
-        if (state.hunger < 30 || state.happy < 30) bodyColor = "#FF6B35";
-        if (state.hunger < 10 || state.happy < 10) bodyColor = "#DC143C";
-
-        const size = state.capySize || 1;
-
-        // Corpo
-        ctx.fillStyle = bodyColor;
-        ctx.beginPath();
-        ctx.ellipse(state.x, state.y, 50 * size, 45 * size, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Patas
-        ctx.fillStyle = bodyColor;
-        ctx.fillRect(state.x - 35 * size, state.y + 35 * size, 15 * size, 20 * size);
-        ctx.fillRect(state.x - 10 * size, state.y + 35 * size, 15 * size, 20 * size);
-        ctx.fillRect(state.x + 10 * size, state.y + 35 * size, 15 * size, 20 * size);
-        ctx.fillRect(state.x + 35 * size, state.y + 35 * size, 15 * size, 20 * size);
-
-        // Cauda
-        ctx.fillStyle = bodyColor;
-        ctx.beginPath();
-        ctx.arc(state.x + 55 * size, state.y + 10 * size, 12 * size, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Orelhas
-        ctx.fillStyle = bodyColor;
-        ctx.beginPath();
-        ctx.arc(state.x - 35 * size, state.y - 40 * size, 12 * size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(state.x + 35 * size, state.y - 40 * size, 12 * size, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Olhos
-        ctx.fillStyle = "#000";
-        ctx.beginPath();
-        ctx.arc(state.x - 22 * size, state.y - 42 * size, 2.5 * size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(state.x + 22 * size, state.y - 42 * size, 2.5 * size, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Nariz
-        ctx.fillStyle = "#8B4513";
-        ctx.beginPath();
-        ctx.ellipse(state.x, state.y - 15 * size, 12 * size, 10 * size, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Narinas
-        ctx.fillStyle = "#654321";
-        ctx.beginPath();
-        ctx.arc(state.x - 5 * size, state.y - 18 * size, 2 * size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(state.x + 5 * size, state.y - 18 * size, 2 * size, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Sorriso
-        ctx.strokeStyle = "#654321";
-        ctx.lineWidth = 2 * size;
-        ctx.beginPath();
-        ctx.arc(state.x, state.y - 5 * size, 15 * size, 0, Math.PI);
-        ctx.stroke();
-
-        // Info no canvas
-        ctx.fillStyle = "#333";
-        ctx.font = "bold 14px Arial";
-        ctx.fillText(`Lv ${state.level} | XP ${state.xp}/100 | Tamanho: ${(state.capySize * 100).toFixed(0)}%`, 10, 290);
-      } else {
-        // Capivara morta
-        ctx.fillStyle = "#888";
-        ctx.font = "bold 40px Arial";
-        ctx.fillText("💀", 130, 150);
-        ctx.font = "14px Arial";
-        ctx.fillStyle = "#333";
-        ctx.fillText("Clique em 'Reviver' para trazer de volta", 50, 200);
-      }
-    };
-
-    const gameLoop = setInterval(draw, 1000 / 30);
-
-    // Lógica de fome/felicidade
     const lifeLoop = setInterval(() => {
       setState((prev: any) => {
-        if (!prev.alive) return prev;
-        let newHunger = Math.max(0, prev.hunger - 0.5);
-        let newHappy = Math.max(0, prev.happy - 0.25);
-        let newAlive = prev.alive;
-
-        if (newHunger <= 0 || newHappy <= 0) {
-          newAlive = false;
-          setMessage("💀 Capivara morreu!");
-        }
-
-        return {
-          ...prev,
-          hunger: newHunger,
-          happy: newHappy,
-          alive: newAlive,
-        };
+        let newState = { ...prev };
+        // Sempre garantir que a capivara está viva
+        newState.alive = true;
+        // Aumentar fome mais lentamente
+        newState.hunger = Math.min(100, prev.hunger + 0.05);
+        // Diminuir felicidade mais lentamente
+        newState.happy = Math.max(0, prev.happy - 0.02);
+        newState.sus = Math.max(0, prev.sus - 0.01);
+        return newState;
       });
     }, 500);
 
+    const keyHandler = (e: KeyboardEvent) => {
+      const speed = stateRef.current?.speed || 3;
+      setState((prev: any) => {
+        let newX = prev.x;
+        let newY = prev.y;
+        if (e.key === "ArrowUp") newY = Math.max(30, prev.y - speed);
+        if (e.key === "ArrowDown") newY = Math.min(370, prev.y + speed);
+        if (e.key === "ArrowLeft") newX = Math.max(30, prev.x - speed);
+        if (e.key === "ArrowRight") newX = Math.min(370, prev.x + speed);
+        return { ...prev, x: newX, y: newY };
+      });
+    };
+
+    window.addEventListener("keydown", keyHandler);
     return () => {
       clearInterval(gameLoop);
       clearInterval(lifeLoop);
+      window.removeEventListener("keydown", keyHandler);
     };
-  }, [godMode]);
+  }, []);
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (!state.alive) return;
-    setState((prev: any) => {
-      let newX = prev.x;
-      let newY = prev.y;
-      if (e.key === "ArrowUp") newY = Math.max(50, newY - prev.speed);
-      if (e.key === "ArrowDown") newY = Math.min(270, newY + prev.speed);
-      if (e.key === "ArrowLeft") newX = Math.max(50, newX - prev.speed);
-      if (e.key === "ArrowRight") newX = Math.min(250, newX + prev.speed);
-      return { ...prev, x: newX, y: newY };
-    });
-  };
+  const passiveCoinGain = setInterval(() => {
+    setState((prev: any) => ({
+      ...prev,
+      coins: prev.coins + 1,
+      totalScore: prev.totalScore + 1,
+    }));
+  }, 3000);
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [state.alive]);
-
-  // Ganho passivo de moedas
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (state.alive) {
-        setState((prev: any) => ({
-          ...prev,
-          coins: prev.coins + 3,
-        }));
-      }
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [state.alive]);
-
-  // Se não está logado, mostrar tela de login
   if (!currentUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 p-4 flex items-center justify-center">
-        <div className="bg-white rounded-3xl p-8 shadow-2xl w-full max-w-md border-4 border-pink-300">
+      <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border-4 border-pink-400">
           <div className="text-center mb-6">
             <div className="text-6xl mb-2">🐹</div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent mb-2">Capyzen</h1>
-            <p className="text-gray-600 font-semibold">Bem-vindo ao jogo da capivara fofinha!</p>
+            <h1 className="text-4xl font-bold text-pink-600 mb-2">Capyzen</h1>
+            <p className="text-gray-700">Bem-vindo ao jogo da capivara fofinha!</p>
           </div>
 
           {!isCreatingUser ? (
             <>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2 text-purple-600">👤 Usuário:</label>
+                <label className="block text-blue-600 font-bold mb-2">👤 Usuário:</label>
                 <input
                   type="text"
+                  placeholder="Digite seu usuário"
                   value={loginUsername}
                   onChange={(e) => setLoginUsername(e.target.value)}
-                  placeholder="Digite seu usuário"
-                  className="w-full p-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-purple-500 bg-pink-50"
+                  className="w-full px-4 py-2 border-2 border-pink-400 rounded-xl focus:outline-none focus:border-pink-600"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2 text-purple-600">🔐 Senha:</label>
+                <label className="block text-yellow-600 font-bold mb-2">🔒 Senha:</label>
                 <input
                   type="password"
+                  placeholder="Digite sua senha"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
-                  placeholder="Digite sua senha"
-                  className="w-full p-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-purple-500 bg-pink-50"
+                  className="w-full px-4 py-2 border-2 border-pink-400 rounded-xl focus:outline-none focus:border-pink-600"
                 />
               </div>
-              {loginError && <p className="text-red-600 text-sm mb-4 font-bold">{loginError}</p>}
+              {loginError && <p className="text-red-500 text-sm mb-4">{loginError}</p>}
               <button
                 onClick={handleLogin}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white py-3 rounded-xl font-bold mb-2 transition transform hover:scale-105 shadow-lg"
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3 rounded-xl mb-3 transition"
               >
                 ✨ Entrar
               </button>
               <button
                 onClick={() => setIsCreatingUser(true)}
-                className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+                className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 rounded-xl transition"
               >
                 🎉 Criar Usuário
               </button>
-              <p className="text-center text-xs text-gray-600 mt-4 font-semibold">👉 Teste: root / root</p>
+              <p className="text-center text-sm text-gray-600 mt-4">👑 Teste: root / root</p>
             </>
           ) : (
             <>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2 text-purple-600">👤 Novo Usuário:</label>
+                <label className="block text-blue-600 font-bold mb-2">👤 Novo Usuário:</label>
                 <input
                   type="text"
+                  placeholder="Digite um usuário"
                   value={createUsername}
                   onChange={(e) => setCreateUsername(e.target.value)}
-                  placeholder="Digite o novo usuário"
-                  className="w-full p-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-purple-500 bg-pink-50"
+                  className="w-full px-4 py-2 border-2 border-pink-400 rounded-xl focus:outline-none focus:border-pink-600"
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-sm font-bold mb-2 text-purple-600">🔐 Senha:</label>
+                <label className="block text-yellow-600 font-bold mb-2">🔒 Senha:</label>
                 <input
                   type="password"
+                  placeholder="Digite uma senha"
                   value={createPassword}
                   onChange={(e) => setCreatePassword(e.target.value)}
-                  placeholder="Digite a senha"
-                  className="w-full p-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-purple-500 bg-pink-50"
+                  className="w-full px-4 py-2 border-2 border-pink-400 rounded-xl focus:outline-none focus:border-pink-600"
                 />
               </div>
-              {createError && <p className="text-red-600 text-sm mb-4 font-bold">{createError}</p>}
+              {createError && <p className="text-red-500 text-sm mb-4">{createError}</p>}
               <button
                 onClick={handleCreateUser}
-                className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white py-3 rounded-xl font-bold mb-2 transition transform hover:scale-105 shadow-lg"
+                className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 rounded-xl mb-3 transition"
               >
                 ✅ Criar
               </button>
               <button
-                onClick={() => {
-                  setIsCreatingUser(false);
-                  setCreateError("");
-                  setCreateUsername("");
-                  setCreatePassword("");
-                }}
-                className="w-full bg-gray-400 hover:bg-gray-500 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+                onClick={() => setIsCreatingUser(false)}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-xl transition"
               >
-                ⬅️ Voltar
+                ❌ Voltar
               </button>
             </>
           )}
@@ -962,398 +752,173 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 p-4">
-      <div className="flex gap-6 flex-wrap justify-center">
-        {/* Canvas */}
-        <div className="bg-gradient-to-br from-pink-200 to-blue-200 rounded-3xl p-4 shadow-2xl border-4 border-pink-300">
-          <canvas
-            ref={canvasRef}
-            width={300}
-            height={320}
-            className="bg-gradient-to-br from-blue-50 to-pink-50 rounded-2xl border-4 border-purple-300"
-          />
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-2xl p-4 mb-4 shadow-lg">
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-3xl">🐹</span>
+              <span className="text-2xl font-bold text-white">👤 {currentUser.username}</span>
+            </div>
+            <div className="flex gap-4 text-white font-bold flex-wrap justify-center">
+              <div>💰 Moedas: {state.coins}</div>
+              <div>⭐ Nível: {state.level}</div>
+              <div>📊 XP: {state.xp}/100</div>
+              <div>📏 Tamanho: {Math.round(state.capySize * 100)}%</div>
+              <div>💩 Coco: {Math.round(state.poop)}</div>
+              <div>📈 Score: {state.totalScore}</div>
+            </div>
+          </div>
         </div>
 
-        {/* Painel Principal */}
-        <div className="bg-gradient-to-br from-white to-pink-50 rounded-3xl p-6 shadow-2xl w-96 border-4 border-purple-300">
-          <div className="text-center mb-4">
-            <div className="text-4xl mb-2">🐹</div>
-            <div className="text-sm text-gray-600 mb-2 font-bold">👤 {currentUser?.username}</div>
-            <input
-              type="text"
-              value={playerName}
-              onChange={(e) => setPlayerName(e.target.value)}
-              className="w-full p-2 border-2 border-purple-300 rounded-xl text-center font-bold mb-2 bg-purple-50 focus:outline-none focus:border-pink-500"
-              placeholder="Seu nome"
-            />
-          </div>
-
-          {/* Stats */}
-          <div className="bg-gradient-to-r from-pink-100 to-purple-100 p-4 rounded-2xl mb-4 border-2 border-pink-300">
-            <div className="grid grid-cols-2 gap-2 text-sm font-bold">
-              <div>💰 Moedas: <span className="text-pink-600">{displayValue(state.coins, 999999)}</span></div>
-              <div>⭐ Nível: <span className="text-purple-600">{displayValue(state.level, 999)}</span></div>
-              <div>📊 XP: <span className="text-blue-600">{state.xp >= 99 ? "∞" : state.xp}/100</span></div>
-              <div>📏 Tamanho: <span className="text-green-600">{(state.capySize * 100).toFixed(0)}%</span></div>
-              <div>💩 Coco: <span className="text-amber-600">{Math.floor(state.poop)}</span></div>
-              <div>📈 Score: <span className="text-red-600">{state.totalScore}</span></div>
+        {/* Main Game Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Canvas */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-lg p-4 border-4 border-pink-300">
+              <canvas
+                ref={canvasRef}
+                width={400}
+                height={400}
+                className="w-full border-4 border-dashed border-pink-400 rounded-xl bg-gradient-to-b from-pink-50 to-purple-50"
+              />
+              <p className="text-center text-sm text-gray-600 mt-2">Use as setas para mover a capivara</p>
             </div>
           </div>
 
-          {/* Mensagem */}
-          <div className="bg-gradient-to-r from-yellow-100 to-orange-100 p-3 rounded-2xl mb-4 text-center font-bold text-sm border-2 border-yellow-300 min-h-12 flex items-center justify-center">
-            {message}
-          </div>
-
-          {/* Achievements Count */}
-          <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-2 rounded-xl mb-4 text-center text-xs font-bold border-2 border-purple-300">
-            🏆 Conquistas: {Object.keys(achievements).length}/50+
-          </div>
-
-          {/* Seletor de Comida */}
-          <div className="bg-gradient-to-r from-green-100 to-blue-100 p-3 rounded-2xl mb-4 border-2 border-green-300">
-            <label className="block text-sm font-bold mb-2 text-green-700">🍽️ Comida:</label>
-            <select
-              value={String(selectedFood)}
-              onChange={(e) => setSelectedFood(Number(e.target.value))}
-              className="w-full p-2 border-2 border-green-300 rounded-xl bg-green-50 text-sm font-semibold focus:outline-none focus:border-green-500"
-            >
-              {foods.map((f, i) => {
-                const foodNames = ["grama", "batata", "hamburger", "refri", "feijao", "hotdog", "pizza", "sushi", "tacos", "sorvete", "bolo", "chocolate", "maçã", "banana", "melancia", "morango", "uva", "cenoura", "brócolis", "espinafre", "tomate", "queijo", "iogurte", "leite", "pão", "arroz"];
-                const count = (state.inventory && state.inventory[foodNames[i]]) || 0;
-                return (
+          {/* Controls */}
+          <div className="space-y-3">
+            <div className="bg-white rounded-2xl shadow-lg p-4 border-4 border-yellow-300">
+              <label className="block text-sm font-bold text-gray-700 mb-2">🍔 Comida:</label>
+              <select
+                value={selectedFood}
+                onChange={(e) => setSelectedFood(Number(e.target.value))}
+                className="w-full px-3 py-2 border-2 border-yellow-400 rounded-lg focus:outline-none text-sm"
+              >
+                {foods.map((food, i) => (
                   <option key={i} value={i}>
-                    {f.name} (💩 {f.poop}) - {count}x
+                    {food.name} (💩 {food.poop}) - {state.inventory[food.name.split(" ")[1].toLowerCase() as any] || 0}x
                   </option>
-                );
-              })}
-            </select>
-          </div>
+                ))}
+              </select>
+            </div>
 
-          {/* Botões de Ação */}
-          <div className="space-y-2 mb-4">
             <button
               onClick={work}
-              disabled={!state.alive || cooldown}
-              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 disabled:bg-gray-400 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              disabled={cooldown}
+              className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               💼 Trabalhar
             </button>
             <button
               onClick={feed}
-              disabled={!state.alive}
-              className="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 disabled:bg-gray-400 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              disabled={!state.alive || (state.inventory as any)[foods[selectedFood]?.name?.split(" ")[1]?.toLowerCase()] === 0}
+              className="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               🍔 Comer
             </button>
             <button
-              onClick={() => useBathroom()}
-              disabled={!state.alive || cooldown}
-              className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-500 hover:to-blue-600 disabled:bg-gray-400 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              onClick={bathroom}
+              disabled={state.poop === 0}
+              className="w-full bg-gradient-to-r from-blue-400 to-cyan-500 hover:from-blue-500 hover:to-cyan-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               🚽 Banheiro
             </button>
             <button
-              onClick={() => giveAffection()}
-              disabled={!state.alive || cooldown}
-              className="w-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 disabled:bg-gray-400 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              onClick={affection}
+              disabled={susCooldown}
+              className="w-full bg-gradient-to-r from-pink-400 to-rose-500 hover:from-pink-500 hover:to-rose-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               ❤️ Carinho
             </button>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => setShowShop(!showShop)}
-                className="bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                🛒 Loja
-              </button>
-              <button
-                onClick={() => setShowCustomize(!showCustomize)}
-                className="bg-gradient-to-r from-pink-400 to-rose-500 hover:from-pink-500 hover:to-rose-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                🎨 Cores
-              </button>
-              <button
-                onClick={() => setShowMinigame(!showMinigame)}
-                className="bg-gradient-to-r from-purple-400 to-violet-500 hover:from-purple-500 hover:to-violet-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                🎮 Jogos
-              </button>
-              <button
-                onClick={() => setShowAchievements(!showAchievements)}
-                className="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                🏆 Conquistas
-              </button>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={handleAdminClick}
-                className="bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                ⚙️ Admin
-              </button>
-              <button
-                onClick={() => setShowBugReport(!showBugReport)}
-                className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                🐛 Bug
-              </button>
-            </div>
-
             <button
-              onClick={() => {
-                if (!state.alive) {
-                  setState(getInitialState());
-                  setMessage("✨ Capivara revivida!");
-                }
-              }}
-              disabled={state.alive}
-              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 disabled:bg-gray-400 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              onClick={() => setShowShop(!showShop)}
+              className="w-full bg-gradient-to-r from-purple-400 to-indigo-500 hover:from-purple-500 hover:to-indigo-600 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
+            >
+              🛒 Loja
+            </button>
+            <button
+              onClick={() => setShowCustomize(!showCustomize)}
+              className="w-full bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
+            >
+              🎨 Cores
+            </button>
+            <button
+              onClick={() => setShowMinigame(!showMinigame)}
+              className="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
+            >
+              🎮 Jogos
+            </button>
+            <button
+              onClick={() => setShowAchievements(!showAchievements)}
+              className="w-full bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
+            >
+              🏆 Conquistas
+            </button>
+            <button
+              onClick={() => setShowAdminPasswordPrompt(true)}
+              className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
+            >
+              ⚙️ Admin
+            </button>
+            <button
+              onClick={() => setShowBugReport(!showBugReport)}
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
+            >
+              🐛 Bug
+            </button>
+            <button
+              onClick={() => setState((prev: any) => ({ ...prev, alive: true }))}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               ✨ Reviver
             </button>
-
             <button
               onClick={() => setShowSaveMenu(!showSaveMenu)}
-              className="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               💾 Progresso
             </button>
-
             <button
               onClick={handleLogout}
-              className="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+              className="w-full bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               🚪 Sair
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Loja */}
-      {showShop && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-pink-50 rounded-3xl p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto border-4 border-purple-300">
-            <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">🛒 Loja</h2>
-            <div className="space-y-2 mb-4">
-              {foods.map((f, i) => (
-                <div key={i} className="p-3 bg-gradient-to-r from-pink-100 to-purple-100 rounded-xl border-2 border-pink-300">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-sm">{f.name} - {f.cost} 💰</span>
-                    <button
-                      onClick={() => {
-                        setSelectedFood(i);
-                        buyFood();
-                      }}
-                      className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white px-3 py-1 rounded-lg text-xs font-bold transition transform hover:scale-105"
-                    >
-                      Comprar
-                    </button>
-                  </div>
-                  <div className="text-xs text-gray-700">💩 +{f.poop} | 🍽️ +{f.hunger}</div>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowShop(false)}
-              className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105"
-            >
-              ❌ Fechar
-            </button>
+        {/* Message */}
+        {message && (
+          <div className="mt-4 bg-gradient-to-r from-yellow-200 to-yellow-300 rounded-2xl p-4 text-center font-bold text-gray-800 shadow-lg border-4 border-yellow-400">
+            {message}
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Minigames */}
-      {showMinigame && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-purple-50 rounded-3xl p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto border-4 border-purple-300">
-            <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">🎮 Jogos</h2>
-            <div className="space-y-2 mb-4">
-              {games.map((g, i) => (
-                <div key={i} className="p-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl border-2 border-purple-300">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <div className="font-bold text-sm">{g.name}</div>
-                      <div className="text-xs text-gray-700">Nível: {g.minLevel} | Custo: {g.cost} 💰 | Prêmio: {g.reward} 💰</div>
-                      {state.level < g.minLevel && (
-                        <div className="text-xs text-red-600 font-bold">🔒 Nível {g.minLevel}</div>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => playGame(i)}
-                      disabled={state.level < g.minLevel || state.coins < g.cost}
-                      className="bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 disabled:bg-gray-400 text-white px-3 py-1 rounded-lg text-sm font-bold transition transform hover:scale-105"
-                    >
-                      Jogar
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowMinigame(false)}
-              className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-105"
-            >
-              ❌ Fechar
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Customizar */}
-      {showCustomize && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-pink-50 rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-pink-300">
-            <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-pink-500 to-purple-500 bg-clip-text text-transparent">🎨 Cores</h2>
-            <div className="space-y-2 grid grid-cols-2 gap-2">
-              {[
-                { name: "Marrom", color: "#8B6914" },
-                { name: "Dourado", color: "#FFD700" },
-                { name: "Cinza", color: "#808080" },
-                { name: "Vermelho", color: "#DC143C" },
-                { name: "Verde", color: "#228B22" },
-                { name: "Azul", color: "#4169E1" },
-                { name: "Rosa", color: "#FF69B4" },
-                { name: "Roxo", color: "#9932CC" },
-              ].map((c) => (
-                <button
-                  key={c.color}
-                  onClick={() => setState((prev: any) => ({ ...prev, capyColor: c.color }))}
-                  className="p-3 rounded-xl font-bold text-white transition transform hover:scale-110 shadow-lg border-2 border-white"
-                  style={{ backgroundColor: c.color }}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowCustomize(false)}
-              className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-2 rounded-xl font-bold mt-4 transition transform hover:scale-105"
-            >
-              ❌ Fechar
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Achievements */}
-      {showAchievements && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-yellow-50 rounded-3xl p-6 max-w-md w-full shadow-2xl max-h-96 overflow-y-auto border-4 border-yellow-300">
-            <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent">🏆 Conquistas ({Object.keys(achievements).length})</h2>
-            <div className="space-y-2 text-sm">
-              {Object.keys(achievements).length === 0 ? (
-                <p className="text-gray-600 text-center font-bold">Nenhuma conquista ainda... Comece a jogar!</p>
-              ) : (
-                <>
-                  {achievements.level5 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">⭐ Atingiu nível 5</div>}
-                  {achievements.level10 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">⭐ Atingiu nível 10</div>}
-                  {achievements.level15 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">⭐ Atingiu nível 15</div>}
-                  {achievements.level20 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">⭐ Atingiu nível 20</div>}
-                  {achievements.level30 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">⭐ Atingiu nível 30</div>}
-                  {achievements.level50 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">⭐ Atingiu nível 50</div>}
-                  {achievements.level100 && <div className="p-2 bg-blue-100 rounded-lg border-2 border-blue-300 font-bold">🌟 LENDÁRIO! Nível 100</div>}
-                  {achievements.coins100 && <div className="p-2 bg-green-100 rounded-lg border-2 border-green-300 font-bold">💰 100 moedas</div>}
-                  {achievements.coins500 && <div className="p-2 bg-green-100 rounded-lg border-2 border-green-300 font-bold">💰 500 moedas</div>}
-                  {achievements.coins1000 && <div className="p-2 bg-green-100 rounded-lg border-2 border-green-300 font-bold">💰 1000 moedas</div>}
-                  {achievements.coins5000 && <div className="p-2 bg-green-100 rounded-lg border-2 border-green-300 font-bold">💰 5000 moedas</div>}
-                  {achievements.coins10000 && <div className="p-2 bg-green-100 rounded-lg border-2 border-green-300 font-bold">💰 10000 moedas</div>}
-                  {achievements.coins50000 && <div className="p-2 bg-green-100 rounded-lg border-2 border-green-300 font-bold">🌟 MILIONÁRIO! 50000</div>}
-                  {achievements.score100 && <div className="p-2 bg-purple-100 rounded-lg border-2 border-purple-300 font-bold">📈 Score 100</div>}
-                  {achievements.score500 && <div className="p-2 bg-purple-100 rounded-lg border-2 border-purple-300 font-bold">📈 Score 500</div>}
-                  {achievements.score1000 && <div className="p-2 bg-purple-100 rounded-lg border-2 border-purple-300 font-bold">📈 Score 1000</div>}
-                  {achievements.score5000 && <div className="p-2 bg-purple-100 rounded-lg border-2 border-purple-300 font-bold">📈 Score 5000</div>}
-                  {achievements.size1_5 && <div className="p-2 bg-pink-100 rounded-lg border-2 border-pink-300 font-bold">📏 50% maior</div>}
-                  {achievements.size2 && <div className="p-2 bg-pink-100 rounded-lg border-2 border-pink-300 font-bold">📏 GIGANTE!</div>}
-                  {achievements.size3 && <div className="p-2 bg-pink-100 rounded-lg border-2 border-pink-300 font-bold">📏 MONSTRO!</div>}
-                  {achievements.fullHunger && <div className="p-2 bg-yellow-100 rounded-lg border-2 border-yellow-300 font-bold">😋 Super satisfeita</div>}
-                  {achievements.fullHappy && <div className="p-2 bg-yellow-100 rounded-lg border-2 border-yellow-300 font-bold">😄 Muito feliz</div>}
-                  {achievements.noPoop && <div className="p-2 bg-yellow-100 rounded-lg border-2 border-yellow-300 font-bold">✨ Limpinha</div>}
-                  {achievements.grama10 && <div className="p-2 bg-orange-100 rounded-lg border-2 border-orange-300 font-bold">🌱 Colecionador</div>}
-                  {achievements.pizza5 && <div className="p-2 bg-orange-100 rounded-lg border-2 border-orange-300 font-bold">🍕 Amante de pizza</div>}
-                  {achievements.sushi5 && <div className="p-2 bg-orange-100 rounded-lg border-2 border-orange-300 font-bold">🍣 Gourmet</div>}
-                  {achievements.sorvete10 && <div className="p-2 bg-orange-100 rounded-lg border-2 border-orange-300 font-bold">🍦 Viciado</div>}
-                  {achievements.susSuspicious && <div className="p-2 bg-red-100 rounded-lg border-2 border-red-300 font-bold">🔴 MUITO SUS!</div>}
-                  {achievements.almostDead && <div className="p-2 bg-red-100 rounded-lg border-2 border-red-300 font-bold">💀 Quase morreu</div>}
-                  {achievements.died && <div className="p-2 bg-red-100 rounded-lg border-2 border-red-300 font-bold">💀 Primeira morte</div>}
-                </>
-              )}
-            </div>
-            <button
-              onClick={() => setShowAchievements(false)}
-              className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-2 rounded-xl font-bold mt-4 transition transform hover:scale-105"
-            >
-              ❌ Fechar
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Menu de Progresso */}
-      {showSaveMenu && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-cyan-50 rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-cyan-300">
-            <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-cyan-500 to-blue-500 bg-clip-text text-transparent">💾 Progresso</h2>
-            <div className="space-y-3">
-              <button
-                onClick={handleContinueProgress}
-                className="w-full bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                ✅ Continuar Progresso
-              </button>
+        {/* Admin Password Prompt */}
+        {showAdminPasswordPrompt && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border-4 border-slate-400">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4">🔐 Admin</h2>
+              <input
+                type="password"
+                placeholder="Digite a senha"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-slate-400 rounded-xl mb-4 focus:outline-none"
+              />
               <button
                 onClick={() => {
-                  const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
-                  const saved = localStorage.getItem(userKey);
-                  if (saved) {
-                    const data = JSON.parse(saved);
-                    const link = document.createElement('a');
-                    link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
-                    link.download = `capyzen_save_${currentUser?.username || 'backup'}.json`;
-                    link.click();
-                    setMessage("📥 Progresso baixado!");
+                  if (adminPassword === "capivarassaomuitofofas404") {
+                    setIsAdminAuthenticated(true);
+                    setShowAdminPanel(true);
+                    setShowAdminPasswordPrompt(false);
+                    setAdminPassword("");
+                  } else {
+                    setMessage("❌ Senha incorreta!");
                   }
                 }}
-                className="w-full bg-gradient-to-r from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                📥 Carregar Progresso
-              </button>
-              <button
-                onClick={handleDeleteProgress}
-                className="w-full bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                🗑️ Deletar Progresso
-              </button>
-              <button
-                onClick={() => setShowSaveMenu(false)}
-                className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
-              >
-                ❌ Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Admin Password Prompt */}
-      {showAdminPasswordPrompt && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-gray-400">
-            <h2 className="text-3xl font-bold mb-4 text-center text-gray-800">🔐 Admin</h2>
-            <input
-              type="password"
-              value={adminPassword}
-              onChange={(e) => setAdminPassword(e.target.value)}
-              placeholder="Digite a senha"
-              className="w-full p-3 border-2 border-gray-400 rounded-xl mb-4 bg-gray-50 focus:outline-none focus:border-gray-600 font-bold"
-            />
-            <div className="space-y-2">
-              <button
-                onClick={handleAdminPasswordSubmit}
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-xl mb-2 transition"
               >
                 ✅ Entrar
               </button>
@@ -1362,112 +927,394 @@ export default function Home() {
                   setShowAdminPasswordPrompt(false);
                   setAdminPassword("");
                 }}
-                className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 rounded-xl transition"
               >
                 ❌ Cancelar
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Admin Panel */}
-      {showAdminPanel && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 rounded-3xl p-8 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto border-4 border-purple-500 backdrop-blur-sm">
-            <div className="text-center mb-8">
-              <h2 className="text-4xl font-black mb-3 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">⚙️ PAINEL ADMIN</h2>
-              <div className="h-1 w-40 mx-auto bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-full"></div>
-            </div>
-            
-            {/* Seção de Moedas */}
-            <div className="mb-6 bg-gradient-to-r from-green-900/30 to-emerald-900/30 rounded-2xl p-4 border-2 border-green-500/50">
-              <h3 className="text-lg font-bold text-yellow-300 mb-3 flex items-center gap-2">💰 MOEDAS</h3>
-              <div className="grid grid-cols-3 gap-2">
-                <button onClick={() => applyAdminCommand("+coins")} className="bg-gradient-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-green-500/50 border-2 border-green-400">+100 💰</button>
-                <button onClick={() => applyAdminCommand("-coins")} className="bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-red-500/50 border-2 border-red-400">-100 💰</button>
-                <button onClick={() => applyAdminCommand("∞coins")} className="bg-gradient-to-br from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-yellow-500/50 border-2 border-yellow-400">∞ 💰</button>
+        {/* Admin Panel */}
+        {showAdminPanel && isAdminAuthenticated && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <div className="bg-gradient-to-b from-slate-900 to-purple-900 rounded-3xl p-8 max-w-2xl w-full shadow-2xl border-4 border-purple-500 my-8">
+              <div className="text-center mb-6">
+                <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-2">⚙️ PAINEL ADMIN</h2>
+                <div className="h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
               </div>
-            </div>
-            
-            {/* Seção de Felicidade */}
-            <div className="mb-6 bg-gradient-to-r from-yellow-900/30 to-orange-900/30 rounded-2xl p-4 border-2 border-yellow-500/50">
-              <h3 className="text-lg font-bold text-orange-300 mb-3 flex items-center gap-2">😄 FELICIDADE</h3>
+
+              {/* Moedas */}
+              <div className="mb-6 bg-slate-800 rounded-2xl p-4 border-2 border-green-500">
+                <h3 className="text-xl font-bold text-green-400 mb-3">💰 MOEDAS</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, coins: prev.coins + 100 }))}
+                    className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    +100 💰
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, coins: Math.max(0, prev.coins - 100) }))}
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    -100 💰
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, coins: 999999 }))}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    ∞ 💰
+                  </button>
+                </div>
+              </div>
+
+              {/* Felicidade */}
+              <div className="mb-6 bg-slate-800 rounded-2xl p-4 border-2 border-yellow-500">
+                <h3 className="text-xl font-bold text-yellow-400 mb-3">😄 FELICIDADE</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, happy: Math.min(100, prev.happy + 20) }))}
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    +20 😄
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, happy: Math.max(0, prev.happy - 20) }))}
+                    className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    -20 😢
+                  </button>
+                </div>
+              </div>
+
+              {/* Fome */}
+              <div className="mb-6 bg-slate-800 rounded-2xl p-4 border-2 border-blue-500">
+                <h3 className="text-xl font-bold text-blue-400 mb-3">🍔 FOME</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, hunger: Math.max(0, prev.hunger - 20) }))}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    +20 🍔
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, hunger: Math.min(100, prev.hunger + 20) }))}
+                    className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    -20 🍔
+                  </button>
+                </div>
+              </div>
+
+              {/* Status */}
+              <div className="mb-6 bg-slate-800 rounded-2xl p-4 border-2 border-amber-500">
+                <h3 className="text-xl font-bold text-amber-400 mb-3">💩 STATUS</h3>
+                <div className="grid grid-cols-4 gap-2">
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, poop: prev.poop + 20 }))}
+                    className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg text-sm"
+                  >
+                    +20 💩
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, poop: Math.max(0, prev.poop - 20) }))}
+                    className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg text-sm"
+                  >
+                    -20 💩
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, sus: prev.sus + 20 }))}
+                    className="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg text-sm"
+                  >
+                    +20 🔴
+                  </button>
+                  <button
+                    onClick={() => setState((prev: any) => ({ ...prev, sus: Math.max(0, prev.sus - 20) }))}
+                    className="bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg text-sm"
+                  >
+                    -20 🔴
+                  </button>
+                </div>
+              </div>
+
+              {/* Modo */}
+              <div className="mb-6 bg-slate-800 rounded-2xl p-4 border-2 border-indigo-500">
+                <h3 className="text-xl font-bold text-indigo-400 mb-3">🎮 MODO</h3>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => setGodMode(true)}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    🌟 GOD
+                  </button>
+                  <button
+                    onClick={() => setGodMode(false)}
+                    className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    ⚖️ Normal
+                  </button>
+                  <button
+                    onClick={() => {
+                      setState(getInitialState());
+                      setMessage("🔄 Jogo resetado!");
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-lg transition transform hover:scale-110 shadow-lg"
+                  >
+                    🔄 RESET
+                  </button>
+                </div>
+              </div>
+
+              {/* Fechar */}
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => applyAdminCommand("+happy")} className="bg-gradient-to-br from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-yellow-500/50 border-2 border-yellow-300">+20 😄</button>
-                <button onClick={() => applyAdminCommand("-happy")} className="bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-red-500/50 border-2 border-red-400">-20 😢</button>
+                <button
+                  onClick={() => {
+                    setShowAdminPanel(false);
+                    setIsAdminAuthenticated(false);
+                  }}
+                  className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition transform hover:scale-105 shadow-lg"
+                >
+                  ❌ Fechar Painel
+                </button>
+                <button
+                  onClick={() => setShowCloseAdminPasswordPrompt(true)}
+                  className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-bold py-3 rounded-xl transition transform hover:scale-105 shadow-lg"
+                >
+                  🔐 Fechar com Senha
+                </button>
               </div>
             </div>
-            
-            {/* Seção de Fome */}
-            <div className="mb-6 bg-gradient-to-r from-blue-900/30 to-cyan-900/30 rounded-2xl p-4 border-2 border-cyan-500/50">
-              <h3 className="text-lg font-bold text-cyan-300 mb-3 flex items-center gap-2">🍔 FOME</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => applyAdminCommand("+hunger")} className="bg-gradient-to-br from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-blue-500/50 border-2 border-cyan-400">+20 🍔</button>
-                <button onClick={() => applyAdminCommand("-hunger")} className="bg-gradient-to-br from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-cyan-500/50 border-2 border-blue-400">-20 🍔</button>
-              </div>
-            </div>
-            
-            {/* Seção de Status */}
-            <div className="mb-6 bg-gradient-to-r from-amber-900/30 to-pink-900/30 rounded-2xl p-4 border-2 border-pink-500/50">
-              <h3 className="text-lg font-bold text-pink-300 mb-3 flex items-center gap-2">💩 STATUS</h3>
-              <div className="grid grid-cols-4 gap-2">
-                <button onClick={() => applyAdminCommand("+poop")} className="bg-gradient-to-br from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-amber-500/50 border-2 border-amber-400 text-sm">+20 💩</button>
-                <button onClick={() => applyAdminCommand("-poop")} className="bg-gradient-to-br from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-yellow-500/50 border-2 border-yellow-400 text-sm">-20 💩</button>
-                <button onClick={() => applyAdminCommand("+sus")} className="bg-gradient-to-br from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-purple-500/50 border-2 border-pink-400 text-sm">+20 🔴</button>
-                <button onClick={() => applyAdminCommand("-sus")} className="bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white py-2 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-pink-500/50 border-2 border-purple-400 text-sm">-20 🔴</button>
-              </div>
-            </div>
-            
-            {/* Seção de Modo */}
-            <div className="mb-6 bg-gradient-to-r from-indigo-900/30 to-gray-900/30 rounded-2xl p-4 border-2 border-indigo-500/50">
-              <h3 className="text-lg font-bold text-indigo-300 mb-3 flex items-center gap-2">🎮 MODO</h3>
-              <div className="grid grid-cols-3 gap-2">
-                <button onClick={() => applyAdminCommand("godMode")} className="bg-gradient-to-br from-gray-700 to-gray-900 hover:from-gray-800 hover:to-black text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-gray-500/50 border-2 border-gray-600">🌟 GOD</button>
-                <button onClick={() => applyAdminCommand("normalMode")} className="bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-gray-500/50 border-2 border-gray-500">⚖️ Normal</button>
-                <button onClick={() => applyAdminCommand("RESET")} className="bg-gradient-to-br from-red-700 to-red-900 hover:from-red-800 hover:to-black text-white py-3 rounded-xl font-bold transition transform hover:scale-110 shadow-lg hover:shadow-red-500/50 border-2 border-red-600">🔄 RESET</button>
-              </div>
-            </div>
-            
-            <button
-              onClick={() => setShowAdminPanel(false)}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg hover:shadow-purple-500/50 border-2 border-purple-400"
-            >
-              ❌ Fechar Painel
-            </button>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Bug Report */}
-      {showBugReport && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-orange-50 rounded-3xl p-6 max-w-md w-full shadow-2xl border-4 border-orange-300">
-            <h2 className="text-3xl font-bold mb-4 text-center bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">🐛 Reportar Bug</h2>
-            <textarea
-              value={bugText}
-              onChange={(e) => setBugText(e.target.value)}
-              className="w-full p-3 border-2 border-orange-300 rounded-xl mb-4 bg-orange-50 focus:outline-none focus:border-orange-500 font-bold"
-              placeholder="Descreva o bug..."
-              rows={4}
-            />
-            <div className="space-y-2">
+        {/* Close Admin with Password */}
+        {showCloseAdminPasswordPrompt && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border-4 border-slate-400">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4">🔐 Fechar com Senha</h2>
+              <input
+                type="password"
+                placeholder="Digite a senha"
+                value={closeAdminPassword}
+                onChange={(e) => setCloseAdminPassword(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-slate-400 rounded-xl mb-4 focus:outline-none"
+              />
               <button
-                onClick={sendBugReport}
-                className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+                onClick={() => {
+                  if (closeAdminPassword === "capivarassaomuitofofas404") {
+                    setShowAdminPanel(false);
+                    setIsAdminAuthenticated(false);
+                    setShowCloseAdminPasswordPrompt(false);
+                    setCloseAdminPassword("");
+                    setMessage("✅ Painel fechado com sucesso!");
+                  } else {
+                    setMessage("❌ Senha incorreta!");
+                  }
+                }}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-xl mb-2 transition"
               >
-                📧 Enviar
+                ✅ Confirmar
               </button>
               <button
-                onClick={() => setShowBugReport(false)}
-                className="w-full bg-gradient-to-r from-gray-400 to-gray-600 hover:from-gray-500 hover:to-gray-700 text-white py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
+                onClick={() => {
+                  setShowCloseAdminPasswordPrompt(false);
+                  setCloseAdminPassword("");
+                }}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 rounded-xl transition"
+              >
+                ❌ Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Shop Modal */}
+        {showShop && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <div className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl border-4 border-purple-400 my-8">
+              <h2 className="text-3xl font-bold text-purple-600 mb-4">🛒 Loja</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                {foods.map((food, i) => (
+                  <button
+                    key={i}
+                    onClick={() => buyFood(i)}
+                    disabled={state.coins < food.cost}
+                    className="bg-gradient-to-br from-green-200 to-green-300 hover:from-green-300 hover:to-green-400 disabled:opacity-50 p-3 rounded-xl border-2 border-green-500 transition transform hover:scale-105"
+                  >
+                    <div className="font-bold text-sm">{food.name}</div>
+                    <div className="text-xs text-gray-700">💩 {food.poop} | 🍽️ {food.hunger}</div>
+                    <div className="text-sm font-bold text-green-700">{food.cost} 💰</div>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowShop(false)}
+                className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-xl transition"
               >
                 ❌ Fechar
               </button>
             </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Minigames Modal */}
+        {showMinigame && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <div className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl border-4 border-teal-400 my-8">
+              <h2 className="text-3xl font-bold text-teal-600 mb-4">🎮 Minigames</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {games.map((game, i) => (
+                  <button
+                    key={i}
+                    onClick={() => playGame(i)}
+                    disabled={state.level < game.level || state.coins < game.cost}
+                    className="bg-gradient-to-br from-blue-200 to-blue-300 hover:from-blue-300 hover:to-blue-400 disabled:opacity-50 p-3 rounded-xl border-2 border-blue-500 transition transform hover:scale-105"
+                  >
+                    <div className="font-bold text-sm">{game.name}</div>
+                    <div className="text-xs text-gray-700">Nível {game.level}</div>
+                    <div className="text-sm font-bold text-blue-700">{game.cost} 💰</div>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowMinigame(false)}
+                className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-xl transition"
+              >
+                ❌ Fechar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Customize Modal */}
+        {showCustomize && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border-4 border-red-400">
+              <h2 className="text-3xl font-bold text-red-600 mb-4">🎨 Cores</h2>
+              <div className="grid grid-cols-4 gap-2">
+                {["#8B6914", "#FF69B4", "#FF0000", "#0000FF", "#00FF00", "#FFFF00", "#FFA500", "#800080"].map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setState((prev: any) => ({ ...prev, capyColor: color }))}
+                    className="w-12 h-12 rounded-lg border-4 border-gray-300 hover:border-black transition transform hover:scale-110"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+              <button
+                onClick={() => setShowCustomize(false)}
+                className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-xl transition"
+              >
+                ❌ Fechar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Achievements Modal */}
+        {showAchievements && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+            <div className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl border-4 border-amber-400 my-8">
+              <h2 className="text-3xl font-bold text-amber-600 mb-4">🏆 Conquistas</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
+                {achievementsList.map((ach) => (
+                  <div
+                    key={ach.id}
+                    className={`p-3 rounded-xl border-2 ${
+                      achievements[ach.id]
+                        ? "bg-gradient-to-br from-yellow-200 to-yellow-300 border-yellow-500"
+                        : "bg-gray-200 border-gray-400 opacity-50"
+                    }`}
+                  >
+                    <div className="font-bold">{ach.name}</div>
+                    <div className="text-sm text-gray-700">{ach.description}</div>
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowAchievements(false)}
+                className="w-full mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-xl transition"
+              >
+                ❌ Fechar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Save Menu */}
+        {showSaveMenu && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border-4 border-indigo-400">
+              <h2 className="text-3xl font-bold text-indigo-600 mb-4">💾 Progresso</h2>
+              <button
+                onClick={() => {
+                  const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
+                  localStorage.setItem(userKey, JSON.stringify(state));
+                  setMessage("✅ Progresso salvo!");
+                  setShowSaveMenu(false);
+                }}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl mb-2 transition"
+              >
+                💾 Continuar Progresso
+              </button>
+              <button
+                onClick={() => {
+                  setState(getInitialState());
+                  setMessage("🔄 Progresso deletado!");
+                  setShowSaveMenu(false);
+                }}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl mb-2 transition"
+              >
+                🗑️ Excluir Progresso
+              </button>
+              <button
+                onClick={() => setShowSaveMenu(false)}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-xl transition"
+              >
+                ❌ Fechar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Bug Report */}
+        {showBugReport && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl border-4 border-red-400">
+              <h2 className="text-3xl font-bold text-red-600 mb-4">🐛 Reportar Bug</h2>
+              <textarea
+                value={bugText}
+                onChange={(e) => setBugText(e.target.value)}
+                placeholder="Descreva o bug..."
+                className="w-full px-4 py-2 border-2 border-red-400 rounded-xl mb-4 focus:outline-none h-24"
+              />
+              <button
+                onClick={() => {
+                  if (bugText.trim()) {
+                    console.log("Bug report:", bugText);
+                    setMessage("✅ Bug reportado! Obrigado!");
+                    setBugText("");
+                    setShowBugReport(false);
+                  }
+                }}
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-xl mb-2 transition"
+              >
+                ✅ Enviar
+              </button>
+              <button
+                onClick={() => {
+                  setShowBugReport(false);
+                  setBugText("");
+                }}
+                className="w-full bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 rounded-xl transition"
+              >
+                ❌ Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
