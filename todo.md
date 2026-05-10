@@ -1,16 +1,18 @@
 # CapyZen Game - TODO
 
 ## Bugs a Corrigir
-- [ ] Corrigir bugs gerais do jogo
-- [ ] Consertar barrinhas que não se mexem
-- [ ] Melhorar UI do jogo inteiro
+- [x] Corrigir bugs gerais do jogo
+- [x] Consertar barrinhas que não se mexem
+- [x] Melhorar UI do jogo inteiro
 
 ## Painel Admin
-- [ ] Pedir senha apenas uma vez (não pedir novamente ao fechar)
-- [ ] Adicionar opção "Fechar com Senha" no painel
+- [x] Pedir senha apenas uma vez (não pedir novamente ao fechar)
+- [x] Adicionar opção "Fechar com Senha" no painel
 
 ## Testes
-- [ ] Testar TODAS as funcionalidades do jogo
+- [x] Testar TODAS as funcionalidades do jogo
+- [x] Criar testes Vitest para lógica do jogo (35 testes)
+- [x] Todos os testes passando
 
 ## Funcionalidades Implementadas
 - [x] Sistema de login com root/root

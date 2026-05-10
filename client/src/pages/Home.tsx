@@ -856,7 +856,13 @@ export default function Home() {
               🏆 Conquistas
             </button>
             <button
-              onClick={() => setShowAdminPasswordPrompt(true)}
+              onClick={() => {
+                if (isAdminAuthenticated) {
+                  setShowAdminPanel(true);
+                } else {
+                  setShowAdminPasswordPrompt(true);
+                }
+              }}
               className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white font-bold py-3 rounded-xl transition transform hover:scale-105"
             >
               ⚙️ Admin
@@ -1071,7 +1077,6 @@ export default function Home() {
                 <button
                   onClick={() => {
                     setShowAdminPanel(false);
-                    setIsAdminAuthenticated(false);
                   }}
                   className="w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition transform hover:scale-105 shadow-lg"
                 >
