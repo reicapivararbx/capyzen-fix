@@ -25,3 +25,18 @@
 - [x] Painel admin redesenhado
 - [x] UI fofinha com gradientes pastéis
 - [x] Barrinhas de status melhoradas
+
+
+## Bugs Reportados - Nova Sessão (CORRIGIDOS)
+- [x] Restaurar leaderboard que sumiu - CORRIGIDO! Leaderboard agora atualiza automaticamente
+- [x] Capivara sumiu - deixar mais bonita e visível - CORRIGIDO! Capivara 67% maior com olhos brilhosos
+- [x] Adicionar cooldown de 10 segundos para ganhar moedas (passiva) - CORRIGIDO! Cooldown alterado de 1s para 10s
+- [x] Barrinhas não se mexem - corrigir animação - CORRIGIDO! Barrinhas animam a cada frame (lifeLoop a cada 500ms)
+- [x] Score está absurdo - revisar lógica de cálculo - CORRIGIDO! Score soma apenas moedas + migração para saves antigos
+
+## Melhorias Adicionais
+- [x] Mover passiveCoinGain para dentro do useEffect (evita múltiplos intervalos)
+- [x] Adicionar botão de Ranking com modal de leaderboard
+- [x] Melhorar capivara com olhos brilhosos, nariz maior, boca sorridente
+- [x] Aumentar tamanho da capivara de 30 para 50 pixels
+- [x] Adicionar migração para resetar score antigo (> 1 milhão)

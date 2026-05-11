@@ -29,6 +29,10 @@ export default function Home() {
           const parsed = JSON.parse(saved);
           // Sempre garantir que alive é true ao carregar
           if (parsed) parsed.alive = true;
+          // Migração: resetar score se estiver muito alto (> 1 milhão)
+          if (parsed && parsed.totalScore > 1000000) {
+            parsed.totalScore = Math.floor(parsed.coins / 2);
+          }
           return parsed || getInitialState();
         } catch {
           return getInitialState();
@@ -645,21 +649,22 @@ export default function Home() {
       });
     };
 
+    const passiveCoinGain = setInterval(() => {
+      setState((prev: any) => ({
+        ...prev,
+        coins: prev.coins + 1,
+        totalScore: prev.totalScore + 1,
+      }));
+    }, 3000);
+
     window.addEventListener("keydown", keyHandler);
     return () => {
       clearInterval(gameLoop);
       clearInterval(lifeLoop);
+      clearInterval(passiveCoinGain);
       window.removeEventListener("keydown", keyHandler);
     };
   }, []);
-
-  const passiveCoinGain = setInterval(() => {
-    setState((prev: any) => ({
-      ...prev,
-      coins: prev.coins + 1,
-      totalScore: prev.totalScore + 1,
-    }));
-  }, 3000);
 
   if (!currentUser) {
     return (
