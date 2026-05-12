@@ -48,3 +48,9 @@
 - [x] Integrar componentes ao Home.tsx - Componentes criados, problema de renderização do botão
 - [x] Testar no browser - Todos os componentes funcionam, capivara melhorada
 - [x] Salvar checkpoint - Próximo passo
+
+
+## Bug Reportado - Conquistas Não Funcionam
+- [x] Investigar por que as conquistas não estão sendo desbloqueadas - CORRIGIDO!
+- [x] Corrigir a lógica de desbloqueio de conquistas - Adicionado unlockAchievement() e useEffect
+- [x] Testar todas as conquistas no browser - Funcionando perfeitamente!

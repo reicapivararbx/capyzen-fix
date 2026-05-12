@@ -173,7 +173,52 @@ export default function Home() {
     localStorage.setItem(userKey, playerName);
   }, [playerName, currentUser]);
 
-  // Função para tocar sons
+  // Verificar e desbloquear conquistas
+  useEffect(() => {
+    if (!state.alive) return;
+    // Primeira ação
+    if (state.workCount > 0 && !achievements["first_work"]) unlockAchievement("first_work");
+    if (state.foodEaten > 0 && !achievements["first_feed"]) unlockAchievement("first_feed");
+    if (state.gamesPlayed > 0 && !achievements["first_game"]) unlockAchievement("first_game");
+    if (state.colorChanges > 0 && !achievements["first_color"]) unlockAchievement("first_color");
+    // Nível
+    if (state.level >= 5 && !achievements["level_5"]) unlockAchievement("level_5");
+    if (state.level >= 10 && !achievements["level_10"]) unlockAchievement("level_10");
+    if (state.level >= 20 && !achievements["level_20"]) unlockAchievement("level_20");
+    if (state.level >= 50 && !achievements["level_50"]) unlockAchievement("level_50");
+    if (state.level >= 100 && !achievements["level_100"]) unlockAchievement("level_100");
+    // Moedas
+    if (state.coins >= 1000 && !achievements["rich"]) unlockAchievement("rich");
+    if (state.coins >= 10000 && !achievements["rich_2"]) unlockAchievement("rich_2");
+    if (state.coins >= 50000 && !achievements["rich_3"]) unlockAchievement("rich_3");
+    if (state.coins >= 100000 && !achievements["coins_100k"]) unlockAchievement("coins_100k");
+    // Status
+    if (state.happy === 100 && !achievements["happy"]) unlockAchievement("happy");
+    if (state.hunger === 100 && !achievements["fed"]) unlockAchievement("fed");
+    if (state.poop === 0 && !achievements["clean"]) unlockAchievement("clean");
+    // Score
+    if (state.totalScore >= 1000 && !achievements["score_1000"]) unlockAchievement("score_1000");
+    if (state.totalScore >= 5000 && !achievements["score_5000"]) unlockAchievement("score_5000");
+    if (state.totalScore >= 10000 && !achievements["score_10000"]) unlockAchievement("score_10000");
+    // Contadores
+    if (state.gamesPlayed >= 5 && !achievements["gamer"]) unlockAchievement("gamer");
+    if (state.gamesPlayed >= 8 && !achievements["game_master"]) unlockAchievement("game_master");
+    if (state.foodEaten >= 10 && !achievements["collector"]) unlockAchievement("collector");
+    if (state.foodEaten >= 100 && !achievements["food_lover"]) unlockAchievement("food_lover");
+    if (state.workCount >= 100 && !achievements["work_master"]) unlockAchievement("work_master");
+    if (state.affectionCount >= 50 && !achievements["affection_master"]) unlockAchievement("affection_master");
+    if (state.bathroomCount >= 50 && !achievements["bathroom_master"]) unlockAchievement("bathroom_master");
+    // Sus
+    if (state.sus >= 100 && !achievements["sus_master"]) unlockAchievement("sus_master");
+    if (state.sus >= 1000 && !achievements["sus_collector"]) unlockAchievement("sus_collector");
+    // Tamanho
+    if (state.size >= 500 && !achievements["size_giant"]) unlockAchievement("size_giant");
+    if (state.size <= 50 && !achievements["size_tiny"]) unlockAchievement("size_tiny");
+    // XP
+    if (state.totalXP >= 10000 && !achievements["xp_master"]) unlockAchievement("xp_master");
+  }, [state, achievements]);
+
+  // Funcao para tocar sons
   const playSound = (type: "eat" | "work" | "levelup" | "achievement") => {
     if (!audioContextRef.current) {
       audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -473,6 +518,19 @@ export default function Home() {
     playSound("achievement");
     setMinigameCooldown(true);
     setTimeout(() => setMinigameCooldown(false), 2000);
+  };
+
+  // Função para desbloquear conquistas
+  const unlockAchievement = (achievementId: string) => {
+    if (!achievements[achievementId]) {
+      setAchievements((prev: any) => ({
+        ...prev,
+        [achievementId]: true,
+      }));
+      playSound("achievement");
+      const achName = achievementsList.find(a => a.id === achievementId)?.name || "Conquista";
+      setMessage(`🏆 ${achName} desbloqueada!`);
+    }
   };
 
   const handleAdminCommand = (command: string) => {
