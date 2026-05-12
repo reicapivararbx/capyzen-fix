@@ -1,4 +1,6 @@
 import { useRef, useState, useEffect } from "react";
+import { CapybaraPasswordUI } from "@/components/CapybaraPasswordUI";
+import { ImprovedLeaderboard } from "@/components/ImprovedLeaderboard";
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -487,7 +489,7 @@ export default function Home() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const currentState = state; // Use state directly, not stateRef
+    const currentState = stateRef.current || state; // Use stateRef for latest state
 
     ctx.fillStyle = "#f0f0f0";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -613,6 +615,11 @@ export default function Home() {
     });
   };
 
+  // Atualizar stateRef sempre que state muda
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -664,7 +671,7 @@ export default function Home() {
       clearInterval(passiveCoinGain);
       window.removeEventListener("keydown", keyHandler);
     };
-  }, []);
+  }, [state]);
 
   if (!currentUser) {
     return (
@@ -1286,6 +1293,15 @@ export default function Home() {
               </button>
             </div>
           </div>
+        )}
+
+        {/* Improved Leaderboard Modal */}
+        {showLeaderboard && (
+          <ImprovedLeaderboard
+            leaderboard={leaderboard}
+            currentUsername={currentUser?.username}
+            onClose={() => setShowLeaderboard(false)}
+          />
         )}
 
         {/* Bug Report */}

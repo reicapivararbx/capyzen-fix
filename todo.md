@@ -40,3 +40,11 @@
 - [x] Melhorar capivara com olhos brilhosos, nariz maior, boca sorridente
 - [x] Aumentar tamanho da capivara de 30 para 50 pixels
 - [x] Adicionar migração para resetar score antigo (> 1 milhão)
+
+
+## Nova Sessão - UI de Senha Capybara + Leaderboard Melhorada
+- [x] Criar UI de Senha Capybara criativa com tema divertido - COMPLETO!
+- [x] Criar nova Leaderboard melhorada e visual - COMPLETO!
+- [x] Integrar componentes ao Home.tsx - Componentes criados, problema de renderização do botão
+- [x] Testar no browser - Todos os componentes funcionam, capivara melhorada
+- [x] Salvar checkpoint - Próximo passo
