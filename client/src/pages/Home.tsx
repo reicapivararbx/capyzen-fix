@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import { CapybaraPasswordUI } from "@/components/CapybaraPasswordUI";
 import { ImprovedLeaderboard } from "@/components/ImprovedLeaderboard";
+import { useCooldown } from "@/hooks/useCooldown";
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -63,6 +64,14 @@ export default function Home() {
       capyColor: "#8B6914",
       capySize: 1,
       totalScore: 0,
+      totalXP: 0,
+      foodEaten: 0,
+      gamesPlayed: 0,
+      workCount: 0,
+      affectionCount: 0,
+      bathroomCount: 0,
+      colorChanges: 0,
+      size: 100,
       inventory: {
         grama: 0, batata: 0, hamburger: 0, refri: 0, feijao: 0, hotdog: 0,
         pizza: 0, sushi: 0, tacos: 0, sorvete: 0, bolo: 0, chocolate: 0,
@@ -94,8 +103,8 @@ export default function Home() {
     }
   });
 
-  const [cooldown, setCooldown] = useState(false);
-  const [susCooldown, setSusCooldown] = useState(false);
+  const [cooldown, activateCooldown] = useCooldown(1000);
+  const [susCooldown, activateSusCooldown] = useCooldown(2000);
   const [message, setMessage] = useState("✨ Bem-vindo ao CapyZen! Clique em 'Trabalhar' para ganhar moedas!");
   const [selectedFood, setSelectedFood] = useState(() => {
     try {
@@ -124,7 +133,7 @@ export default function Home() {
       return "Anônimo";
     }
   });
-  const [minigameCooldown, setMinigameCooldown] = useState(false);
+  const [minigameCooldown, activateMinigameCooldown] = useCooldown(2000);
   const [adminPassword, setAdminPassword] = useState("");
   const [showAdminPasswordPrompt, setShowAdminPasswordPrompt] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
@@ -146,31 +155,53 @@ export default function Home() {
 
   // Salvar estado no localStorage
   useEffect(() => {
-    const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
-    localStorage.setItem(userKey, JSON.stringify(state));
+    try {
+      const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
+      localStorage.setItem(userKey, JSON.stringify(state));
+    } catch (e) {
+      if (e instanceof Error && e.name === 'QuotaExceededError') {
+        console.warn("localStorage quota exceeded");
+      }
+    }
   }, [state, currentUser]);
 
   // Salvar comida selecionada
   useEffect(() => {
-    const userKey = currentUser ? `capyzen_selected_food_${currentUser.username}` : "capyzen_selected_food";
-    localStorage.setItem(userKey, String(selectedFood));
+    try {
+      const userKey = currentUser ? `capyzen_selected_food_${currentUser.username}` : "capyzen_selected_food";
+      localStorage.setItem(userKey, String(selectedFood));
+    } catch (e) {
+      // Ignorar erro de quota
+    }
   }, [selectedFood, currentUser]);
 
   // Salvar achievements
   useEffect(() => {
-    const userKey = currentUser ? `capyzen_achievements_${currentUser.username}` : "capyzen_achievements";
-    localStorage.setItem(userKey, JSON.stringify(achievements));
+    try {
+      const userKey = currentUser ? `capyzen_achievements_${currentUser.username}` : "capyzen_achievements";
+      localStorage.setItem(userKey, JSON.stringify(achievements));
+    } catch (e) {
+      // Ignorar erro de quota
+    }
   }, [achievements, currentUser]);
 
   // Salvar leaderboard
   useEffect(() => {
-    localStorage.setItem("capyzen_leaderboard", JSON.stringify(leaderboard));
+    try {
+      localStorage.setItem("capyzen_leaderboard", JSON.stringify(leaderboard));
+    } catch (e) {
+      // Ignorar erro de quota
+    }
   }, [leaderboard]);
 
   // Salvar player name
   useEffect(() => {
-    const userKey = currentUser ? `capyzen_player_name_${currentUser.username}` : "capyzen_player_name";
-    localStorage.setItem(userKey, playerName);
+    try {
+      const userKey = currentUser ? `capyzen_player_name_${currentUser.username}` : "capyzen_player_name";
+      localStorage.setItem(userKey, playerName);
+    } catch (e) {
+      // Ignorar erro de quota
+    }
   }, [playerName, currentUser]);
 
   // Verificar e desbloquear conquistas
@@ -268,7 +299,7 @@ export default function Home() {
           break;
       }
     } catch (e) {
-      console.log("Sound error:", e);
+      // Erro de som silenciado
     }
   };
 
@@ -364,40 +395,92 @@ export default function Home() {
   ];
 
   const handleLogin = () => {
-    const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
-    if (users[loginUsername] && users[loginUsername] === loginPassword) {
-      setCurrentUser({ username: loginUsername, password: loginPassword });
-      localStorage.setItem("capyzen_current_user", JSON.stringify({ username: loginUsername, password: loginPassword }));
-      // Garantir que a capivara está viva ao fazer login
-      setState((prev: any) => ({ ...prev, alive: true }));
-      setLoginError("");
-      setLoginUsername("");
-      setLoginPassword("");
-    } else {
-      setLoginError("Usuario ou senha incorretos!");
+    // Validação de entrada
+    if (!loginUsername || !loginPassword) {
+      setLoginError("Preencha usuário e senha!");
+      return;
+    }
+    if (loginUsername.length < 3 || loginUsername.length > 20) {
+      setLoginError("Usuário deve ter entre 3 e 20 caracteres!");
+      return;
+    }
+    if (loginPassword.length < 3 || loginPassword.length > 50) {
+      setLoginError("Senha deve ter entre 3 e 50 caracteres!");
+      return;
+    }
+    // Validação de caracteres seguros
+    if (!/^[a-zA-Z0-9_-]+$/.test(loginUsername)) {
+      setLoginError("Usuário deve conter apenas letras, números, - e _!");
+      return;
+    }
+    
+    try {
+      const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
+      if (users[loginUsername] && users[loginUsername] === loginPassword) {
+        setCurrentUser({ username: loginUsername, password: loginPassword });
+        try {
+          localStorage.setItem("capyzen_current_user", JSON.stringify({ username: loginUsername, password: loginPassword }));
+        } catch (e) {
+          // Ignorar erro de quota
+        }
+        // Garantir que a capivara está viva ao fazer login
+        setState((prev: any) => ({ ...prev, alive: true }));
+        setLoginError("");
+        setLoginUsername("");
+        setLoginPassword("");
+      } else {
+        setLoginError("Usuario ou senha incorretos!");
+      }
+    } catch (e) {
+      setLoginError("Erro ao carregar dados de usuário!");
     }
   };
 
   const handleCreateUser = () => {
+    // Validação de entrada
     if (!createUsername || !createPassword) {
       setMessage("Preencha usuário e senha!");
       return;
     }
-    const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
-    if (users[createUsername]) {
-      setMessage("Usuário já existe!");
+    if (createUsername.length < 3 || createUsername.length > 20) {
+      setMessage("Usuário deve ter entre 3 e 20 caracteres!");
       return;
     }
-    users[createUsername] = createPassword;
-    localStorage.setItem("capyzen_users", JSON.stringify(users));
-    setCurrentUser({ username: createUsername, password: createPassword });
-    localStorage.setItem("capyzen_current_user", JSON.stringify({ username: createUsername, password: createPassword }));
-    // Garantir que a capivara está viva ao criar novo usuário
-    setState((prev: any) => ({ ...prev, alive: true }));
-    setCreateError("");
-    setCreateUsername("");
-    setCreatePassword("");
-    setIsCreatingUser(false);
+    if (createPassword.length < 3 || createPassword.length > 50) {
+      setMessage("Senha deve ter entre 3 e 50 caracteres!");
+      return;
+    }
+    if (!/^[a-zA-Z0-9_-]+$/.test(createUsername)) {
+      setMessage("Usuário deve conter apenas letras, números, - e _!");
+      return;
+    }
+    try {
+      const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
+      if (users[createUsername]) {
+        setMessage("Usuário já existe!");
+        return;
+      }
+      users[createUsername] = createPassword;
+      try {
+        localStorage.setItem("capyzen_users", JSON.stringify(users));
+      } catch (e) {
+        // Ignorar erro de quota
+      }
+      setCurrentUser({ username: createUsername, password: createPassword });
+      try {
+        localStorage.setItem("capyzen_current_user", JSON.stringify({ username: createUsername, password: createPassword }));
+      } catch (e) {
+        // Ignorar erro de quota
+      }
+      // Garantir que a capivara está viva ao criar novo usuário
+      setState((prev: any) => ({ ...prev, alive: true }));
+      setCreateError("");
+      setCreateUsername("");
+      setCreatePassword("");
+      setIsCreatingUser(false);
+    } catch (e) {
+      setMessage("Erro ao criar usuário!");
+    }
   };
 
   const handleLogout = () => {
@@ -431,8 +514,8 @@ export default function Home() {
     });
     setMessage(`💼 Trabalhou! +${coins} 💰 +${xpGain} XP`);
     playSound("work");
-    setCooldown(true);
-    setTimeout(() => setCooldown(false), 1000);
+    activateCooldown();
+    
   };
 
   const feed = () => {
@@ -479,8 +562,7 @@ export default function Home() {
       totalScore: prev.totalScore + 10,
     }));
     setMessage("❤️ Carinho! +15 😄");
-    setSusCooldown(true);
-    setTimeout(() => setSusCooldown(false), 2000);
+    activateSusCooldown();
   };
 
   const buyFood = (index: number) => {
@@ -516,8 +598,7 @@ export default function Home() {
     }));
     setMessage(`🎮 Jogou ${game.name}! +20 😄`);
     playSound("achievement");
-    setMinigameCooldown(true);
-    setTimeout(() => setMinigameCooldown(false), 2000);
+    activateMinigameCooldown();
   };
 
   // Função para desbloquear conquistas
@@ -623,7 +704,7 @@ export default function Home() {
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    const currentState = state; // Use state directly, not stateRef
+    const currentState = stateRef.current || state; // Use stateRef for latest state
 
     const barWidth = 120;
     const barHeight = 16;
@@ -673,7 +754,7 @@ export default function Home() {
     });
   };
 
-  // Atualizar stateRef sempre que state muda
+  // Sincronizar stateRef com state
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
@@ -729,7 +810,7 @@ export default function Home() {
       clearInterval(passiveCoinGain);
       window.removeEventListener("keydown", keyHandler);
     };
-  }, [state]);
+  }, []);
 
   if (!currentUser) {
     return (
@@ -1324,10 +1405,14 @@ export default function Home() {
               <h2 className="text-3xl font-bold text-indigo-600 mb-4">💾 Progresso</h2>
               <button
                 onClick={() => {
-                  const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
-                  localStorage.setItem(userKey, JSON.stringify(state));
-                  setMessage("✅ Progresso salvo!");
-                  setShowSaveMenu(false);
+                  try {
+                    const userKey = currentUser ? `capyzen_state_${currentUser.username}` : "capyzen_state";
+                    localStorage.setItem(userKey, JSON.stringify(state));
+                    setMessage("✅ Progresso salvo!");
+                    setShowSaveMenu(false);
+                  } catch (e) {
+                    setMessage("❌ Erro ao salvar progresso!");
+                  }
                 }}
                 className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl mb-2 transition"
               >
@@ -1376,7 +1461,7 @@ export default function Home() {
               <button
                 onClick={() => {
                   if (bugText.trim()) {
-                    console.log("Bug report:", bugText);
+                    // Bug report silenciado
                     setMessage("✅ Bug reportado! Obrigado!");
                     setBugText("");
                     setShowBugReport(false);
