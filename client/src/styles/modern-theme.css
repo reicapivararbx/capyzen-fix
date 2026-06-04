@@ -1,0 +1,267 @@
+/* CapyZen Modern Theme - Redesign */
+
+/* Paleta de Cores Moderna */
+:root {
+  /* Cores Primárias - Gradientes Suaves */
+  --color-primary-light: #FF6B9D;
+  --color-primary-main: #FF1493;
+  --color-primary-dark: #C71585;
+
+  /* Cores Secundárias - Azul Moderno */
+  --color-secondary-light: #87CEEB;
+  --color-secondary-main: #4169E1;
+  --color-secondary-dark: #1E90FF;
+
+  /* Cores de Acento - Roxo Elegante */
+  --color-accent-light: #DA70D6;
+  --color-accent-main: #BA55D3;
+  --color-accent-dark: #9932CC;
+
+  /* Cores Neutras */
+  --color-white: #FFFFFF;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  /* Cores de Status */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  /* Sombras Modernas */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* Gradientes Modernos */
+  --gradient-primary: linear-gradient(135deg, #FF6B9D 0%, #FF1493 100%);
+  --gradient-secondary: linear-gradient(135deg, #87CEEB 0%, #4169E1 100%);
+  --gradient-accent: linear-gradient(135deg, #DA70D6 0%, #BA55D3 100%);
+  --gradient-warm: linear-gradient(135deg, #FFB347 0%, #FF8C00 100%);
+  --gradient-cool: linear-gradient(135deg, #87CEEB 0%, #E0FFFF 100%);
+}
+
+/* Tipografia Moderna */
+body {
+  font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: var(--color-gray-900);
+}
+
+/* Botões Modernos */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--color-white);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: var(--gradient-secondary);
+  color: var(--color-white);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Cards Modernos */
+.card-modern {
+  background: var(--color-white);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s ease;
+  border: 1px solid var(--color-gray-200);
+}
+
+.card-modern:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Modals Modernos */
+.modal-modern {
+  background: var(--color-white);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow-2xl);
+  max-width: 500px;
+  width: 90%;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Inputs Modernos */
+.input-modern {
+  background: var(--color-gray-50);
+  border: 2px solid var(--color-gray-200);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.input-modern:focus {
+  outline: none;
+  border-color: var(--color-primary-main);
+  box-shadow: 0 0 0 3px rgba(255, 20, 147, 0.1);
+  background: var(--color-white);
+}
+
+/* Badges Modernos */
+.badge-modern {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--color-warning);
+}
+
+.badge-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+}
+
+/* Barras de Progresso Modernas */
+.progress-bar-modern {
+  background: var(--color-gray-200);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar-modern-fill {
+  background: var(--gradient-primary);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Utilidades */
+.text-gradient {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modal-modern {
+    padding: 20px;
+    max-width: 100%;
+    width: 95%;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
