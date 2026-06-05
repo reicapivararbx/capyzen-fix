@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CapyZen Dashboard Supremo</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <h2>👑 Admin Supremo</h2>
+      <ul class="nav-menu">
+        <li class="nav-item active" onclick="switchTab('stats')">📊 Estatísticas</li>
+        <li class="nav-item" onclick="switchTab('commands')">⚙️ Comandos</li>
+        <li class="nav-item" onclick="switchTab('logs')">📜 Logs</li>
+        <li class="nav-item" onclick="switchTab('settings')">⚙️ Configurações</li>
+        <li class="nav-item logout" onclick="logout()">🚪 Sair</li>
+      </ul>
+    </aside>
+
+    <!-- Main Panel -->
+    <main class="main-panel">
+      <header class="panel-header">
+        <h1>🛡️ Painel Administrativo Completo</h1>
+        <p>Status do servidor: <span class="status-online">● Online</span></p>
+      </header>
+
+      <!-- Stats Tab -->
+      <section id="stats-tab" class="tab-content active">
+        <h2>📊 Estatísticas do Servidor</h2>
+        <div class="stats-grid">
+          <div class="card">
+            <div class="card-label">👥 Jogadores Online</div>
+            <div class="card-value">127</div>
+          </div>
+          <div class="card">
+            <div class="card-label">💰 Economia Global</div>
+            <div class="card-value">999,999</div>
+          </div>
+          <div class="card">
+            <div class="card-label">🕐 Uptime</div>
+            <div class="card-value">72h</div>
+          </div>
+          <div class="card">
+            <div class="card-label">🚨 Alertas</div>
+            <div class="card-value alert-count">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Commands Tab -->
+      <section id="commands-tab" class="tab-content">
+        <h2>⚙️ Comandos Administrativos</h2>
+        <div id="commands" class="command-grid"></div>
+      </section>
+
+      <!-- Logs Tab -->
+      <section id="logs-tab" class="tab-content">
+        <h2>📜 Logs Administrativos</h2>
+        <div class="logs-container">
+          <div id="admin-logs" class="admin-logs"></div>
+        </div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="settings-tab" class="tab-content">
+        <h2>⚙️ Configurações</h2>
+        <div class="settings-grid">
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="auto-save" checked> Auto-save habilitado
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="notifications" checked> Notificações habilitadas
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="dark-mode" checked> Modo escuro
+            </label>
+          </div>
+          <button onclick="resetSettings()" class="btn-danger">🔄 Resetar Configurações</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

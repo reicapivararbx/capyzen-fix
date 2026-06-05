@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificação de Segurança</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="auth-box">
+    <h1>🔐 Verificação Suprema</h1>
+    <p class="subtitle">Responda as perguntas de segurança</p>
+    
+    <div class="form-group">
+      <label>Qual é a cor favorita do dono?</label>
+      <input id="color" type="text" placeholder="Ex: Turquesa" class="input-field">
+    </div>
+    
+    <div class="form-group">
+      <label>Qual é o animal favorito do dono?</label>
+      <input id="animal" type="text" placeholder="Ex: Capivara" class="input-field">
+    </div>
+    
+    <div class="form-group">
+      <label>Qual é o código secreto?</label>
+      <input id="code" type="password" placeholder="Código" class="input-field">
+    </div>
+    
+    <div class="form-group">
+      <label>Qual é o nome do dono?</label>
+      <input id="owner" type="text" placeholder="Nome" class="input-field">
+    </div>
+    
+    <button onclick="verifySecurity()" class="btn-primary">Verificar</button>
+    <button onclick="window.history.back()" class="btn-secondary">← Voltar</button>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
