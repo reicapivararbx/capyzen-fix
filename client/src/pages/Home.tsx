@@ -6,6 +6,7 @@ import { Link } from "wouter";
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
+  const keysPressed = useRef<{ [key: string]: boolean }>({});
 
   // Game State
   const [gameState, setGameState] = useState(() => {
@@ -21,6 +22,8 @@ export default function Home() {
   const [username, setUsername] = useState("");
   const [capyName, setCapyName] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [capyX, setCapyX] = useState(200);
+  const [capyY, setCapyY] = useState(250);
 
   function getInitialState() {
     return {
@@ -30,16 +33,23 @@ export default function Home() {
         level: 1,
         xp: 0,
         maxXp: 100,
-        coins: 1000,
-        age: 0,
+        coins: 0,
+        food: 3,
+        days: 0,
+        streakDays: 0,
+        alive: true,
       },
       capybara: {
-        hunger: 100,
-        happiness: 100,
-        energy: 100,
+        hunger: 99,
+        happiness: 99,
+        poop: 0,
+        energy: 99,
+        thirst: 79,
+        hygiene: 99,
         health: 100,
         mood: "😊 Feliz",
       },
+      achievements: [],
     };
   }
 
@@ -82,127 +92,275 @@ export default function Home() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-
-    // Clear canvas
-    ctx.fillStyle = "rgba(15, 15, 35, 0.1)";
+    // Clear canvas with sky gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, "#87CEEB");
+    gradient.addColorStop(1, "#E0F6FF");
+    ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Corpo
-    ctx.fillStyle = "#8B6F47";
+    // Draw clouds
+    drawCloud(ctx, 80, 60, 60);
+    drawCloud(ctx, 300, 80, 80);
+    drawCloud(ctx, 450, 50, 70);
+
+    // Draw sun
+    ctx.fillStyle = "#FFD700";
     ctx.beginPath();
-    ctx.ellipse(centerX, centerY, 80, 60, 0, 0, Math.PI * 2);
+    ctx.arc(500, 80, 40, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw rainbow
+    drawRainbow(ctx, 150, 200, 100);
+
+    // Draw tree
+    ctx.fillStyle = "#228B22";
+    ctx.beginPath();
+    ctx.arc(450, 200, 50, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "#8B4513";
+    ctx.fillRect(430, 250, 40, 80);
+
+    // Draw grass
+    ctx.fillStyle = "#90EE90";
+    ctx.fillRect(0, 350, canvas.width, 150);
+
+    // Draw flowers
+    drawFlower(ctx, 100, 320);
+    drawFlower(ctx, 200, 330);
+    drawFlower(ctx, 350, 310);
+    drawFlower(ctx, 480, 320);
+
+    // Draw capybara
+    drawCapybara(ctx, capyX, capyY);
+
+    // Draw name and level
+    ctx.fillStyle = "#333";
+    ctx.font = "bold 16px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(gameState.player.capyName, capyX, capyY - 100);
+    
+    ctx.font = "bold 12px Arial";
+    ctx.fillText(`Lv${gameState.player.level}`, capyX, capyY - 85);
+  }, [isLoggedIn, gameState, capyX, capyY]);
+
+  // Draw capybara function
+  function drawCapybara(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    // Corpo
+    ctx.fillStyle = "#9B7653";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 10, 85, 75, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Barriga
+    ctx.fillStyle = "#B8956A";
+    ctx.beginPath();
+    ctx.ellipse(x, y + 15, 60, 55, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Cabeça
-    ctx.fillStyle = "#A0826D";
+    ctx.fillStyle = "#A68968";
     ctx.beginPath();
-    ctx.arc(centerX + 40, centerY - 50, 50, 0, Math.PI * 2);
+    ctx.arc(x, y - 35, 55, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Focinho
+    ctx.fillStyle = "#C4A574";
+    ctx.beginPath();
+    ctx.ellipse(x, y - 20, 35, 30, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Orelhas
-    ctx.fillStyle = "#8B6F47";
+    ctx.fillStyle = "#9B7653";
     ctx.beginPath();
-    ctx.arc(centerX + 20, centerY - 90, 15, 0, Math.PI * 2);
+    ctx.arc(x - 35, y - 70, 18, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(centerX + 60, centerY - 90, 15, 0, Math.PI * 2);
+    ctx.arc(x + 35, y - 70, 18, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Interior das orelhas
+    ctx.fillStyle = "#8B6F47";
+    ctx.beginPath();
+    ctx.arc(x - 35, y - 70, 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 35, y - 70, 10, 0, Math.PI * 2);
     ctx.fill();
 
     // Olhos
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = "#1a1a1a";
     ctx.beginPath();
-    ctx.arc(centerX + 25, centerY - 60, 8, 0, Math.PI * 2);
+    ctx.arc(x - 18, y - 45, 10, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(centerX + 55, centerY - 60, 8, 0, Math.PI * 2);
+    ctx.arc(x + 18, y - 45, 10, 0, Math.PI * 2);
     ctx.fill();
 
     // Brilho nos olhos
-    ctx.fillStyle = "#fff";
+    ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.arc(centerX + 27, centerY - 62, 3, 0, Math.PI * 2);
+    ctx.arc(x - 15, y - 48, 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(centerX + 57, centerY - 62, 3, 0, Math.PI * 2);
+    ctx.arc(x + 21, y - 48, 4, 0, Math.PI * 2);
     ctx.fill();
 
     // Nariz
-    ctx.fillStyle = "#654321";
+    ctx.fillStyle = "#5C4033";
     ctx.beginPath();
-    ctx.arc(centerX + 40, centerY - 40, 8, 0, Math.PI * 2);
+    ctx.arc(x, y - 15, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Narinas
+    ctx.fillStyle = "#3D2817";
+    ctx.beginPath();
+    ctx.arc(x - 5, y - 15, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + 5, y - 15, 3, 0, Math.PI * 2);
     ctx.fill();
 
     // Boca
-    ctx.strokeStyle = "#654321";
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#5C4033";
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.arc(centerX + 40, centerY - 30, 12, 0, Math.PI, false);
+    ctx.arc(x, y - 5, 15, 0, Math.PI, false);
     ctx.stroke();
 
     // Patas
+    ctx.fillStyle = "#9B7653";
+    ctx.fillRect(x - 55, y + 60, 30, 50);
+    ctx.fillRect(x + 25, y + 60, 30, 50);
+
+    // Patas traseiras
     ctx.fillStyle = "#8B6F47";
-    ctx.fillRect(centerX - 50, centerY + 50, 25, 40);
-    ctx.fillRect(centerX + 25, centerY + 50, 25, 40);
+    ctx.fillRect(x - 70, y + 40, 25, 45);
+    ctx.fillRect(x + 45, y + 40, 25, 45);
 
     // Cauda
-    ctx.strokeStyle = "#8B6F47";
-    ctx.lineWidth = 20;
+    ctx.strokeStyle = "#9B7653";
+    ctx.lineWidth = 25;
+    ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(centerX - 70, centerY);
-    ctx.quadraticCurveTo(centerX - 120, centerY - 30, centerX - 100, centerY - 80);
+    ctx.moveTo(x - 80, y + 20);
+    ctx.quadraticCurveTo(x - 140, y - 20, x - 110, y - 90);
     ctx.stroke();
+  }
 
-    // Nome
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 16px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(gameState.player.capyName, centerX, canvas.height - 20);
-  }, [isLoggedIn, gameState.player.capyName]);
+  function drawCloud(ctx: CanvasRenderingContext2D, x: number, y: number, size: number) {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.beginPath();
+    ctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + size * 0.3, y - size * 0.2, size * 0.6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x + size * 0.6, y, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawRainbow(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+    const colors = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#9400D3"];
+    for (let i = colors.length - 1; i >= 0; i--) {
+      ctx.strokeStyle = colors[i];
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.arc(x, y, radius - i * 8, 0, Math.PI, false);
+      ctx.stroke();
+    }
+  }
+
+  function drawFlower(ctx: CanvasRenderingContext2D, x: number, y: number) {
+    // Pétalas
+    ctx.fillStyle = "#FF69B4";
+    for (let i = 0; i < 5; i++) {
+      const angle = (i * Math.PI * 2) / 5;
+      ctx.beginPath();
+      ctx.arc(x + Math.cos(angle) * 15, y + Math.sin(angle) * 15, 8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Centro
+    ctx.fillStyle = "#FFD700";
+    ctx.beginPath();
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      keysPressed.current[e.key.toLowerCase()] = true;
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      keysPressed.current[e.key.toLowerCase()] = false;
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
 
   // Game loop
   useEffect(() => {
     if (!isLoggedIn) return;
 
     gameLoopRef.current = setInterval(() => {
+      // Movement
+      let newX = capyX;
+      let newY = capyY;
+
+      if (keysPressed.current["w"] || keysPressed.current["arrowup"]) newY = Math.max(100, newY - 5);
+      if (keysPressed.current["s"] || keysPressed.current["arrowdown"]) newY = Math.min(300, newY + 5);
+      if (keysPressed.current["a"] || keysPressed.current["arrowleft"]) newX = Math.max(50, newX - 5);
+      if (keysPressed.current["d"] || keysPressed.current["arrowright"]) newX = Math.min(450, newX + 5);
+
+      setCapyX(newX);
+      setCapyY(newY);
+
+      // Decrease stats
       setGameState((prev: any) => {
         const updated = { ...prev };
-        updated.capybara.hunger = Math.max(0, updated.capybara.hunger - 0.5);
-        updated.capybara.happiness = Math.max(0, updated.capybara.happiness - 0.3);
-        updated.capybara.energy = Math.max(0, updated.capybara.energy - 0.2);
+        updated.capybara.hunger = Math.max(0, updated.capybara.hunger - 0.3);
+        updated.capybara.happiness = Math.max(0, updated.capybara.happiness - 0.2);
+        updated.capybara.energy = Math.max(0, updated.capybara.energy - 0.15);
+        updated.capybara.thirst = Math.max(0, updated.capybara.thirst - 0.25);
+        updated.capybara.hygiene = Math.max(0, updated.capybara.hygiene - 0.1);
+        updated.capybara.poop = Math.min(100, updated.capybara.poop + 0.2);
 
-        if (updated.capybara.hunger < 20) {
-          updated.capybara.health = Math.max(0, updated.capybara.health - 0.5);
+        // Update mood
+        if (updated.capybara.hunger < 30) updated.capybara.mood = "😢 Faminto";
+        else if (updated.capybara.happiness < 30) updated.capybara.mood = "😞 Triste";
+        else if (updated.capybara.energy < 20) updated.capybara.mood = "😴 Cansado";
+        else updated.capybara.mood = "😊 Feliz";
+
+        // Check if dead
+        if (updated.capybara.hunger <= 0 || updated.capybara.health <= 0) {
+          updated.player.alive = false;
         }
-
-        const avg =
-          (updated.capybara.hunger +
-            updated.capybara.happiness +
-            updated.capybara.energy) /
-          3;
-        if (avg >= 80) updated.capybara.mood = "😊 Feliz";
-        else if (avg >= 60) updated.capybara.mood = "😐 Normal";
-        else if (avg >= 40) updated.capybara.mood = "😟 Triste";
-        else updated.capybara.mood = "😢 Muito Triste";
 
         return updated;
       });
-    }, 500);
+    }, 1000);
 
     return () => {
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
-  }, [isLoggedIn]);
+  }, [isLoggedIn, capyX, capyY]);
 
   // Actions
-  const feedCapy = () => {
-    if (gameState.capybara.hunger >= 100) return;
+  const feed = () => {
     setGameState((prev: any) => ({
       ...prev,
       capybara: {
         ...prev.capybara,
-        hunger: Math.min(100, prev.capybara.hunger + 30),
+        hunger: Math.min(100, prev.capybara.hunger + 20),
       },
       player: {
         ...prev.player,
@@ -212,46 +370,43 @@ export default function Home() {
     }));
   };
 
-  const playWithCapy = () => {
-    if (gameState.capybara.energy < 20) return;
+  const play = () => {
     setGameState((prev: any) => ({
       ...prev,
       capybara: {
         ...prev.capybara,
-        happiness: Math.min(100, prev.capybara.happiness + 25),
-        energy: Math.max(0, prev.capybara.energy - 20),
+        happiness: Math.min(100, prev.capybara.happiness + 15),
+        energy: Math.max(0, prev.capybara.energy - 10),
       },
       player: {
         ...prev.player,
+        coins: prev.player.coins + 15,
         xp: prev.player.xp + 10,
       },
     }));
   };
 
-  const workCapy = () => {
-    if (gameState.capybara.energy < 30) return;
-    const coinsEarned = Math.floor(Math.random() * 50) + 20;
+  const work = () => {
     setGameState((prev: any) => ({
       ...prev,
-      capybara: {
-        ...prev.capybara,
-        energy: Math.max(0, prev.capybara.energy - 30),
-      },
       player: {
         ...prev.player,
-        coins: prev.player.coins + coinsEarned,
-        xp: prev.player.xp + 15,
+        coins: prev.player.coins + 50,
+        xp: prev.player.xp + 20,
+      },
+      capybara: {
+        ...prev.capybara,
+        energy: Math.max(0, prev.capybara.energy - 20),
       },
     }));
   };
 
-  const sleepCapy = () => {
+  const sleep = () => {
     setGameState((prev: any) => ({
       ...prev,
       capybara: {
         ...prev.capybara,
-        energy: Math.min(100, prev.capybara.energy + 50),
-        hunger: Math.max(0, prev.capybara.hunger - 10),
+        energy: Math.min(100, prev.capybara.energy + 40),
       },
       player: {
         ...prev.player,
@@ -260,31 +415,32 @@ export default function Home() {
     }));
   };
 
-  const bathCapy = () => {
+  const bath = () => {
     setGameState((prev: any) => ({
       ...prev,
       capybara: {
         ...prev.capybara,
-        health: Math.min(100, prev.capybara.health + 30),
-        happiness: Math.min(100, prev.capybara.happiness + 15),
+        hygiene: Math.min(100, prev.capybara.hygiene + 30),
+        poop: Math.max(0, prev.capybara.poop - 20),
       },
       player: {
         ...prev.player,
+        coins: prev.player.coins + 5,
         xp: prev.player.xp + 8,
       },
     }));
   };
 
-  const petCapy = () => {
+  const pet = () => {
     setGameState((prev: any) => ({
       ...prev,
       capybara: {
         ...prev.capybara,
-        happiness: Math.min(100, prev.capybara.happiness + 20),
+        happiness: Math.min(100, prev.capybara.happiness + 10),
       },
       player: {
         ...prev.player,
-        xp: prev.player.xp + 5,
+        xp: prev.player.xp + 3,
       },
     }));
   };
@@ -298,48 +454,48 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md p-8 bg-slate-800 border-slate-700">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl mb-2">🐹 CapyZen</h1>
-            <p className="text-slate-400">Cuide de sua Capivara</p>
-          </div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-slate-800 border-purple-500 border-2">
+          <div className="p-8 space-y-6">
+            <div className="text-center space-y-2">
+              <div className="text-5xl">🐹</div>
+              <h1 className="text-3xl font-bold text-white">CapyZen</h1>
+              <p className="text-gray-300">Cuide de sua Capivara</p>
+            </div>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Seu nome"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
-            <input
-              type="text"
-              placeholder="Nome da capivara"
-              value={capyName}
-              onChange={(e) => setCapyName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
-
-            {loginError && (
-              <p className="text-red-400 text-sm text-center">{loginError}</p>
-            )}
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder="Seu nome"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 bg-slate-700 text-white placeholder-gray-400 rounded-lg border border-purple-500 focus:outline-none focus:border-purple-300"
+              />
+              <input
+                type="text"
+                placeholder="Nome da capivara"
+                value={capyName}
+                onChange={(e) => setCapyName(e.target.value)}
+                className="w-full px-4 py-2 bg-slate-700 text-white placeholder-gray-400 rounded-lg border border-purple-500 focus:outline-none focus:border-purple-300"
+              />
+              {loginError && <p className="text-red-400 text-sm">{loginError}</p>}
+            </div>
 
             <Button
               onClick={startGame}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-2"
             >
               🎮 Começar Jogo
             </Button>
 
-            <div className="flex gap-2 pt-4">
+            <div className="flex gap-2">
               <Link href="/loja" className="flex-1">
-                <Button variant="outline" className="w-full">
+                <Button className="w-full bg-slate-700 hover:bg-slate-600 text-white">
                   🛍️ Loja
                 </Button>
               </Link>
               <Link href="/admin" className="flex-1">
-                <Button variant="outline" className="w-full">
+                <Button className="w-full bg-slate-700 hover:bg-slate-600 text-white">
                   ⚙️ Admin
                 </Button>
               </Link>
@@ -350,214 +506,128 @@ export default function Home() {
     );
   }
 
-  const hunger = Math.max(0, Math.min(100, gameState.capybara.hunger));
-  const happiness = Math.max(0, Math.min(100, gameState.capybara.happiness));
-  const energy = Math.max(0, Math.min(100, gameState.capybara.energy));
-  const xpPercent = (gameState.player.xp / gameState.player.maxXp) * 100;
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      {/* Header */}
-      <header className="max-w-7xl mx-auto mb-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">🐹 CapyZen</h1>
-            <p className="text-slate-400">Cuide de sua Capivara</p>
-          </div>
-          <nav className="flex gap-4">
-            <Link href="/loja">
-              <Button variant="outline">🛍️ Loja</Button>
-            </Link>
-            <Link href="/admin">
-              <Button variant="outline">⚙️ Admin</Button>
-            </Link>
-            <Button onClick={logout} variant="destructive">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Main Game Area */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-3xl font-bold text-white">🐹 CapyZen</h1>
+            <Button onClick={logout} className="bg-red-600 hover:bg-red-700">
               🚪 Sair
             </Button>
-          </nav>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Sidebar */}
-        <Card className="bg-slate-800 border-slate-700 p-6">
-          <h2 className="text-xl font-bold mb-4">👤 Jogador</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-slate-400">Nome:</span>
-              <span className="font-bold">{gameState.player.username}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Nível:</span>
-              <span className="font-bold text-blue-400">
-                {gameState.player.level}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Moedas:</span>
-              <span className="font-bold text-yellow-400">
-                {gameState.player.coins}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Idade:</span>
-              <span className="font-bold">{gameState.player.age} dias</span>
-            </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="font-bold mb-2">Próximo Nível</h3>
-            <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-              <div
-                className="bg-gradient-to-r from-yellow-400 to-orange-400 h-full transition-all"
-                style={{ width: `${xpPercent}%` }}
-              />
-            </div>
-            <p className="text-sm text-slate-400 mt-1">
-              {gameState.player.xp}/{gameState.player.maxXp} XP
-            </p>
+          <Card className="bg-slate-800 border-purple-500 border-2 p-4">
+            <canvas
+              ref={canvasRef}
+              width={500}
+              height={400}
+              className="w-full border-4 border-purple-500 rounded-lg"
+            />
+          </Card>
+
+          <div className="grid grid-cols-3 gap-2">
+            <Button onClick={feed} className="bg-orange-500 hover:bg-orange-600">
+              🍖 Alimentar
+            </Button>
+            <Button onClick={play} className="bg-blue-500 hover:bg-blue-600">
+              🎾 Brincar
+            </Button>
+            <Button onClick={work} className="bg-green-500 hover:bg-green-600">
+              💼 Trabalhar
+            </Button>
           </div>
 
-          <Button
-            onClick={saveGame}
-            className="w-full mt-6 bg-green-600 hover:bg-green-700"
-          >
+          <div className="grid grid-cols-3 gap-2">
+            <Button onClick={sleep} className="bg-purple-500 hover:bg-purple-600">
+              😴 Dormir
+            </Button>
+            <Button onClick={bath} className="bg-cyan-500 hover:bg-cyan-600">
+              🚿 Banho
+            </Button>
+            <Button onClick={pet} className="bg-pink-500 hover:bg-pink-600">
+              🤗 Carinho
+            </Button>
+          </div>
+
+          <Button onClick={saveGame} className="w-full bg-slate-700 hover:bg-slate-600">
             💾 Salvar Jogo
           </Button>
-        </Card>
+        </div>
 
-        {/* Center: Game Area */}
-        <Card className="bg-slate-800 border-slate-700 p-6 lg:col-span-1">
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold mb-4">
-                {gameState.player.capyName}
-              </h2>
-              <canvas
-                ref={canvasRef}
-                width={300}
-                height={300}
-                className="w-full border-2 border-slate-700 rounded-lg"
-              />
+        {/* Status Panel */}
+        <div className="space-y-4">
+          <Card className="bg-slate-800 border-purple-500 border-2 p-4">
+            <h2 className="text-xl font-bold text-white mb-4">👤 Jogador</h2>
+            <div className="space-y-2 text-sm text-gray-300">
+              <div className="flex justify-between">
+                <span>Nome:</span>
+                <span className="text-white font-bold">{gameState.player.username}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Nível:</span>
+                <span className="text-white font-bold">{gameState.player.level}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Moedas:</span>
+                <span className="text-yellow-400 font-bold">💰 {gameState.player.coins}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Idade:</span>
+                <span className="text-white font-bold">{gameState.player.days} dias</span>
+              </div>
             </div>
+          </Card>
 
-            {/* Status Bars */}
+          <Card className="bg-slate-800 border-purple-500 border-2 p-4">
+            <h2 className="text-xl font-bold text-white mb-4">📊 Capybara</h2>
             <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>🍖 Fome</span>
-                  <span>{Math.round(hunger)}%</span>
+              {[
+                { label: "🍔 Fome", value: gameState.capybara.hunger, color: "bg-orange-500" },
+                { label: "❤️ Felicidade", value: gameState.capybara.happiness, color: "bg-pink-500" },
+                { label: "💩 Coco", value: gameState.capybara.poop, color: "bg-yellow-700" },
+                { label: "⚡ Energia", value: gameState.capybara.energy, color: "bg-blue-500" },
+                { label: "💧 Sede", value: gameState.capybara.thirst, color: "bg-cyan-500" },
+                { label: "🧴 Higiene", value: gameState.capybara.hygiene, color: "bg-green-500" },
+                { label: "❤️‍🩹 Saúde", value: gameState.capybara.health, color: "bg-red-500" },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <div className="flex justify-between text-xs text-gray-300 mb-1">
+                    <span>{stat.label}</span>
+                    <span>{Math.round(stat.value)}/100</span>
+                  </div>
+                  <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+                    <div
+                      className={`h-full ${stat.color} transition-all duration-500`}
+                      style={{ width: `${Math.min(100, stat.value)}%` }}
+                    />
+                  </div>
                 </div>
-                <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-red-400 to-orange-400 h-full transition-all"
-                    style={{ width: `${hunger}%` }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>😊 Felicidade</span>
-                  <span>{Math.round(happiness)}%</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-pink-400 to-purple-400 h-full transition-all"
-                    style={{ width: `${happiness}%` }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>⚡ Energia</span>
-                  <span>{Math.round(energy)}%</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
-                  <div
-                    className="bg-gradient-to-r from-blue-400 to-cyan-400 h-full transition-all"
-                    style={{ width: `${energy}%` }}
-                  />
-                </div>
-              </div>
+              ))}
             </div>
+          </Card>
 
-            {/* Actions Grid */}
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                onClick={feedCapy}
-                variant="outline"
-                className="text-sm"
-                disabled={gameState.capybara.hunger >= 100}
-              >
-                🍖 Alimentar
-              </Button>
-              <Button
-                onClick={playWithCapy}
-                variant="outline"
-                className="text-sm"
-                disabled={gameState.capybara.energy < 20}
-              >
-                🎾 Brincar
-              </Button>
-              <Button
-                onClick={workCapy}
-                variant="outline"
-                className="text-sm"
-                disabled={gameState.capybara.energy < 30}
-              >
-                💼 Trabalhar
-              </Button>
-              <Button
-                onClick={sleepCapy}
-                variant="outline"
-                className="text-sm"
-              >
-                😴 Dormir
-              </Button>
-              <Button
-                onClick={bathCapy}
-                variant="outline"
-                className="text-sm"
-              >
-                🚿 Banho
-              </Button>
-              <Button
-                onClick={petCapy}
-                variant="outline"
-                className="text-sm"
-              >
-                🤗 Carinho
-              </Button>
-            </div>
-          </div>
-        </Card>
-
-        {/* Right Sidebar */}
-        <Card className="bg-slate-800 border-slate-700 p-6">
-          <h2 className="text-xl font-bold mb-4">📊 Estatísticas</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="text-slate-400">Saúde:</span>
-              <span className="font-bold text-green-400">
-                {Math.round(gameState.capybara.health)}%
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Humor:</span>
-              <span className="font-bold">{gameState.capybara.mood}</span>
-            </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-slate-700 rounded-lg">
-            <p className="text-center text-sm text-slate-300">
-              💡 Dica: Cuide bem de sua capivara para ganhar mais moedas e
-              experiência!
+          <Card className="bg-slate-800 border-purple-500 border-2 p-4">
+            <h2 className="text-xl font-bold text-white mb-2">💡 Dica</h2>
+            <p className="text-xs text-gray-300">
+              Use WASD ou Setas para mover a capivara! Cuide bem dela para ganhar mais moedas e experiência.
             </p>
+          </Card>
+
+          <div className="flex gap-2">
+            <Link href="/loja" className="flex-1">
+              <Button className="w-full bg-slate-700 hover:bg-slate-600">
+                🛍️ Loja
+              </Button>
+            </Link>
+            <Link href="/admin" className="flex-1">
+              <Button className="w-full bg-slate-700 hover:bg-slate-600">
+                ⚙️ Admin
+              </Button>
+            </Link>
           </div>
-        </Card>
+        </div>
       </div>
     </div>
   );

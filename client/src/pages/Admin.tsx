@@ -4,20 +4,43 @@ import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 
 export default function Admin() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authStep, setAuthStep] = useState<"password" | "question" | "authenticated">("password");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [questionAnswer, setQuestionAnswer] = useState("");
+  const [questionError, setQuestionError] = useState("");
   const [allGames, setAllGames] = useState<any[]>([]);
 
-  const ADMIN_PASSWORD = "admin123";
+  // Senhas válidas
+  const VALID_PASSWORDS = [
+    "Can_u_please_give_me_adm",
+    "capivarasdevemseradmsemtudo!",
+    "307546"
+  ];
 
-  const handleLogin = () => {
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
+  // Pergunta de segurança
+  const SECURITY_QUESTION = "Qual é o seu nome?";
+  const CORRECT_ANSWER = "matteo"; // Você disse que não quer ser chamado por esse nome, mas é a resposta correta
+
+  const handlePasswordSubmit = () => {
+    if (VALID_PASSWORDS.includes(password)) {
       setPasswordError("");
-      loadAllGames();
+      setAuthStep("question");
     } else {
       setPasswordError("Senha incorreta!");
+      setPassword("");
+    }
+  };
+
+  const handleQuestionSubmit = () => {
+    const normalizedAnswer = questionAnswer.toLowerCase().trim();
+    if (normalizedAnswer === CORRECT_ANSWER.toLowerCase()) {
+      setQuestionError("");
+      setAuthStep("authenticated");
+      loadAllGames();
+    } else {
+      setQuestionError("Resposta incorreta!");
+      setQuestionAnswer("");
     }
   };
 
@@ -65,6 +88,9 @@ export default function Admin() {
         game.capybara.happiness = 100;
         game.capybara.energy = 100;
         game.capybara.health = 100;
+        game.capybara.poop = 0;
+        game.capybara.thirst = 100;
+        game.capybara.hygiene = 100;
         localStorage.setItem("capyzen_game", JSON.stringify(game));
         loadAllGames();
         alert("✅ Todos os stats foram maximizados!");
@@ -90,7 +116,8 @@ export default function Admin() {
     }
   };
 
-  if (!isAuthenticated) {
+  // Tela de Senha
+  if (authStep === "password") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
         <Card className="w-full max-w-md p-8 bg-slate-800 border-slate-700">
@@ -105,7 +132,7 @@ export default function Admin() {
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleLogin()}
+              onKeyPress={(e) => e.key === "Enter" && handlePasswordSubmit()}
               className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
             />
 
@@ -114,10 +141,10 @@ export default function Admin() {
             )}
 
             <Button
-              onClick={handleLogin}
+              onClick={handlePasswordSubmit}
               className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700"
             >
-              🔓 Acessar Admin
+              🔓 Próximo
             </Button>
 
             <Link href="/">
@@ -131,6 +158,61 @@ export default function Admin() {
     );
   }
 
+  // Tela de Pergunta de Segurança
+  if (authStep === "question") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md p-8 bg-slate-800 border-slate-700">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl mb-2">🔐 Verificação de Segurança</h1>
+            <p className="text-slate-400">Responda a pergunta para continuar</p>
+          </div>
+
+          <div className="space-y-4">
+            <div className="bg-slate-700 p-4 rounded-lg">
+              <p className="text-slate-300 font-semibold">{SECURITY_QUESTION}</p>
+            </div>
+
+            <input
+              type="text"
+              placeholder="Sua resposta"
+              value={questionAnswer}
+              onChange={(e) => setQuestionAnswer(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleQuestionSubmit()}
+              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+            />
+
+            {questionError && (
+              <p className="text-red-400 text-sm text-center">{questionError}</p>
+            )}
+
+            <Button
+              onClick={handleQuestionSubmit}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            >
+              ✅ Verificar
+            </Button>
+
+            <Button
+              onClick={() => {
+                setAuthStep("password");
+                setPassword("");
+                setQuestionAnswer("");
+                setPasswordError("");
+                setQuestionError("");
+              }}
+              variant="outline"
+              className="w-full"
+            >
+              ← Voltar
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
+
+  // Painel Admin Autenticado
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
       {/* Header */}
@@ -148,7 +230,13 @@ export default function Admin() {
               <Button variant="outline">🛍️ Loja</Button>
             </Link>
             <Button
-              onClick={() => setIsAuthenticated(false)}
+              onClick={() => {
+                setAuthStep("password");
+                setPassword("");
+                setQuestionAnswer("");
+                setPasswordError("");
+                setQuestionError("");
+              }}
               variant="destructive"
             >
               🚪 Sair
@@ -253,6 +341,7 @@ export default function Admin() {
           <p className="text-slate-400 text-sm">
             Painel de administração para controlar o jogo CapyZen. Aqui você pode
             adicionar moedas, maximizar stats, subir de nível e resetar dados.
+            Sistema de autenticação com múltiplas senhas e pergunta de segurança.
           </p>
         </Card>
       </div>
