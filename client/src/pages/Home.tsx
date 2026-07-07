@@ -26,6 +26,18 @@ export default function Home() {
   const [capyY, setCapyY] = useState(280);
   const [raindrops, setRaindrops] = useState<Array<{ x: number; y: number }>>([]);
   const [isRaining, setIsRaining] = useState(false);
+  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(() => {
+    try {
+      const dismissed = localStorage.getItem("whatsapp_popup_dismissed");
+      return !dismissed;
+    } catch {
+      return true;
+    }
+  });
+  const [showBugModal, setShowBugModal] = useState(false);
+  const [bugReport, setBugReport] = useState({ title: "", description: "" });
+  const [bugSubmitting, setBugSubmitting] = useState(false);
+  const [bugMessage, setBugMessage] = useState("");
 
   function getInitialState() {
     return {
@@ -659,6 +671,131 @@ export default function Home() {
             Use WASD ou Setas para mover a capivara! Cuide bem dela para ganhar mais moedas e experiência.
           </p>
         </Card>
+
+        {/* Report Bug Button */}
+        <div className="flex justify-center mt-6">
+          <Button
+            onClick={() => setShowBugModal(true)}
+            variant="outline"
+            className="bg-red-900 hover:bg-red-800 border-red-700"
+          >
+            🐛 Reportar Bug
+          </Button>
+        </div>
+
+        {/* Bug Report Modal */}
+        {showBugModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="bg-slate-800 border-slate-700 p-6 w-full max-w-md">
+              <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
+              <div className="space-y-4">
+                <input
+                  type="text"
+                  placeholder="Título do bug"
+                  value={bugReport.title}
+                  onChange={(e) => setBugReport({ ...bugReport, title: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                />
+                <textarea
+                  placeholder="Descreva o bug em detalhes..."
+                  value={bugReport.description}
+                  onChange={(e) => setBugReport({ ...bugReport, description: e.target.value })}
+                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 h-24"
+                />
+                {bugMessage && (
+                  <p className={`text-sm text-center ${bugMessage.includes("✅") ? "text-green-400" : "text-red-400"}`}>
+                    {bugMessage}
+                  </p>
+                )}
+                <div className="flex gap-3">
+                  <Button
+                    onClick={async () => {
+                      if (!bugReport.title.trim() || !bugReport.description.trim()) {
+                        setBugMessage("❌ Preencha todos os campos!");
+                        return;
+                      }
+
+                      setBugSubmitting(true);
+                      try {
+                        const response = await fetch("/api/send-bug-report", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          body: JSON.stringify({
+                            title: bugReport.title,
+                            description: bugReport.description,
+                            player: gameState.player.username,
+                            capybara: gameState.player.capyName,
+                          }),
+                        });
+
+                        if (response.ok) {
+                          setBugMessage("✅ Bug reportado com sucesso!");
+                          setTimeout(() => {
+                            setShowBugModal(false);
+                            setBugReport({ title: "", description: "" });
+                            setBugMessage("");
+                          }, 2000);
+                        } else {
+                          setBugMessage("❌ Erro ao enviar relatório");
+                        }
+                      } catch (error) {
+                        setBugMessage("❌ Erro ao conectar com servidor");
+                      } finally {
+                        setBugSubmitting(false);
+                      }
+                    }}
+                    disabled={bugSubmitting}
+                    className="flex-1 bg-green-600 hover:bg-green-700"
+                  >
+                    {bugSubmitting ? "Enviando..." : "Enviar"}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowBugModal(false);
+                      setBugReport({ title: "", description: "" });
+                      setBugMessage("");
+                    }}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* WhatsApp Popup - Small and Discrete */}
+        {showWhatsAppPopup && isLoggedIn && (
+          <div className="fixed bottom-6 right-6 z-40 animate-bounce">
+            <Card className="bg-green-600 border-green-500 p-3 w-72 shadow-lg">
+              <div className="flex justify-between items-start gap-3">
+                <div className="flex-1">
+                  <h3 className="font-bold text-white text-sm mb-2">💬 Siga nosso canal!</h3>
+                  <p className="text-white text-xs mb-3">Siga o canal "Helu💜❤️" no WhatsApp para novidades!</p>
+                  <a
+                    href="https://whatsapp.com/channel/0029Vb7mvxBDOQIOgBSSJ71n"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-white text-green-600 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100 transition"
+                  >
+                    📱 Seguir Canal
+                  </a>
+                </div>
+                <button
+                  onClick={() => {
+                    setShowWhatsAppPopup(false);
+                    localStorage.setItem("whatsapp_popup_dismissed", "true");
+                  }}
+                  className="text-white hover:text-gray-200 text-lg font-bold leading-none"
+                >
+                  ✕
+                </button>
+              </div>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );

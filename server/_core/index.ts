@@ -36,6 +36,33 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   registerStorageProxy(app);
   registerOAuthRoutes(app);
+
+  // Bug Report Endpoint
+  app.post("/api/send-bug-report", (req, res) => {
+    const { title, description, player, capybara } = req.body;
+
+    if (!title || !description) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Simular envio de email (em produção, usar nodemailer ou similar)
+    const bugReport = {
+      timestamp: new Date().toISOString(),
+      title,
+      description,
+      player,
+      capybara,
+    };
+
+    console.log("[BUG REPORT]", JSON.stringify(bugReport, null, 2));
+    console.log(`Email would be sent to: acontasecundaria222@gmail.com`);
+
+    // TODO: Implementar envio real de email com nodemailer
+    // Para agora, apenas logamos o bug
+
+    res.json({ success: true, message: "Bug report received" });
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",
