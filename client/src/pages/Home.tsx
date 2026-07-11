@@ -234,8 +234,8 @@ export default function Home() {
     drawFlower(ctx, 350, 320, '#FF69B4');
     drawFlower(ctx, 480, 330, '#FFB6C1');
 
-    // Draw capybara - REALISTA
-    drawCapybaraRealistic(ctx, capyX, capyY, gameState.capybara.equippedItems);
+    // Draw capybara - USANDO IMAGEM REAL
+    drawCapybaraWithImage(ctx, capyX, capyY, gameState.capybara.equippedItems);
 
     // Draw name and level
     ctx.fillStyle = '#2C3E50';
@@ -247,6 +247,24 @@ export default function Home() {
     ctx.fillStyle = '#555';
     ctx.fillText(`Lv${gameState.player.level}`, capyX, capyY - 110);
   }, [isLoggedIn, gameState, capyX, capyY]);
+
+  // Draw capybara using the real image
+  function drawCapybaraWithImage(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
+    const img = new Image();
+    img.src = '/capybara.png';
+    img.onload = () => {
+      // Draw the capybara image
+      ctx.drawImage(img, x - 50, y - 50, 100, 100);
+      
+      // Draw equipped items on top
+      if (equippedItems.includes('hat')) {
+        ctx.fillStyle = '#FF6B6B';
+        ctx.beginPath();
+        ctx.arc(x, y - 55, 20, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    };
+  }
 
   // Draw realistic capybara based on the photo
   function drawCapybaraRealistic(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
