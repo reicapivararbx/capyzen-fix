@@ -561,6 +561,9 @@ export default function Home() {
           <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600">
             ⚙️ Admin
           </Button>
+          <Button onClick={() => window.location.href = '/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600">
+            🎵 FNF Batalha
+          </Button>
           <Button onClick={() => setShowBugReport(true)} className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600">
             🐛 Reportar Bug
           </Button>
