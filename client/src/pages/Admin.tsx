@@ -223,9 +223,7 @@ export default function Admin() {
             <p className="text-slate-400">Controle total do jogo</p>
           </div>
           <nav className="flex gap-4">
-            <Link href="/">
-              <Button variant="outline">🐹 Jogo</Button>
-            </Link>
+            <Button variant="outline" onClick={() => window.location.href = '/'}>🐹 Jogo</Button>
             <Link href="/loja">
               <Button variant="outline">🛍️ Loja</Button>
             </Link>
@@ -239,7 +237,7 @@ export default function Admin() {
               }}
               variant="destructive"
             >
-              🚪 Sair
+              🚺 Sair
             </Button>
           </nav>
         </div>

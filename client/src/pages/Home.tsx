@@ -48,7 +48,9 @@ export default function Home() {
   useEffect(() => {
     const saved = localStorage.getItem('capyzen_game');
     if (saved) {
-      setGameState(JSON.parse(saved));
+      const gameData = JSON.parse(saved);
+      setGameState(gameData);
+      setIsLoggedIn(true);
     }
     const popupDismissed = localStorage.getItem('capyzen_popup_dismissed');
     if (popupDismissed) {
@@ -470,18 +472,9 @@ export default function Home() {
             className="w-full px-4 py-3 mb-6 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-purple-400"
           />
 
-          <Button onClick={startGame} className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 rounded-lg mb-4">
+          <Button onClick={startGame} className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 rounded-lg">
             🎮 Começar Jogo
           </Button>
-
-          <div className="flex gap-2">
-            <Button variant="outline" className="flex-1">
-              🛍️ Loja
-            </Button>
-            <Button variant="outline" className="flex-1">
-              ⚙️ Admin
-            </Button>
-          </div>
         </div>
       </div>
     );

@@ -206,9 +206,7 @@ export default function Shop() {
             <p className="text-slate-400">Compre itens para sua capivara (1000+ itens disponíveis!)</p>
           </div>
           <nav className="flex gap-4">
-            <Link href="/">
-              <Button variant="outline">🐹 Jogo</Button>
-            </Link>
+            <Button variant="outline" onClick={() => window.location.href = '/'}>🐹 Jogo</Button>
             <Link href="/admin">
               <Button variant="outline">⚙️ Admin</Button>
             </Link>
