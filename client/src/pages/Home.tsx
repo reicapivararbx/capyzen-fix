@@ -1,153 +1,187 @@
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Link } from "wouter";
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/_core/hooks/useAuth';
+import { getLoginUrl } from '@/const';
+
+interface GameState {
+  player: {
+    name: string;
+    capyName: string;
+    level: number;
+    xp: number;
+    coins: number;
+    age: number;
+  };
+  capybara: {
+    hunger: number;
+    happiness: number;
+    poop: number;
+    energy: number;
+    thirst: number;
+    hygiene: number;
+    health: number;
+    equippedItems: string[];
+  };
+}
 
 export default function Home() {
+  const { user, loading, isAuthenticated, logout } = useAuth({});
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [playerName, setPlayerName] = useState('');
+  const [capyName, setCapyName] = useState('');
+  const [gameState, setGameState] = useState<GameState>({
+    player: { name: '', capyName: '', level: 1, xp: 0, coins: 0, age: 0 },
+    capybara: { hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [] },
+  });
+  const [capyX, setCapyX] = useState(300);
+  const [capyY, setCapyY] = useState(250);
+  const [showBugReport, setShowBugReport] = useState(false);
+  const [bugTitle, setBugTitle] = useState('');
+  const [bugDescription, setBugDescription] = useState('');
+  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
-  const keysPressed = useRef<{ [key: string]: boolean }>({});
 
-  // Game State
-  const [gameState, setGameState] = useState(() => {
-    try {
-      const saved = localStorage.getItem("capyzen_game");
-      return saved ? JSON.parse(saved) : getInitialState();
-    } catch {
-      return getInitialState();
+  // Load game state from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('capyzen_game');
+    if (saved) {
+      setGameState(JSON.parse(saved));
     }
-  });
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
-  const [capyName, setCapyName] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [capyX, setCapyX] = useState(250);
-  const [capyY, setCapyY] = useState(280);
-  const [raindrops, setRaindrops] = useState<Array<{ x: number; y: number }>>([]);
-  const [isRaining, setIsRaining] = useState(false);
-  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(() => {
-    try {
-      const dismissed = localStorage.getItem("whatsapp_popup_dismissed");
-      return !dismissed;
-    } catch {
-      return true;
+    const popupDismissed = localStorage.getItem('capyzen_popup_dismissed');
+    if (popupDismissed) {
+      setShowWhatsAppPopup(false);
     }
-  });
-  const [showBugModal, setShowBugModal] = useState(false);
-  const [bugReport, setBugReport] = useState({ title: "", description: "" });
-  const [bugSubmitting, setBugSubmitting] = useState(false);
-  const [bugMessage, setBugMessage] = useState("");
-
-  function getInitialState() {
-    return {
-      player: {
-        username: "",
-        capyName: "",
-        level: 1,
-        xp: 0,
-        maxXp: 100,
-        coins: 0,
-        food: 3,
-        days: 0,
-        streakDays: 0,
-        alive: true,
-      },
-      capybara: {
-        hunger: 99,
-        happiness: 99,
-        poop: 0,
-        energy: 99,
-        thirst: 79,
-        hygiene: 99,
-        health: 100,
-        mood: "😊 Feliz",
-      },
-      achievements: [],
-    };
-  }
-
-  // Save game
-  const saveGame = () => {
-    try {
-      localStorage.setItem("capyzen_game", JSON.stringify(gameState));
-    } catch (e) {
-      console.error("Erro ao salvar:", e);
-    }
-  };
+  }, []);
 
   // Start game
   const startGame = () => {
-    if (!username.trim() || !capyName.trim()) {
-      setLoginError("Preencha todos os campos!");
+    if (!playerName.trim() || !capyName.trim()) {
+      alert('Por favor, preencha os campos!');
       return;
     }
-
-    const newState = {
-      ...gameState,
-      player: {
-        ...gameState.player,
-        username: username.trim(),
-        capyName: capyName.trim(),
-      },
+    const newState: GameState = {
+      player: { name: playerName, capyName, level: 1, xp: 0, coins: 0, age: 0 },
+      capybara: { hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [] },
     };
-
     setGameState(newState);
-    localStorage.setItem("capyzen_game", JSON.stringify(newState));
     setIsLoggedIn(true);
-    setLoginError("");
+    localStorage.setItem('capyzen_game', JSON.stringify(newState));
   };
 
-  // Keyboard controls
+  // Game actions
+  const performAction = (action: string) => {
+    const newState = { ...gameState };
+    const capy = newState.capybara;
+
+    switch (action) {
+      case 'feed':
+        capy.hunger = Math.max(0, capy.hunger - 30);
+        capy.happiness = Math.min(100, capy.happiness + 10);
+        newState.player.coins += 5;
+        newState.player.xp += 10;
+        break;
+      case 'play':
+        capy.happiness = Math.min(100, capy.happiness + 25);
+        capy.energy = Math.max(0, capy.energy - 20);
+        capy.hunger = Math.min(100, capy.hunger + 15);
+        newState.player.coins += 8;
+        newState.player.xp += 15;
+        break;
+      case 'work':
+        newState.player.coins += 20;
+        newState.player.xp += 20;
+        capy.energy = Math.max(0, capy.energy - 30);
+        capy.hunger = Math.min(100, capy.hunger + 20);
+        break;
+      case 'sleep':
+        capy.energy = Math.min(100, capy.energy + 40);
+        capy.hunger = Math.min(100, capy.hunger + 10);
+        break;
+      case 'bath':
+        capy.hygiene = Math.min(100, capy.hygiene + 30);
+        capy.energy = Math.max(0, capy.energy - 15);
+        break;
+      case 'pet':
+        capy.happiness = Math.min(100, capy.happiness + 15);
+        capy.energy = Math.max(0, capy.energy - 5);
+        newState.player.xp += 5;
+        break;
+    }
+
+    // Natural decay
+    capy.hunger = Math.min(100, capy.hunger + 1);
+    capy.thirst = Math.min(100, capy.thirst + 0.5);
+    capy.poop = Math.min(100, capy.poop + 0.3);
+    capy.hygiene = Math.max(0, capy.hygiene - 0.2);
+
+    // Level up
+    if (newState.player.xp >= 100) {
+      newState.player.level += 1;
+      newState.player.xp = 0;
+    }
+
+    setGameState(newState);
+    localStorage.setItem('capyzen_game', JSON.stringify(newState));
+  };
+
+  // Keyboard movement
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      keysPressed.current[e.key.toLowerCase()] = true;
+      if (!isLoggedIn) return;
+      const step = 15;
+      const canvasWidth = 560;
+      const canvasHeight = 400;
+
+      switch (e.key.toLowerCase()) {
+        case 'w':
+        case 'arrowup':
+          setCapyY((prev) => Math.max(100, prev - step));
+          break;
+        case 's':
+        case 'arrowdown':
+          setCapyY((prev) => Math.min(canvasHeight - 50, prev + step));
+          break;
+        case 'a':
+        case 'arrowleft':
+          setCapyX((prev) => Math.max(50, prev - step));
+          break;
+        case 'd':
+        case 'arrowright':
+          setCapyX((prev) => Math.min(canvasWidth - 50, prev + step));
+          break;
+      }
     };
 
-    const handleKeyUp = (e: KeyboardEvent) => {
-      keysPressed.current[e.key.toLowerCase()] = false;
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isLoggedIn]);
 
   // Game loop
   useEffect(() => {
     if (!isLoggedIn) return;
 
     gameLoopRef.current = setInterval(() => {
-      setCapyX((prev: number) => {
-        let newX = prev;
-        if (keysPressed.current["w"] || keysPressed.current["arrowup"]) newX -= 5;
-        if (keysPressed.current["s"] || keysPressed.current["arrowdown"]) newX += 5;
-        if (keysPressed.current["a"] || keysPressed.current["arrowleft"]) newX -= 5;
-        if (keysPressed.current["d"] || keysPressed.current["arrowright"]) newX += 5;
-        return Math.max(80, Math.min(520, newX));
-      });
+      setGameState((prev) => {
+        const newState = { ...prev };
+        const capy = newState.capybara;
 
-      setCapyY((prev: number) => {
-        let newY = prev;
-        if (keysPressed.current["w"] || keysPressed.current["arrowup"]) newY -= 5;
-        if (keysPressed.current["s"] || keysPressed.current["arrowdown"]) newY += 5;
-        return Math.max(150, Math.min(320, newY));
-      });
+        capy.hunger = Math.min(100, capy.hunger + 0.5);
+        capy.thirst = Math.min(100, capy.thirst + 0.3);
+        capy.poop = Math.min(100, capy.poop + 0.2);
+        capy.hygiene = Math.max(0, capy.hygiene - 0.15);
+        capy.energy = Math.max(0, capy.energy - 0.1);
 
-      // Update game state
-      setGameState((prev: any) => {
-        const updated = { ...prev };
-        updated.capybara.hunger = Math.max(0, updated.capybara.hunger - 0.05);
-        updated.capybara.thirst = Math.max(0, updated.capybara.thirst - 0.08);
-        updated.capybara.energy = Math.max(0, updated.capybara.energy - 0.02);
-        updated.capybara.happiness = Math.max(0, updated.capybara.happiness - 0.03);
-        updated.capybara.poop = Math.min(100, updated.capybara.poop + 0.1);
-        updated.capybara.hygiene = Math.max(0, updated.capybara.hygiene - 0.02);
-        return updated;
+        if (capy.hunger > 80 || capy.thirst > 80 || capy.poop > 80) {
+          capy.happiness = Math.max(0, capy.happiness - 0.5);
+        }
+
+        newState.player.age = Math.floor((Date.now() - new Date(localStorage.getItem('capyzen_start') || Date.now()).getTime()) / 1000 / 60);
+
+        localStorage.setItem('capyzen_game', JSON.stringify(newState));
+        return newState;
       });
     }, 50);
 
@@ -161,176 +195,166 @@ export default function Home() {
     if (!isLoggedIn || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // Clear canvas with sky gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, "#8BA3D9");
-    gradient.addColorStop(1, "#C5D9F0");
+    gradient.addColorStop(0, '#8BA3D9');
+    gradient.addColorStop(1, '#C5D9F0');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw clouds
-    drawCloud(ctx, 80, 60, 70, "#FFFFFF");
-    drawCloud(ctx, 320, 100, 90, "#FFFFFF");
-    drawCloud(ctx, 480, 50, 75, "#FFFFFF");
+    drawCloud(ctx, 80, 60, 70, '#FFFFFF');
+    drawCloud(ctx, 320, 100, 90, '#FFFFFF');
+    drawCloud(ctx, 480, 50, 75, '#FFFFFF');
 
     // Draw sun
-    ctx.fillStyle = "#FFD700";
+    ctx.fillStyle = '#FFD700';
     ctx.beginPath();
     ctx.arc(500, 80, 35, 0, Math.PI * 2);
     ctx.fill();
 
     // Draw tree
-    ctx.fillStyle = "#2D5016";
+    ctx.fillStyle = '#2D5016';
     ctx.beginPath();
     ctx.arc(450, 200, 55, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#654321";
+    ctx.fillStyle = '#654321';
     ctx.fillRect(430, 250, 40, 100);
 
     // Draw grass
-    ctx.fillStyle = "#5FD068";
+    ctx.fillStyle = '#5FD068';
     ctx.fillRect(0, 350, canvas.width, 150);
 
     // Draw flowers
-    drawFlower(ctx, 100, 330, "#FF69B4");
-    drawFlower(ctx, 200, 340, "#FFB6C1");
-    drawFlower(ctx, 350, 320, "#FF69B4");
-    drawFlower(ctx, 480, 330, "#FFB6C1");
+    drawFlower(ctx, 100, 330, '#FF69B4');
+    drawFlower(ctx, 200, 340, '#FFB6C1');
+    drawFlower(ctx, 350, 320, '#FF69B4');
+    drawFlower(ctx, 480, 330, '#FFB6C1');
 
-    // Draw capybara - IMPROVED VERSION
-    drawCapybaraImproved(ctx, capyX, capyY);
+    // Draw capybara - REALISTA
+    drawCapybaraRealistic(ctx, capyX, capyY, gameState.capybara.equippedItems);
 
     // Draw name and level
-    ctx.fillStyle = "#2C3E50";
-    ctx.font = "bold 18px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText(gameState.player.capyName, capyX, capyY - 120);
+    ctx.fillStyle = '#2C3E50';
+    ctx.font = 'bold 18px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(gameState.player.capyName, capyX, capyY - 130);
 
-    ctx.font = "bold 14px Arial";
-    ctx.fillStyle = "#555";
-    ctx.fillText(`Lv${gameState.player.level}`, capyX, capyY - 100);
+    ctx.font = 'bold 14px Arial';
+    ctx.fillStyle = '#555';
+    ctx.fillText(`Lv${gameState.player.level}`, capyX, capyY - 110);
   }, [isLoggedIn, gameState, capyX, capyY]);
 
-  // Draw improved capybara - MUCH BETTER DESIGN
-  function drawCapybaraImproved(ctx: CanvasRenderingContext2D, x: number, y: number) {
-    // Corpo principal - mais arredondado e fofo
-    ctx.fillStyle = "#A0826D";
+  // Draw realistic capybara based on the photo
+  function drawCapybaraRealistic(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
+    // Corpo principal - GRANDE, RECHONCHUDO E FOFO
+    ctx.fillStyle = '#D4C5B9'; // Bege claro
     ctx.beginPath();
-    ctx.ellipse(x, y + 15, 90, 70, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 20, 95, 75, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Barriga clara
-    ctx.fillStyle = "#C4B5A0";
+    // Barriga ainda mais clara
+    ctx.fillStyle = '#E8DDD2';
     ctx.beginPath();
-    ctx.ellipse(x, y + 20, 65, 50, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 25, 70, 55, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Cabeça grande e fofa
-    ctx.fillStyle = "#A0826D";
+    // Cabeça MUITO GRANDE - característica principal da capivara
+    ctx.fillStyle = '#D4C5B9';
     ctx.beginPath();
-    ctx.arc(x, y - 40, 60, 0, Math.PI * 2);
+    ctx.arc(x, y - 35, 70, 0, Math.PI * 2);
     ctx.fill();
 
-    // Focinho/Rosto
-    ctx.fillStyle = "#C4B5A0";
+    // Focinho GRANDE E ARREDONDADO - como na foto
+    ctx.fillStyle = '#E8DDD2';
     ctx.beginPath();
-    ctx.ellipse(x, y - 25, 40, 38, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 15, y - 20, 45, 42, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Orelhas - MAIORES E MAIS VISÍVEIS
-    ctx.fillStyle = "#A0826D";
+    // SEM ORELHAS VISÍVEIS (ou MUITO PEQUENAS)
+    ctx.fillStyle = '#C4B5A0';
     ctx.beginPath();
-    ctx.arc(x - 40, y - 75, 22, 0, Math.PI * 2);
+    ctx.arc(x - 50, y - 65, 8, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 40, y - 75, 22, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Interior das orelhas
-    ctx.fillStyle = "#8B7355";
-    ctx.beginPath();
-    ctx.arc(x - 40, y - 75, 12, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 40, y - 75, 12, 0, Math.PI * 2);
+    ctx.arc(x + 50, y - 65, 8, 0, Math.PI * 2);
     ctx.fill();
 
-    // Olhos GRANDES e expressivos
-    ctx.fillStyle = "#FFFFFF";
+    // Olhos PEQUENOS E REDONDOS (não grandes como antes)
+    ctx.fillStyle = '#2C2C2C';
     ctx.beginPath();
-    ctx.arc(x - 20, y - 45, 13, 0, Math.PI * 2);
+    ctx.arc(x - 10, y - 50, 7, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 20, y - 45, 13, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Pupilas
-    ctx.fillStyle = "#1a1a1a";
-    ctx.beginPath();
-    ctx.arc(x - 20, y - 45, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 20, y - 45, 8, 0, Math.PI * 2);
+    ctx.arc(x + 30, y - 50, 7, 0, Math.PI * 2);
     ctx.fill();
 
-    // Brilho nos olhos - MAIS VISÍVEL
-    ctx.fillStyle = "#FFFFFF";
+    // Brilho nos olhos
+    ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
-    ctx.arc(x - 17, y - 48, 5, 0, Math.PI * 2);
+    ctx.arc(x - 8, y - 52, 3, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 23, y - 48, 5, 0, Math.PI * 2);
+    ctx.arc(x + 32, y - 52, 3, 0, Math.PI * 2);
     ctx.fill();
 
-    // Nariz grande e fofo
-    ctx.fillStyle = "#8B7355";
+    // Nariz GRANDE, AZULADO/CINZENTO - como na foto
+    ctx.fillStyle = '#9BA8B5'; // Cinza azulado
     ctx.beginPath();
-    ctx.ellipse(x, y - 15, 12, 11, 0, 0, Math.PI * 2);
+    ctx.ellipse(x + 20, y - 10, 15, 13, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Narinas
-    ctx.fillStyle = "#5C4033";
+    ctx.fillStyle = '#6B7A8A';
     ctx.beginPath();
-    ctx.arc(x - 6, y - 15, 3, 0, Math.PI * 2);
+    ctx.arc(x + 12, y - 10, 4, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 6, y - 15, 3, 0, Math.PI * 2);
+    ctx.arc(x + 28, y - 10, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    // Boca - SORRISO GRANDE E FOFO
-    ctx.strokeStyle = "#8B7355";
-    ctx.lineWidth = 3;
+    // Boca - expressão dócil
+    ctx.strokeStyle = '#9BA8B5';
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(x, y - 2, 18, 0, Math.PI, false);
+    ctx.arc(x + 20, y + 5, 12, 0, Math.PI, false);
     ctx.stroke();
 
-    // Patas dianteiras
-    ctx.fillStyle = "#A0826D";
-    ctx.fillRect(x - 60, y + 65, 35, 55);
-    ctx.fillRect(x + 25, y + 65, 35, 55);
+    // Patas dianteiras - CURTAS E GROSSAS
+    ctx.fillStyle = '#D4C5B9';
+    ctx.fillRect(x - 60, y + 70, 32, 50);
+    ctx.fillRect(x + 30, y + 70, 32, 50);
 
-    // Patas traseiras
-    ctx.fillStyle = "#8B7355";
-    ctx.fillRect(x - 75, y + 45, 28, 50);
-    ctx.fillRect(x + 47, y + 45, 28, 50);
+    // Patas traseiras - CURTAS E GROSSAS
+    ctx.fillStyle = '#C4B5A0';
+    ctx.fillRect(x - 70, y + 50, 25, 45);
+    ctx.fillRect(x + 45, y + 50, 25, 45);
 
     // Cauda fofa
-    ctx.strokeStyle = "#A0826D";
+    ctx.strokeStyle = '#D4C5B9';
     ctx.lineWidth = 28;
-    ctx.lineCap = "round";
+    ctx.lineCap = 'round';
     ctx.beginPath();
     ctx.moveTo(x - 85, y + 25);
     ctx.quadraticCurveTo(x - 150, y - 10, x - 120, y - 85);
     ctx.stroke();
 
     // Sombreado para profundidade
-    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
     ctx.beginPath();
     ctx.ellipse(x, y + 85, 95, 15, 0, 0, Math.PI * 2);
     ctx.fill();
+
+    // Draw equipped items
+    if (equippedItems.includes('hat')) {
+      ctx.fillStyle = '#FF6B6B';
+      ctx.beginPath();
+      ctx.arc(x, y - 105, 20, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   // Draw cloud
@@ -340,7 +364,7 @@ export default function Home() {
     ctx.arc(x - size / 2, y, size / 2.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x, y - size / 3, size / 2, 0, Math.PI * 2);
+    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
     ctx.arc(x + size / 2, y, size / 2.5, 0, Math.PI * 2);
@@ -349,454 +373,229 @@ export default function Home() {
 
   // Draw flower
   function drawFlower(ctx: CanvasRenderingContext2D, x: number, y: number, color: string) {
-    // Pétalas
     ctx.fillStyle = color;
     for (let i = 0; i < 5; i++) {
-      const angle = (i / 5) * Math.PI * 2;
-      const px = x + Math.cos(angle) * 12;
-      const py = y + Math.sin(angle) * 12;
       ctx.beginPath();
-      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.arc(x + Math.cos((i / 5) * Math.PI * 2) * 8, y + Math.sin((i / 5) * Math.PI * 2) * 8, 5, 0, Math.PI * 2);
       ctx.fill();
     }
-    // Centro
-    ctx.fillStyle = "#FFD700";
+    ctx.fillStyle = '#FFD700';
     ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  // Action handlers
-  const performAction = (action: string) => {
-    setGameState((prev: any) => {
-      const updated = { ...prev };
-      switch (action) {
-        case "feed":
-          updated.capybara.hunger = Math.min(100, updated.capybara.hunger + 20);
-          updated.player.coins += 10;
-          break;
-        case "play":
-          updated.capybara.happiness = Math.min(100, updated.capybara.happiness + 15);
-          updated.capybara.energy = Math.max(0, updated.capybara.energy - 10);
-          updated.player.coins += 5;
-          break;
-        case "work":
-          updated.player.coins += 30;
-          updated.capybara.energy = Math.max(0, updated.capybara.energy - 20);
-          break;
-        case "sleep":
-          updated.capybara.energy = Math.min(100, updated.capybara.energy + 30);
-          break;
-        case "bath":
-          updated.capybara.hygiene = Math.min(100, updated.capybara.hygiene + 25);
-          updated.capybara.thirst = Math.max(0, updated.capybara.thirst - 10);
-          break;
-        case "pet":
-          updated.capybara.happiness = Math.min(100, updated.capybara.happiness + 10);
-          break;
+  // Report bug
+  const reportBug = async () => {
+    if (!bugTitle.trim() || !bugDescription.trim()) {
+      alert('Por favor, preencha todos os campos!');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/send-bug-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: bugTitle,
+          description: bugDescription,
+          player: gameState.player.name,
+          capybara: gameState.player.capyName,
+        }),
+      });
+
+      if (response.ok) {
+        alert('Bug reportado com sucesso! Obrigado por nos ajudar! 🐛');
+        setBugTitle('');
+        setBugDescription('');
+        setShowBugReport(false);
       }
-      return updated;
-    });
+    } catch (error) {
+      console.error('Erro ao reportar bug:', error);
+      alert('Erro ao reportar bug. Tente novamente.');
+    }
   };
 
-  // Login screen
+  if (loading) return <div className="flex items-center justify-center h-screen">Carregando...</div>;
+
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-purple-700 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md p-8 bg-slate-800 border-slate-700">
+      <div className="min-h-screen bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center p-4">
+        <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl max-w-md w-full border border-purple-400">
           <div className="text-center mb-8">
             <div className="text-6xl mb-4">🐹</div>
-            <h1 className="text-3xl font-bold mb-2">CapyZen</h1>
-            <p className="text-slate-400">Cuide de sua Capivara</p>
+            <h1 className="text-3xl font-bold text-purple-300 mb-2">CapyZen</h1>
+            <p className="text-gray-300">Cuide de sua Capivara</p>
           </div>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Seu nome"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
+          <input
+            type="text"
+            placeholder="Seu nome"
+            value={playerName}
+            onChange={(e) => setPlayerName(e.target.value)}
+            className="w-full px-4 py-3 mb-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-purple-400"
+          />
 
-            <input
-              type="text"
-              placeholder="Nome da capivara"
-              value={capyName}
-              onChange={(e) => setCapyName(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
+          <input
+            type="text"
+            placeholder="Nome da capivara"
+            value={capyName}
+            onChange={(e) => setCapyName(e.target.value)}
+            className="w-full px-4 py-3 mb-6 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-purple-400"
+          />
 
-            {loginError && <p className="text-red-400 text-sm text-center">{loginError}</p>}
+          <Button onClick={startGame} className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 rounded-lg mb-4">
+            🎮 Começar Jogo
+          </Button>
 
-            <Button
-              onClick={startGame}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-            >
-              🎮 Começar Jogo
+          <div className="flex gap-2">
+            <Button variant="outline" className="flex-1">
+              🛍️ Loja
             </Button>
-
-            <div className="flex gap-2">
-              <Link href="/loja" className="flex-1">
-                <Button variant="outline" className="w-full">
-                  🛍️ Loja
-                </Button>
-              </Link>
-              <Link href="/admin" className="flex-1">
-                <Button variant="outline" className="w-full">
-                  ⚙️ Admin
-                </Button>
-              </Link>
-            </div>
+            <Button variant="outline" className="flex-1">
+              ⚙️ Admin
+            </Button>
           </div>
-        </Card>
+        </div>
       </div>
     );
   }
 
-  // Game screen
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-4">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gray-900 text-white p-4">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <header className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-4xl font-bold">🐹 CapyZen</h1>
-          </div>
-          <Button
-            onClick={() => {
-              setIsLoggedIn(false);
-              setUsername("");
-              setCapyName("");
-            }}
-            variant="destructive"
-          >
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-3xl font-bold">🐹 CapyZen</h1>
+          <Button onClick={() => { setIsLoggedIn(false); }} variant="outline">
             🚪 Sair
           </Button>
-        </header>
+        </div>
 
-        {/* Main game area */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Canvas */}
-          <div className="lg:col-span-2">
-            <Card className="bg-slate-800 border-slate-700 p-4">
-              <canvas
-                ref={canvasRef}
-                width={600}
-                height={400}
-                className="w-full border-4 border-slate-600 rounded-lg"
-              />
-            </Card>
+          <div className="lg:col-span-3">
+            <div className="bg-gray-800 rounded-lg p-4 border border-purple-400">
+              <canvas ref={canvasRef} width={560} height={400} className="w-full border-2 border-purple-400 rounded" />
+            </div>
           </div>
 
           {/* Stats */}
-          <Card className="bg-slate-800 border-slate-700 p-6">
-            <h2 className="text-2xl font-bold mb-6">👤 Jogador</h2>
-            <div className="space-y-3 text-sm">
-              <div>
-                <span className="text-slate-400">Nome:</span>
-                <p className="font-bold">{gameState.player.username}</p>
-              </div>
-              <div>
-                <span className="text-slate-400">Nível:</span>
-                <p className="font-bold text-blue-400">{gameState.player.level}</p>
-              </div>
-              <div>
-                <span className="text-slate-400">Moedas:</span>
-                <p className="font-bold text-yellow-400">💰 {gameState.player.coins}</p>
-              </div>
-              <div>
-                <span className="text-slate-400">Idade:</span>
-                <p className="font-bold">{gameState.player.days} dias</p>
-              </div>
+          <div className="bg-gray-800 rounded-lg p-4 border border-purple-400">
+            <h2 className="text-xl font-bold mb-4">👤 Jogador</h2>
+            <div className="space-y-2 text-sm mb-6">
+              <p>Nome: <span className="text-purple-300">{gameState.player.name}</span></p>
+              <p>Nível: <span className="text-purple-300">{gameState.player.level}</span></p>
+              <p>Moedas: 💰 <span className="text-yellow-300">{gameState.player.coins}</span></p>
+              <p>Idade: <span className="text-purple-300">{gameState.player.age} dias</span></p>
             </div>
 
-            <div className="border-t border-slate-600 my-6"></div>
-
-            <h2 className="text-2xl font-bold mb-6">📊 Capybara</h2>
-            <div className="space-y-3">
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>🍔 Fome</span>
-                  <span>{Math.round(gameState.capybara.hunger)}/100</span>
+            <h2 className="text-xl font-bold mb-4">📊 Capybara</h2>
+            <div className="space-y-2">
+              {[
+                { label: '🍔 Fome', value: gameState.capybara.hunger, color: 'bg-orange-500' },
+                { label: '❤️ Felicidade', value: gameState.capybara.happiness, color: 'bg-pink-500' },
+                { label: '💩 Coco', value: gameState.capybara.poop, color: 'bg-yellow-700' },
+                { label: '⚡ Energia', value: gameState.capybara.energy, color: 'bg-yellow-400' },
+                { label: '💧 Sede', value: gameState.capybara.thirst, color: 'bg-blue-400' },
+                { label: '🧴 Higiene', value: gameState.capybara.hygiene, color: 'bg-cyan-400' },
+                { label: '❤️‍🩹 Saúde', value: gameState.capybara.health, color: 'bg-green-500' },
+              ].map((stat) => (
+                <div key={stat.label}>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span>{stat.label}</span>
+                    <span>{Math.round(stat.value)}/100</span>
+                  </div>
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className={`${stat.color} h-2 rounded-full`} style={{ width: `${stat.value}%` }}></div>
+                  </div>
                 </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-orange-500 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.hunger}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>❤️ Felicidade</span>
-                  <span>{Math.round(gameState.capybara.happiness)}/100</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-pink-500 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.happiness}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>💩 Coco</span>
-                  <span>{Math.round(gameState.capybara.poop)}/100</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-yellow-700 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.poop}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>⚡ Energia</span>
-                  <span>{Math.round(gameState.capybara.energy)}/100</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-yellow-500 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.energy}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>💧 Sede</span>
-                  <span>{Math.round(gameState.capybara.thirst)}/100</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.thirst}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>🧴 Higiene</span>
-                  <span>{Math.round(gameState.capybara.hygiene)}/100</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-cyan-500 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.hygiene}%` }}
-                  ></div>
-                </div>
-              </div>
-              <div>
-                <div className="flex justify-between text-xs mb-1">
-                  <span>❤️‍🩹 Saúde</span>
-                  <span>{Math.round(gameState.capybara.health)}/100</span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div
-                    className="bg-green-500 h-2 rounded-full"
-                    style={{ width: `${gameState.capybara.health}%` }}
-                  ></div>
-                </div>
-              </div>
+              ))}
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-          <Button
-            onClick={() => performAction("feed")}
-            className="bg-orange-600 hover:bg-orange-700"
-          >
-            🍖 Alimentar
-          </Button>
-          <Button
-            onClick={() => performAction("play")}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
-            🎾 Brincar
-          </Button>
-          <Button
-            onClick={() => performAction("work")}
-            className="bg-purple-600 hover:bg-purple-700"
-          >
-            💼 Trabalhar
-          </Button>
-          <Button
-            onClick={() => performAction("sleep")}
-            className="bg-indigo-600 hover:bg-indigo-700"
-          >
-            😴 Dormir
-          </Button>
-          <Button
-            onClick={() => performAction("bath")}
-            className="bg-cyan-600 hover:bg-cyan-700"
-          >
-            🚿 Banho
-          </Button>
-          <Button
-            onClick={() => performAction("pet")}
-            className="bg-pink-600 hover:bg-pink-700"
-          >
-            🤗 Carinho
-          </Button>
+        <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-2">
+          {[
+            { label: '🍖 Alimentar', action: 'feed' },
+            { label: '🎾 Brincar', action: 'play' },
+            { label: '💼 Trabalhar', action: 'work' },
+            { label: '😴 Dormir', action: 'sleep' },
+            { label: '🚿 Banho', action: 'bath' },
+            { label: '🤗 Carinho', action: 'pet' },
+          ].map((btn) => (
+            <Button key={btn.action} onClick={() => performAction(btn.action)} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold">
+              {btn.label}
+            </Button>
+          ))}
         </div>
 
-        {/* Save and Navigation */}
-        <div className="flex gap-3 justify-center">
-          <Button
-            onClick={saveGame}
-            variant="outline"
-            className="bg-slate-700 hover:bg-slate-600"
-          >
+        {/* Navigation */}
+        <div className="mt-4 flex gap-2 flex-wrap">
+          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
             💾 Salvar Jogo
           </Button>
-          <Link href="/loja">
-            <Button variant="outline" className="bg-slate-700 hover:bg-slate-600">
-              🛍️ Loja
-            </Button>
-          </Link>
-          <Link href="/admin">
-            <Button variant="outline" className="bg-slate-700 hover:bg-slate-600">
-              ⚙️ Admin
-            </Button>
-          </Link>
-        </div>
-
-        {/* Tips */}
-        <Card className="bg-slate-800 border-slate-700 p-4 mt-6">
-          <h3 className="font-bold mb-2">💡 Dica</h3>
-          <p className="text-slate-400 text-sm">
-            Use WASD ou Setas para mover a capivara! Cuide bem dela para ganhar mais moedas e experiência.
-          </p>
-        </Card>
-
-        {/* Report Bug Button */}
-        <div className="flex justify-center mt-6">
-          <Button
-            onClick={() => setShowBugModal(true)}
-            variant="outline"
-            className="bg-red-900 hover:bg-red-800 border-red-700"
-          >
+          <Button className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600">
+            🛍️ Loja
+          </Button>
+          <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600">
+            ⚙️ Admin
+          </Button>
+          <Button onClick={() => setShowBugReport(true)} className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600">
             🐛 Reportar Bug
           </Button>
         </div>
 
-        {/* Bug Report Modal */}
-        {showBugModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="bg-slate-800 border-slate-700 p-6 w-full max-w-md">
-              <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Título do bug"
-                  value={bugReport.title}
-                  onChange={(e) => setBugReport({ ...bugReport, title: e.target.value })}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-                />
-                <textarea
-                  placeholder="Descreva o bug em detalhes..."
-                  value={bugReport.description}
-                  onChange={(e) => setBugReport({ ...bugReport, description: e.target.value })}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500 h-24"
-                />
-                {bugMessage && (
-                  <p className={`text-sm text-center ${bugMessage.includes("✅") ? "text-green-400" : "text-red-400"}`}>
-                    {bugMessage}
-                  </p>
-                )}
-                <div className="flex gap-3">
-                  <Button
-                    onClick={async () => {
-                      if (!bugReport.title.trim() || !bugReport.description.trim()) {
-                        setBugMessage("❌ Preencha todos os campos!");
-                        return;
-                      }
-
-                      setBugSubmitting(true);
-                      try {
-                        const response = await fetch("/api/send-bug-report", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({
-                            title: bugReport.title,
-                            description: bugReport.description,
-                            player: gameState.player.username,
-                            capybara: gameState.player.capyName,
-                          }),
-                        });
-
-                        if (response.ok) {
-                          setBugMessage("✅ Bug reportado com sucesso!");
-                          setTimeout(() => {
-                            setShowBugModal(false);
-                            setBugReport({ title: "", description: "" });
-                            setBugMessage("");
-                          }, 2000);
-                        } else {
-                          setBugMessage("❌ Erro ao enviar relatório");
-                        }
-                      } catch (error) {
-                        setBugMessage("❌ Erro ao conectar com servidor");
-                      } finally {
-                        setBugSubmitting(false);
-                      }
-                    }}
-                    disabled={bugSubmitting}
-                    className="flex-1 bg-green-600 hover:bg-green-700"
-                  >
-                    {bugSubmitting ? "Enviando..." : "Enviar"}
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      setShowBugModal(false);
-                      setBugReport({ title: "", description: "" });
-                      setBugMessage("");
-                    }}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    Cancelar
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </div>
-        )}
-
-        {/* WhatsApp Popup - Small and Discrete */}
-        {showWhatsAppPopup && isLoggedIn && (
-          <div className="fixed bottom-6 right-6 z-40 animate-bounce">
-            <Card className="bg-green-600 border-green-500 p-3 w-72 shadow-lg">
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex-1">
-                  <h3 className="font-bold text-white text-sm mb-2">💬 Siga nosso canal!</h3>
-                  <p className="text-white text-xs mb-3">Siga o canal "Helu💜❤️" no WhatsApp para novidades!</p>
-                  <a
-                    href="https://whatsapp.com/channel/0029Vb7mvxBDOQIOgBSSJ71n"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block bg-white text-green-600 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100 transition"
-                  >
-                    📱 Seguir Canal
-                  </a>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowWhatsAppPopup(false);
-                    localStorage.setItem("whatsapp_popup_dismissed", "true");
-                  }}
-                  className="text-white hover:text-gray-200 text-lg font-bold leading-none"
-                >
-                  ✕
-                </button>
-              </div>
-            </Card>
-          </div>
-        )}
+        {/* Tip */}
+        <div className="mt-4 bg-blue-900 border border-blue-400 rounded-lg p-3 text-sm">
+          💡 <strong>Dica:</strong> Use WASD ou Setas para mover a capivara! Cuide bem dela para ganhar mais moedas e experiência.
+        </div>
       </div>
+
+      {/* Bug Report Modal */}
+      {showBugReport && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-purple-400">
+            <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
+            <input
+              type="text"
+              placeholder="Título do bug"
+              value={bugTitle}
+              onChange={(e) => setBugTitle(e.target.value)}
+              className="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-purple-400"
+            />
+            <textarea
+              placeholder="Descrição do bug"
+              value={bugDescription}
+              onChange={(e) => setBugDescription(e.target.value)}
+              className="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:border-purple-400 h-24"
+            />
+            <div className="flex gap-2">
+              <Button onClick={reportBug} className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600">
+                Enviar
+              </Button>
+              <Button onClick={() => setShowBugReport(false)} variant="outline" className="flex-1">
+                Cancelar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* WhatsApp Popup */}
+      {showWhatsAppPopup && (
+        <div className="fixed bottom-4 right-4 bg-green-500 rounded-lg p-4 shadow-lg max-w-xs animate-bounce z-40">
+          <div className="flex justify-between items-start mb-2">
+            <h3 className="font-bold text-white">💬 Siga nosso canal!</h3>
+            <button onClick={() => { setShowWhatsAppPopup(false); localStorage.setItem('capyzen_popup_dismissed', 'true'); }} className="text-white font-bold">✕</button>
+          </div>
+          <p className="text-white text-sm mb-3">Siga o canal "Helu💜❤️" no WhatsApp para novidades!</p>
+          <a href="https://whatsapp.com/channel/0029Vb7mvxBDOQIOgBSSJ71n" target="_blank" rel="noopener noreferrer" className="block bg-white text-green-500 font-bold py-2 px-4 rounded text-center hover:bg-gray-100">
+            📱 Seguir Canal
+          </a>
+        </div>
+      )}
     </div>
   );
 }
