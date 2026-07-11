@@ -168,11 +168,15 @@ export default function Shop() {
         ...gameState.player,
         coins: gameState.player.coins - item.price,
       },
+      capybara: {
+        ...gameState.capybara,
+        equippedItems: [...gameState.capybara.equippedItems, item.name],
+      },
     };
 
     setGameState(updated);
     localStorage.setItem("capyzen_game", JSON.stringify(updated));
-    setNotification(`✅ Comprou ${item.name}!`);
+    setNotification(`✅ Comprou ${item.name}! A capivara está usando agora!`);
     setTimeout(() => setNotification(""), 3000);
   };
 

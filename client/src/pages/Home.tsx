@@ -253,17 +253,25 @@ export default function Home() {
     const img = new Image();
     img.src = '/capybara.png';
     img.onload = () => {
-      // Draw the capybara image
       ctx.drawImage(img, x - 50, y - 50, 100, 100);
-      
-      // Draw equipped items on top
-      if (equippedItems.includes('hat')) {
-        ctx.fillStyle = '#FF6B6B';
-        ctx.beginPath();
-        ctx.arc(x, y - 55, 20, 0, Math.PI * 2);
-        ctx.fill();
-      }
+      equippedItems.forEach((item, idx) => {
+        drawItemOnCapybara(ctx, x, y - 60 - (idx * 25), item);
+      });
     };
+  }
+
+  function drawItemOnCapybara(ctx: CanvasRenderingContext2D, x: number, y: number, item: string) {
+    if (item.includes('food')) {
+      ctx.fillStyle = '#FF6B6B';
+      ctx.beginPath();
+      ctx.arc(x + 30, y, 12, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (item.includes('hat')) {
+      ctx.fillStyle = '#FF6B6B';
+      ctx.beginPath();
+      ctx.ellipse(x, y - 55, 25, 15, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
   }
 
   // Draw realistic capybara based on the photo
