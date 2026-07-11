@@ -15,6 +15,19 @@ interface GameStats {
   health: number;
 }
 
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  unlocked: boolean;
+}
+
+interface Song {
+  id: string;
+  name: string;
+  completed: boolean;
+}
+
 export default function FNF() {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameStats, setGameStats] = useState<GameStats>({
@@ -26,6 +39,20 @@ export default function FNF() {
   const [currentTime, setCurrentTime] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [won, setWon] = useState(false);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [songs, setSongs] = useState<Song[]>([
+    { id: 'song1', name: '🎵 Música 1', completed: false },
+    { id: 'song2', name: '🎵 Música 2', completed: false },
+    { id: 'song3', name: '🎵 Música 3', completed: false },
+    { id: 'song4', name: '🎵 Música 4', completed: false },
+    { id: 'song5', name: '🎵 Música 5', completed: false },
+  ]);
+  const [achievements, setAchievements] = useState<Achievement[]>([
+    { id: 'first_win', name: '🏆 Primeira Vitória', description: 'Vença uma música', unlocked: false },
+    { id: 'all_songs', name: '👑 Rei da Música', description: 'Complete todas as 5 músicas', unlocked: false },
+    { id: 'perfect_combo', name: '⭐ Combo Perfeito', description: 'Acerte 20 notas seguidas', unlocked: false },
+  ]);
+  const [showAchievements, setShowAchievements] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -54,7 +81,6 @@ export default function FNF() {
     setCurrentTime(0);
     startTimeRef.current = Date.now();
 
-    // Game loop
     gameLoopRef.current = setInterval(() => {
       setCurrentTime((Date.now() - startTimeRef.current) / 1000);
     }, 16);
@@ -77,7 +103,6 @@ export default function FNF() {
 
       e.preventDefault();
 
-      // Verificar se acertou uma nota
       const hitNote = notes.find(
         (n) =>
           !n.hit &&
@@ -115,13 +140,39 @@ export default function FNF() {
     }
   }, [gameStats.health]);
 
-  // Verificar vitória
+  // Verificar vitória e desbloquear conquistas
   useEffect(() => {
     if (gameStarted && notes.length > 0 && notes.every((n) => n.hit)) {
       setWon(true);
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+
+      // Marcar música como completa
+      const newSongs = [...songs];
+      newSongs[currentSongIndex].completed = true;
+      setSongs(newSongs);
+
+      // Desbloquear conquistas
+      const newAchievements = [...achievements];
+      newAchievements[0].unlocked = true;
+
+      if (newSongs.every((s) => s.completed)) {
+        newAchievements[1].unlocked = true;
+        const gameState = localStorage.getItem('capyzen_game');
+        if (gameState) {
+          const parsed = JSON.parse(gameState);
+          parsed.player.coins += 1000000;
+          localStorage.setItem('capyzen_game', JSON.stringify(parsed));
+          alert('🎉 Parabéns! Você completou todas as músicas e ganhou 1.000.000 de moedas! 💰');
+        }
+      }
+
+      if (gameStats.combo >= 20) {
+        newAchievements[2].unlocked = true;
+      }
+
+      setAchievements(newAchievements);
     }
-  }, [notes, gameStarted]);
+  }, [notes, gameStarted, currentSongIndex, gameStats.combo, songs, achievements]);
 
   // Desenhar jogo
   useEffect(() => {
@@ -131,14 +182,12 @@ export default function FNF() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Limpar canvas
     const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#16213e');
     gradient.addColorStop(1, '#0f3460');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Desenhar pistas
     const laneWidth = canvas.width / 4;
     const laneY = canvas.height - 150;
 
@@ -146,7 +195,6 @@ export default function FNF() {
       ctx.fillStyle = i % 2 === 0 ? '#2a2a4e' : '#1f1f3a';
       ctx.fillRect(i * laneWidth, 0, laneWidth, canvas.height);
 
-      // Desenhar receptor de notas
       ctx.fillStyle = '#4a90e2';
       ctx.fillRect(i * laneWidth + 10, laneY, laneWidth - 20, 80);
       ctx.strokeStyle = '#fff';
@@ -154,7 +202,6 @@ export default function FNF() {
       ctx.strokeRect(i * laneWidth + 10, laneY, laneWidth - 20, 80);
     }
 
-    // Desenhar notas
     notes.forEach((note) => {
       if (note.hit) return;
 
@@ -173,17 +220,14 @@ export default function FNF() {
       ctx.stroke();
     });
 
-    // Desenhar capivara vs inimigo
     const capyX = 50;
     const capyY = 50;
 
-    // Capivara (esquerda)
     ctx.fillStyle = '#d4a574';
     ctx.beginPath();
     ctx.ellipse(capyX, capyY, 30, 40, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Olhos da capivara
     ctx.fillStyle = '#000';
     ctx.beginPath();
     ctx.arc(capyX - 10, capyY - 10, 5, 0, Math.PI * 2);
@@ -192,14 +236,12 @@ export default function FNF() {
     ctx.arc(capyX + 10, capyY - 10, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Inimigo (direita)
     const enemyX = canvas.width - 50;
     ctx.fillStyle = '#e74c3c';
     ctx.beginPath();
     ctx.ellipse(enemyX, capyY, 30, 40, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Olhos do inimigo
     ctx.fillStyle = '#000';
     ctx.beginPath();
     ctx.arc(enemyX - 10, capyY - 10, 5, 0, Math.PI * 2);
@@ -212,11 +254,10 @@ export default function FNF() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 p-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">🎵 CapyZen FNF</h1>
-            <p className="text-white/80">Batalhe com sua capivara ao ritmo da música!</p>
+            <p className="text-white/80">Música {currentSongIndex + 1}/5: {songs[currentSongIndex].name}</p>
           </div>
           <nav className="flex gap-4">
             <Link href="/">
@@ -228,9 +269,7 @@ export default function FNF() {
           </nav>
         </div>
 
-        {/* Game Container */}
         <div className="bg-slate-900 rounded-lg overflow-hidden shadow-2xl">
-          {/* Canvas */}
           <canvas
             ref={canvasRef}
             width={800}
@@ -238,7 +277,6 @@ export default function FNF() {
             className="w-full bg-slate-800"
           />
 
-          {/* Stats */}
           <div className="p-6 bg-slate-800 border-t border-slate-700">
             <div className="grid grid-cols-4 gap-4 mb-6">
               <div className="bg-slate-700 p-4 rounded-lg">
@@ -264,7 +302,6 @@ export default function FNF() {
               </div>
             </div>
 
-            {/* Controles */}
             <div className="text-center mb-6">
               <p className="text-white text-lg mb-3">Pressione as teclas: <span className="font-bold">A S D F</span></p>
               <div className="flex gap-2 justify-center">
@@ -275,7 +312,6 @@ export default function FNF() {
               </div>
             </div>
 
-            {/* Botões */}
             <div className="flex gap-4 justify-center">
               {!gameStarted && (
                 <Button
@@ -302,26 +338,102 @@ export default function FNF() {
                 <div className="text-center w-full">
                   <p className="text-3xl font-bold text-green-500 mb-4">🎉 Vitória!</p>
                   <p className="text-white text-xl mb-4">Pontuação Final: {gameStats.score}</p>
-                  <Button
-                    onClick={startGame}
-                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-                  >
-                    🔄 Jogar Novamente
-                  </Button>
+                  <div className="flex gap-2 justify-center flex-wrap">
+                    {currentSongIndex < songs.length - 1 ? (
+                      <Button
+                        onClick={() => {
+                          setCurrentSongIndex(currentSongIndex + 1);
+                          setGameStarted(false);
+                          setWon(false);
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
+                      >
+                        ➡️ Próxima Música
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          setCurrentSongIndex(0);
+                          setGameStarted(false);
+                          setWon(false);
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                      >
+                        🔄 Recomeçar do Início
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => setShowAchievements(true)}
+                      className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 text-lg"
+                    >
+                      🏆 Conquistas
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Instruções */}
+        {/* Progresso das Músicas */}
+        <div className="mt-8 bg-slate-800 p-6 rounded-lg text-white">
+          <h3 className="text-xl font-bold mb-4">📋 Progresso das Músicas:</h3>
+          <div className="grid grid-cols-5 gap-2">
+            {songs.map((song, idx) => (
+              <div
+                key={song.id}
+                className={`p-4 rounded-lg text-center font-bold ${
+                  song.completed
+                    ? 'bg-green-600'
+                    : idx === currentSongIndex
+                    ? 'bg-yellow-600'
+                    : 'bg-slate-700'
+                }`}
+              >
+                {song.completed ? '✅' : idx === currentSongIndex ? '▶️' : '⏸️'} {song.name}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Modal de Conquistas */}
+        {showAchievements && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-slate-900 rounded-lg p-8 max-w-md w-full border border-yellow-400">
+              <h2 className="text-3xl font-bold mb-6 text-yellow-400">🏆 Conquistas</h2>
+              <div className="space-y-4 mb-6">
+                {achievements.map((achievement) => (
+                  <div
+                    key={achievement.id}
+                    className={`p-4 rounded-lg border-2 ${
+                      achievement.unlocked
+                        ? 'bg-yellow-900 border-yellow-400'
+                        : 'bg-slate-700 border-slate-600 opacity-50'
+                    }`}
+                  >
+                    <p className="text-lg font-bold">{achievement.name}</p>
+                    <p className="text-sm text-slate-300">{achievement.description}</p>
+                    {achievement.unlocked && <p className="text-yellow-300 mt-2">✅ Desbloqueada!</p>}
+                  </div>
+                ))}
+              </div>
+              <Button
+                onClick={() => setShowAchievements(false)}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Fechar
+              </Button>
+            </div>
+          </div>
+        )}
+
         <div className="mt-8 bg-slate-800 p-6 rounded-lg text-white">
           <h3 className="text-xl font-bold mb-4">📖 Como Jogar:</h3>
           <ul className="space-y-2">
             <li>✅ Pressione as teclas <span className="font-bold">A S D F</span> quando as notas chegarem ao receptor</li>
             <li>✅ Acerte as notas para ganhar pontos e aumentar o combo</li>
             <li>✅ Errar as notas reduz sua saúde</li>
-            <li>✅ Acerte todas as notas para vencer a batalha!</li>
+            <li>✅ Complete todas as 5 músicas para ganhar 1.000.000 de moedas! 💰</li>
           </ul>
         </div>
       </div>
