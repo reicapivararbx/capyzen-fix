@@ -4,27 +4,10 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { getLoginUrl } from '@/const';
-
-interface GameState {
-  player: {
-    name: string;
-    capyName: string;
-    level: number;
-    xp: number;
-    coins: number;
-    age: number;
-  };
-  capybara: {
-    hunger: number;
-    happiness: number;
-    poop: number;
-    energy: number;
-    thirst: number;
-    hygiene: number;
-    health: number;
-    equippedItems: string[];
-  };
-}
+import GameView from '@/components/GameView';
+import StatsPanel from '@/components/StatsPanel';
+import GameControls from '@/components/GameControls';
+import { GameState } from '@/types/game';
 
 export default function Home() {
   const { user, loading, isAuthenticated, logout } = useAuth({});
@@ -32,8 +15,11 @@ export default function Home() {
   const [playerName, setPlayerName] = useState('');
   const [capyName, setCapyName] = useState('');
   const [gameState, setGameState] = useState<GameState>({
-    player: { name: '', capyName: '', level: 1, xp: 0, coins: 0, age: 0 },
-    capybara: { hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [] },
+    playerName: '', capyName: '', level: 1, xp: 0, coins: 0, age: 0,
+    hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [],
+    food: 0, sus: 0, x: 0, y: 0, speed: 0, alive: true, capyColor: '#8B7355', capySize: 50,
+    totalScore: 0, totalXP: 0, foodEaten: 0, gamesPlayed: 0, workCount: 0, affectionCount: 0,
+    bathroomCount: 0, colorChanges: 0, size: 50, inventory: {} as any,
   });
   const [capyX, setCapyX] = useState(300);
   const [capyY, setCapyY] = useState(250);
@@ -41,7 +27,6 @@ export default function Home() {
   const [bugTitle, setBugTitle] = useState('');
   const [bugDescription, setBugDescription] = useState('');
   const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(true);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
 
   // Load game state from localStorage
@@ -65,8 +50,9 @@ export default function Home() {
       return;
     }
     const newState: GameState = {
-      player: { name: playerName, capyName, level: 1, xp: 0, coins: 0, age: 0 },
-      capybara: { hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [] },
+      ...gameState,
+      playerName: playerName, capyName: capyName, level: 1, xp: 0, coins: 0, age: 0,
+      hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [],
     };
     setGameState(newState);
     setIsLoggedIn(true);
@@ -76,53 +62,52 @@ export default function Home() {
   // Game actions
   const performAction = (action: string) => {
     const newState = { ...gameState };
-    const capy = newState.capybara;
 
     switch (action) {
       case 'feed':
-        capy.hunger = Math.max(0, capy.hunger - 30);
-        capy.happiness = Math.min(100, capy.happiness + 10);
-        newState.player.coins += 5;
-        newState.player.xp += 10;
+        newState.hunger = Math.max(0, newState.hunger - 30);
+        newState.happiness = Math.min(100, newState.happiness + 10);
+        newState.coins += 5;
+        newState.xp += 10;
         break;
       case 'play':
-        capy.happiness = Math.min(100, capy.happiness + 25);
-        capy.energy = Math.max(0, capy.energy - 20);
-        capy.hunger = Math.min(100, capy.hunger + 15);
-        newState.player.coins += 8;
-        newState.player.xp += 15;
+        newState.happiness = Math.min(100, newState.happiness + 25);
+        newState.energy = Math.max(0, newState.energy - 20);
+        newState.hunger = Math.min(100, newState.hunger + 15);
+        newState.coins += 8;
+        newState.xp += 15;
         break;
       case 'work':
-        newState.player.coins += 20;
-        newState.player.xp += 20;
-        capy.energy = Math.max(0, capy.energy - 30);
-        capy.hunger = Math.min(100, capy.hunger + 20);
+        newState.coins += 20;
+        newState.xp += 20;
+        newState.energy = Math.max(0, newState.energy - 30);
+        newState.hunger = Math.min(100, newState.hunger + 20);
         break;
       case 'sleep':
-        capy.energy = Math.min(100, capy.energy + 40);
-        capy.hunger = Math.min(100, capy.hunger + 10);
+        newState.energy = Math.min(100, newState.energy + 40);
+        newState.hunger = Math.min(100, newState.hunger + 10);
         break;
       case 'bath':
-        capy.hygiene = Math.min(100, capy.hygiene + 30);
-        capy.energy = Math.max(0, capy.energy - 15);
+        newState.hygiene = Math.min(100, newState.hygiene + 30);
+        newState.energy = Math.max(0, newState.energy - 15);
         break;
       case 'pet':
-        capy.happiness = Math.min(100, capy.happiness + 15);
-        capy.energy = Math.max(0, capy.energy - 5);
-        newState.player.xp += 5;
+        newState.happiness = Math.min(100, newState.happiness + 15);
+        newState.energy = Math.max(0, newState.energy - 5);
+        newState.xp += 5;
         break;
     }
 
     // Natural decay
-    capy.hunger = Math.min(100, capy.hunger + 1);
-    capy.thirst = Math.min(100, capy.thirst + 0.5);
-    capy.poop = Math.min(100, capy.poop + 0.3);
-    capy.hygiene = Math.max(0, capy.hygiene - 0.2);
+    newState.hunger = Math.min(100, newState.hunger + 1);
+    newState.thirst = Math.min(100, newState.thirst + 0.5);
+    newState.poop = Math.min(100, newState.poop + 0.3);
+    newState.hygiene = Math.max(0, newState.hygiene - 0.2);
 
     // Level up
-    if (newState.player.xp >= 100) {
-      newState.player.level += 1;
-      newState.player.xp = 0;
+    if (newState.xp >= 100) {
+      newState.level += 1;
+      newState.xp = 0;
     }
 
     setGameState(newState);
@@ -168,19 +153,18 @@ export default function Home() {
     gameLoopRef.current = setInterval(() => {
       setGameState((prev) => {
         const newState = { ...prev };
-        const capy = newState.capybara;
 
-        capy.hunger = Math.min(100, capy.hunger + 0.5);
-        capy.thirst = Math.min(100, capy.thirst + 0.3);
-        capy.poop = Math.min(100, capy.poop + 0.2);
-        capy.hygiene = Math.max(0, capy.hygiene - 0.15);
-        capy.energy = Math.max(0, capy.energy - 0.1);
+        newState.hunger = Math.min(100, newState.hunger + 0.5);
+        newState.thirst = Math.min(100, newState.thirst + 0.3);
+        newState.poop = Math.min(100, newState.poop + 0.2);
+        newState.hygiene = Math.max(0, newState.hygiene - 0.15);
+        newState.energy = Math.max(0, newState.energy - 0.1);
 
-        if (capy.hunger > 80 || capy.thirst > 80 || capy.poop > 80) {
-          capy.happiness = Math.max(0, capy.happiness - 0.5);
+        if (newState.hunger > 80 || newState.thirst > 80 || newState.poop > 80) {
+          newState.happiness = Math.max(0, newState.happiness - 0.5);
         }
 
-        newState.player.age = Math.floor((Date.now() - new Date(localStorage.getItem('capyzen_start') || Date.now()).getTime()) / 1000 / 60);
+        newState.age = Math.floor((Date.now() - new Date(localStorage.getItem('capyzen_start') || Date.now()).getTime()) / 1000 / 60);
 
         localStorage.setItem('capyzen_game', JSON.stringify(newState));
         return newState;
@@ -191,227 +175,6 @@ export default function Home() {
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
     };
   }, [isLoggedIn]);
-
-  // Draw canvas
-  useEffect(() => {
-    if (!isLoggedIn || !canvasRef.current) return;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear canvas with sky gradient
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#8BA3D9');
-    gradient.addColorStop(1, '#C5D9F0');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Draw clouds
-    drawCloud(ctx, 80, 60, 70, '#FFFFFF');
-    drawCloud(ctx, 320, 100, 90, '#FFFFFF');
-    drawCloud(ctx, 480, 50, 75, '#FFFFFF');
-
-    // Draw sun
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath();
-    ctx.arc(500, 80, 35, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Draw tree
-    ctx.fillStyle = '#2D5016';
-    ctx.beginPath();
-    ctx.arc(450, 200, 55, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#654321';
-    ctx.fillRect(430, 250, 40, 100);
-
-    // Draw grass
-    ctx.fillStyle = '#5FD068';
-    ctx.fillRect(0, 350, canvas.width, 150);
-
-    // Draw flowers
-    drawFlower(ctx, 100, 330, '#FF69B4');
-    drawFlower(ctx, 200, 340, '#FFB6C1');
-    drawFlower(ctx, 350, 320, '#FF69B4');
-    drawFlower(ctx, 480, 330, '#FFB6C1');
-
-    // Draw capybara - USANDO IMAGEM REAL
-    drawCapybaraWithImage(ctx, capyX, capyY, gameState.capybara.equippedItems);
-
-    // Draw name and level
-    ctx.fillStyle = '#2C3E50';
-    ctx.font = 'bold 18px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText(gameState.player.capyName, capyX, capyY - 130);
-
-    ctx.font = 'bold 14px Arial';
-    ctx.fillStyle = '#555';
-    ctx.fillText(`Lv${gameState.player.level}`, capyX, capyY - 110);
-  }, [isLoggedIn, gameState, capyX, capyY]);
-
-  // Draw capybara using the real image
-  function drawCapybaraWithImage(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
-    const img = new Image();
-    img.src = '/capybara.png';
-    img.onload = () => {
-      ctx.drawImage(img, x - 50, y - 50, 100, 100);
-      equippedItems.forEach((item, idx) => {
-        drawItemOnCapybara(ctx, x, y - 60 - (idx * 25), item);
-      });
-    };
-  }
-
-  function drawItemOnCapybara(ctx: CanvasRenderingContext2D, x: number, y: number, item: string) {
-    if (item.includes('food')) {
-      ctx.fillStyle = '#FF6B6B';
-      ctx.beginPath();
-      ctx.arc(x + 30, y, 12, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (item.includes('hat')) {
-      ctx.fillStyle = '#FF6B6B';
-      ctx.beginPath();
-      ctx.ellipse(x, y - 55, 25, 15, 0, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  // Draw realistic capybara based on the photo
-  function drawCapybaraRealistic(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
-    // Corpo principal - GRANDE, RECHONCHUDO E FOFO
-    ctx.fillStyle = '#D4C5B9'; // Bege claro
-    ctx.beginPath();
-    ctx.ellipse(x, y + 20, 95, 75, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Barriga ainda mais clara
-    ctx.fillStyle = '#E8DDD2';
-    ctx.beginPath();
-    ctx.ellipse(x, y + 25, 70, 55, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Cabeça MUITO GRANDE - característica principal da capivara
-    ctx.fillStyle = '#D4C5B9';
-    ctx.beginPath();
-    ctx.arc(x, y - 35, 70, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Focinho GRANDE E ARREDONDADO - como na foto
-    ctx.fillStyle = '#E8DDD2';
-    ctx.beginPath();
-    ctx.ellipse(x + 15, y - 20, 45, 42, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // SEM ORELHAS VISÍVEIS (ou MUITO PEQUENAS)
-    ctx.fillStyle = '#C4B5A0';
-    ctx.beginPath();
-    ctx.arc(x - 50, y - 65, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 50, y - 65, 8, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Olhos PEQUENOS E REDONDOS (não grandes como antes)
-    ctx.fillStyle = '#2C2C2C';
-    ctx.beginPath();
-    ctx.arc(x - 10, y - 50, 7, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 30, y - 50, 7, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Brilho nos olhos
-    ctx.fillStyle = '#FFFFFF';
-    ctx.beginPath();
-    ctx.arc(x - 8, y - 52, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 32, y - 52, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Nariz GRANDE, AZULADO/CINZENTO - como na foto
-    ctx.fillStyle = '#9BA8B5'; // Cinza azulado
-    ctx.beginPath();
-    ctx.ellipse(x + 20, y - 10, 15, 13, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Narinas
-    ctx.fillStyle = '#6B7A8A';
-    ctx.beginPath();
-    ctx.arc(x + 12, y - 10, 4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + 28, y - 10, 4, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Boca - expressão dócil
-    ctx.strokeStyle = '#9BA8B5';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(x + 20, y + 5, 12, 0, Math.PI, false);
-    ctx.stroke();
-
-    // Patas dianteiras - CURTAS E GROSSAS
-    ctx.fillStyle = '#D4C5B9';
-    ctx.fillRect(x - 60, y + 70, 32, 50);
-    ctx.fillRect(x + 30, y + 70, 32, 50);
-
-    // Patas traseiras - CURTAS E GROSSAS
-    ctx.fillStyle = '#C4B5A0';
-    ctx.fillRect(x - 70, y + 50, 25, 45);
-    ctx.fillRect(x + 45, y + 50, 25, 45);
-
-    // Cauda fofa
-    ctx.strokeStyle = '#D4C5B9';
-    ctx.lineWidth = 28;
-    ctx.lineCap = 'round';
-    ctx.beginPath();
-    ctx.moveTo(x - 85, y + 25);
-    ctx.quadraticCurveTo(x - 150, y - 10, x - 120, y - 85);
-    ctx.stroke();
-
-    // Sombreado para profundidade
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-    ctx.beginPath();
-    ctx.ellipse(x, y + 85, 95, 15, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Draw equipped items
-    if (equippedItems.includes('hat')) {
-      ctx.fillStyle = '#FF6B6B';
-      ctx.beginPath();
-      ctx.arc(x, y - 105, 20, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  // Draw cloud
-  function drawCloud(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x - size / 2, y, size / 2.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x, y, size / 2, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(x + size / 2, y, size / 2.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  // Draw flower
-  function drawFlower(ctx: CanvasRenderingContext2D, x: number, y: number, color: string) {
-    ctx.fillStyle = color;
-    for (let i = 0; i < 5; i++) {
-      ctx.beginPath();
-      ctx.arc(x + Math.cos((i / 5) * Math.PI * 2) * 8, y + Math.sin((i / 5) * Math.PI * 2) * 8, 5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, Math.PI * 2);
-    ctx.fill();
-  }
 
   // Report bug
   const reportBug = async () => {
@@ -427,8 +190,8 @@ export default function Home() {
         body: JSON.stringify({
           title: bugTitle,
           description: bugDescription,
-          player: gameState.player.name,
-          capybara: gameState.player.capyName,
+          player: gameState.playerName,
+          capybara: gameState.capyName,
         }),
       });
 
@@ -495,60 +258,16 @@ export default function Home() {
           {/* Canvas */}
           <div className="lg:col-span-3">
             <div className="bg-gray-800 rounded-lg p-4 border border-purple-400">
-              <canvas ref={canvasRef} width={560} height={400} className="w-full border-2 border-purple-400 rounded" />
+              <GameView gameState={gameState} capyX={capyX} capyY={capyY} />
             </div>
           </div>
 
           {/* Stats */}
-          <div className="bg-gray-800 rounded-lg p-4 border border-purple-400">
-            <h2 className="text-xl font-bold mb-4">👤 Jogador</h2>
-            <div className="space-y-2 text-sm mb-6">
-              <p>Nome: <span className="text-purple-300">{gameState.player.name}</span></p>
-              <p>Nível: <span className="text-purple-300">{gameState.player.level}</span></p>
-              <p>Moedas: 💰 <span className="text-yellow-300">{gameState.player.coins}</span></p>
-              <p>Idade: <span className="text-purple-300">{gameState.player.age} dias</span></p>
-            </div>
-
-            <h2 className="text-xl font-bold mb-4">📊 Capybara</h2>
-            <div className="space-y-2">
-              {[
-                { label: '🍔 Fome', value: gameState.capybara.hunger, color: 'bg-orange-500' },
-                { label: '❤️ Felicidade', value: gameState.capybara.happiness, color: 'bg-pink-500' },
-                { label: '💩 Coco', value: gameState.capybara.poop, color: 'bg-yellow-700' },
-                { label: '⚡ Energia', value: gameState.capybara.energy, color: 'bg-yellow-400' },
-                { label: '💧 Sede', value: gameState.capybara.thirst, color: 'bg-blue-400' },
-                { label: '🧴 Higiene', value: gameState.capybara.hygiene, color: 'bg-cyan-400' },
-                { label: '❤️‍🩹 Saúde', value: gameState.capybara.health, color: 'bg-green-500' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="flex justify-between text-xs mb-1">
-                    <span>{stat.label}</span>
-                    <span>{Math.round(stat.value)}/100</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div className={`${stat.color} h-2 rounded-full`} style={{ width: `${stat.value}%` }}></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <StatsPanel gameState={gameState} />
         </div>
 
         {/* Actions */}
-        <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-2">
-          {[
-            { label: '🍖 Alimentar', action: 'feed' },
-            { label: '🎾 Brincar', action: 'play' },
-            { label: '💼 Trabalhar', action: 'work' },
-            { label: '😴 Dormir', action: 'sleep' },
-            { label: '🚿 Banho', action: 'bath' },
-            { label: '🤗 Carinho', action: 'pet' },
-          ].map((btn) => (
-            <Button key={btn.action} onClick={() => performAction(btn.action)} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold">
-              {btn.label}
-            </Button>
-          ))}
-        </div>
+        <GameControls onAction={performAction} />
 
         {/* Navigation */}
         <div className="mt-4 flex gap-2 flex-wrap">

@@ -1,31 +1,28 @@
 import { useState } from "react";
-
-interface LeaderboardEntry {
-  username: string;
-  score: number;
-  level: number;
-  coins: number;
-  achievements: number;
-}
+import { trpc } from "@/lib/trpc";
+import type { LeaderboardEntry } from "@/types/game";
 
 interface ImprovedLeaderboardProps {
-  leaderboard: LeaderboardEntry[];
   currentUsername?: string;
   onClose: () => void;
 }
 
 export function ImprovedLeaderboard({
-  leaderboard,
   currentUsername,
   onClose,
 }: ImprovedLeaderboardProps) {
-  const [sortBy, setSortBy] = useState<"score" | "level" | "coins">("score");
-
-  const sortedLeaderboard = [...leaderboard].sort((a, b) => {
-    if (sortBy === "score") return b.score - a.score;
-    if (sortBy === "level") return b.level - a.level;
-    return b.coins - a.coins;
+  const { data: leaderboard, isLoading } = trpc.game.leaderboard.useQuery(undefined, {
+    refetchInterval: 30000,
   });
+
+  const [sortBy, setSortBy] = useState<"score" | "level">("score");
+
+  const sortedLeaderboard = leaderboard
+    ? [...leaderboard].sort((a, b) => {
+        if (sortBy === "score") return b.score - a.score;
+        return b.level - a.level;
+      })
+    : [];
 
   const getMedalEmoji = (position: number) => {
     if (position === 0) return "🥇";
@@ -65,7 +62,7 @@ export function ImprovedLeaderboard({
 
         {/* Filtros */}
         <div className="flex gap-3 justify-center mb-8 flex-wrap">
-          {(["score", "level", "coins"] as const).map((filter) => (
+          {(["score", "level"] as const).map((filter) => (
             <button
               key={filter}
               onClick={() => setSortBy(filter)}
@@ -77,19 +74,22 @@ export function ImprovedLeaderboard({
             >
               {filter === "score" && "📊 Score"}
               {filter === "level" && "⭐ Nível"}
-              {filter === "coins" && "💰 Moedas"}
             </button>
           ))}
         </div>
 
         {/* Leaderboard */}
         <div className="space-y-3 max-h-96 overflow-y-auto pr-4">
-          {sortedLeaderboard.length > 0 ? (
+          {isLoading ? (
+            <div className="text-center text-gray-600 py-12">
+              <p className="text-xl font-bold">⏳ Carregando ranking...</p>
+            </div>
+          ) : sortedLeaderboard.length > 0 ? (
             sortedLeaderboard.map((player, index) => {
               const isCurrentUser = currentUsername === player.username;
               return (
                 <div
-                  key={index}
+                  key={player.username}
                   className={`p-4 rounded-2xl border-2 transition transform hover:scale-102 ${
                     isCurrentUser
                       ? "bg-gradient-to-r from-yellow-100 to-orange-100 border-yellow-400 shadow-lg"
@@ -113,31 +113,12 @@ export function ImprovedLeaderboard({
                       </div>
                     </div>
 
-                    {/* Stats */}
-                    <div className="flex gap-6 items-center">
-                      {/* Score */}
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
-                          {getScoreBadge(player.score)} {player.score.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-gray-600">Score</div>
+                    {/* Score */}
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
+                        {getScoreBadge(player.score)} {player.score.toLocaleString()}
                       </div>
-
-                      {/* Moedas */}
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-yellow-600">
-                          💰 {player.coins.toLocaleString()}
-                        </div>
-                        <div className="text-xs text-gray-600">Moedas</div>
-                      </div>
-
-                      {/* Achievements */}
-                      <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">
-                          🏅 {player.achievements}
-                        </div>
-                        <div className="text-xs text-gray-600">Conquistas</div>
-                      </div>
+                      <div className="text-xs text-gray-600">Score</div>
                     </div>
                   </div>
 
@@ -162,9 +143,9 @@ export function ImprovedLeaderboard({
         </div>
 
         {/* Footer Stats */}
-        {leaderboard.length > 0 && (
+        {leaderboard && leaderboard.length > 0 && (
           <div className="mt-8 pt-6 border-t-2 border-gray-200">
-            <div className="grid grid-cols-3 gap-4 text-center">
+            <div className="grid grid-cols-2 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-purple-600">
                   {leaderboard.length}
@@ -176,15 +157,6 @@ export function ImprovedLeaderboard({
                   {Math.max(...leaderboard.map((p) => p.level))}
                 </div>
                 <div className="text-sm text-gray-600">Nível Máximo</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-yellow-600">
-                  {(
-                    leaderboard.reduce((sum, p) => sum + p.score, 0) /
-                    leaderboard.length
-                  ).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                </div>
-                <div className="text-sm text-gray-600">Score Médio</div>
               </div>
             </div>
           </div>

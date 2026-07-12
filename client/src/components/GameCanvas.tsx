@@ -111,7 +111,7 @@ export function GameCanvas({ state, stateRef, onKeyDown }: GameCanvasProps) {
 
     const bars = [
       { label: '🍽️', value: Math.max(0, 100 - currentState.hunger), color: '#10b981', max: 100 },
-      { label: '😄', value: currentState.happy, color: '#f59e0b', max: 100 },
+      { label: '😄', value: currentState.happiness, color: '#f59e0b', max: 100 },
       { label: '💩', value: Math.min(100, currentState.poop), color: '#8b7355', max: 100 },
       { label: '🔴', value: currentState.sus, color: '#ef4444', max: 100 },
     ];

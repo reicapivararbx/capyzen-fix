@@ -142,7 +142,7 @@ describe('Input Validation', () => {
         coins: 100,
         level: 5,
         hunger: 75,
-        happy: 80,
+        happiness: 80,
         poop: 20,
         alive: true,
       };
@@ -151,7 +151,7 @@ describe('Input Validation', () => {
         typeof state.coins === 'number' &&
         typeof state.level === 'number' &&
         typeof state.hunger === 'number' &&
-        typeof state.happy === 'number' &&
+        typeof state.happiness === 'number' &&
         typeof state.poop === 'number' &&
         typeof state.alive === 'boolean';
       
@@ -161,13 +161,13 @@ describe('Input Validation', () => {
     it('should ensure stats are within valid ranges', () => {
       const state = {
         hunger: 50,
-        happy: 80,
+        happiness: 80,
         poop: 30,
       };
       
       const isValid = 
         state.hunger >= 0 && state.hunger <= 100 &&
-        state.happy >= 0 && state.happy <= 100 &&
+        state.happiness >= 0 && state.happiness <= 100 &&
         state.poop >= 0 && state.poop <= 100;
       
       expect(isValid).toBe(true);
@@ -176,13 +176,13 @@ describe('Input Validation', () => {
     it('should reject stats outside valid ranges', () => {
       const state = {
         hunger: 150, // Invalid
-        happy: -10,  // Invalid
+        happiness: -10,  // Invalid
         poop: 200,   // Invalid
       };
       
       const isValid = 
         state.hunger >= 0 && state.hunger <= 100 &&
-        state.happy >= 0 && state.happy <= 100 &&
+        state.happiness >= 0 && state.happiness <= 100 &&
         state.poop >= 0 && state.poop <= 100;
       
       expect(isValid).toBe(false);

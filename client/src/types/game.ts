@@ -9,7 +9,7 @@ export interface GameState {
   food: number;
   poop: number;
   hunger: number;
-  happy: number;
+  happiness: number;
   sus: number;
   x: number;
   y: number;
@@ -27,6 +27,14 @@ export interface GameState {
   colorChanges: number;
   size: number;
   inventory: Inventory;
+  energy: number;
+  thirst: number;
+  hygiene: number;
+  health: number;
+  equippedItems: string[];
+  playerName: string;
+  capyName: string;
+  age: number;
 }
 
 export interface Inventory {

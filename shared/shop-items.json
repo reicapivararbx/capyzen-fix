@@ -1,0 +1,8002 @@
+[
+  {
+    "id": 1,
+    "name": "Maçã 1",
+    "icon": "🍎",
+    "price": 55,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 2,
+    "name": "Maçã 2",
+    "icon": "🍎",
+    "price": 60,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 3,
+    "name": "Maçã 3",
+    "icon": "🍎",
+    "price": 65,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 4,
+    "name": "Maçã 4",
+    "icon": "🍎",
+    "price": 70,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 5,
+    "name": "Maçã 5",
+    "icon": "🍎",
+    "price": 75,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 6,
+    "name": "Maçã 6",
+    "icon": "🍎",
+    "price": 80,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 7,
+    "name": "Maçã 7",
+    "icon": "🍎",
+    "price": 85,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 8,
+    "name": "Maçã 8",
+    "icon": "🍎",
+    "price": 90,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 9,
+    "name": "Maçã 9",
+    "icon": "🍎",
+    "price": 95,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 10,
+    "name": "Maçã 10",
+    "icon": "🍎",
+    "price": 100,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 11,
+    "name": "Maçã 11",
+    "icon": "🍎",
+    "price": 105,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 12,
+    "name": "Maçã 12",
+    "icon": "🍎",
+    "price": 110,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 13,
+    "name": "Maçã 13",
+    "icon": "🍎",
+    "price": 115,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 14,
+    "name": "Maçã 14",
+    "icon": "🍎",
+    "price": 120,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 15,
+    "name": "Maçã 15",
+    "icon": "🍎",
+    "price": 125,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 16,
+    "name": "Maçã 16",
+    "icon": "🍎",
+    "price": 130,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 17,
+    "name": "Maçã 17",
+    "icon": "🍎",
+    "price": 135,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 18,
+    "name": "Maçã 18",
+    "icon": "🍎",
+    "price": 140,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 19,
+    "name": "Maçã 19",
+    "icon": "🍎",
+    "price": 145,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 20,
+    "name": "Maçã 20",
+    "icon": "🍎",
+    "price": 150,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 21,
+    "name": "Banana 1",
+    "icon": "🍌",
+    "price": 50,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 22,
+    "name": "Banana 2",
+    "icon": "🍌",
+    "price": 55,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 23,
+    "name": "Banana 3",
+    "icon": "🍌",
+    "price": 60,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 24,
+    "name": "Banana 4",
+    "icon": "🍌",
+    "price": 65,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 25,
+    "name": "Banana 5",
+    "icon": "🍌",
+    "price": 70,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 26,
+    "name": "Banana 6",
+    "icon": "🍌",
+    "price": 75,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 27,
+    "name": "Banana 7",
+    "icon": "🍌",
+    "price": 80,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 28,
+    "name": "Banana 8",
+    "icon": "🍌",
+    "price": 85,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 29,
+    "name": "Banana 9",
+    "icon": "🍌",
+    "price": 90,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 30,
+    "name": "Banana 10",
+    "icon": "🍌",
+    "price": 95,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 31,
+    "name": "Banana 11",
+    "icon": "🍌",
+    "price": 100,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 32,
+    "name": "Banana 12",
+    "icon": "🍌",
+    "price": 105,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 33,
+    "name": "Banana 13",
+    "icon": "🍌",
+    "price": 110,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 34,
+    "name": "Banana 14",
+    "icon": "🍌",
+    "price": 115,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 35,
+    "name": "Banana 15",
+    "icon": "🍌",
+    "price": 120,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 36,
+    "name": "Banana 16",
+    "icon": "🍌",
+    "price": 125,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 37,
+    "name": "Banana 17",
+    "icon": "🍌",
+    "price": 130,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 38,
+    "name": "Banana 18",
+    "icon": "🍌",
+    "price": 135,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 39,
+    "name": "Banana 19",
+    "icon": "🍌",
+    "price": 140,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 40,
+    "name": "Banana 20",
+    "icon": "🍌",
+    "price": 145,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 41,
+    "name": "Laranja 1",
+    "icon": "🍊",
+    "price": 60,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 42,
+    "name": "Laranja 2",
+    "icon": "🍊",
+    "price": 65,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 43,
+    "name": "Laranja 3",
+    "icon": "🍊",
+    "price": 70,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 44,
+    "name": "Laranja 4",
+    "icon": "🍊",
+    "price": 75,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 45,
+    "name": "Laranja 5",
+    "icon": "🍊",
+    "price": 80,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 46,
+    "name": "Laranja 6",
+    "icon": "🍊",
+    "price": 85,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 47,
+    "name": "Laranja 7",
+    "icon": "🍊",
+    "price": 90,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 48,
+    "name": "Laranja 8",
+    "icon": "🍊",
+    "price": 95,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 49,
+    "name": "Laranja 9",
+    "icon": "🍊",
+    "price": 100,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 50,
+    "name": "Laranja 10",
+    "icon": "🍊",
+    "price": 105,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 51,
+    "name": "Laranja 11",
+    "icon": "🍊",
+    "price": 110,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 52,
+    "name": "Laranja 12",
+    "icon": "🍊",
+    "price": 115,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 53,
+    "name": "Laranja 13",
+    "icon": "🍊",
+    "price": 120,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 54,
+    "name": "Laranja 14",
+    "icon": "🍊",
+    "price": 125,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 55,
+    "name": "Laranja 15",
+    "icon": "🍊",
+    "price": 130,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 56,
+    "name": "Laranja 16",
+    "icon": "🍊",
+    "price": 135,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 57,
+    "name": "Laranja 17",
+    "icon": "🍊",
+    "price": 140,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 58,
+    "name": "Laranja 18",
+    "icon": "🍊",
+    "price": 145,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 59,
+    "name": "Laranja 19",
+    "icon": "🍊",
+    "price": 150,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 60,
+    "name": "Laranja 20",
+    "icon": "🍊",
+    "price": 155,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 61,
+    "name": "Morango 1",
+    "icon": "🍓",
+    "price": 65,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 62,
+    "name": "Morango 2",
+    "icon": "🍓",
+    "price": 70,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 63,
+    "name": "Morango 3",
+    "icon": "🍓",
+    "price": 75,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 64,
+    "name": "Morango 4",
+    "icon": "🍓",
+    "price": 80,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 65,
+    "name": "Morango 5",
+    "icon": "🍓",
+    "price": 85,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 66,
+    "name": "Morango 6",
+    "icon": "🍓",
+    "price": 90,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 67,
+    "name": "Morango 7",
+    "icon": "🍓",
+    "price": 95,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 68,
+    "name": "Morango 8",
+    "icon": "🍓",
+    "price": 100,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 69,
+    "name": "Morango 9",
+    "icon": "🍓",
+    "price": 105,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 70,
+    "name": "Morango 10",
+    "icon": "🍓",
+    "price": 110,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 71,
+    "name": "Morango 11",
+    "icon": "🍓",
+    "price": 115,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 72,
+    "name": "Morango 12",
+    "icon": "🍓",
+    "price": 120,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 73,
+    "name": "Morango 13",
+    "icon": "🍓",
+    "price": 125,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 74,
+    "name": "Morango 14",
+    "icon": "🍓",
+    "price": 130,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 75,
+    "name": "Morango 15",
+    "icon": "🍓",
+    "price": 135,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 76,
+    "name": "Morango 16",
+    "icon": "🍓",
+    "price": 140,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 77,
+    "name": "Morango 17",
+    "icon": "🍓",
+    "price": 145,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 78,
+    "name": "Morango 18",
+    "icon": "🍓",
+    "price": 150,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 79,
+    "name": "Morango 19",
+    "icon": "🍓",
+    "price": 155,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 80,
+    "name": "Morango 20",
+    "icon": "🍓",
+    "price": 160,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 81,
+    "name": "Melancia 1",
+    "icon": "🍉",
+    "price": 75,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 82,
+    "name": "Melancia 2",
+    "icon": "🍉",
+    "price": 80,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 83,
+    "name": "Melancia 3",
+    "icon": "🍉",
+    "price": 85,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 84,
+    "name": "Melancia 4",
+    "icon": "🍉",
+    "price": 90,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 85,
+    "name": "Melancia 5",
+    "icon": "🍉",
+    "price": 95,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 86,
+    "name": "Melancia 6",
+    "icon": "🍉",
+    "price": 100,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 87,
+    "name": "Melancia 7",
+    "icon": "🍉",
+    "price": 105,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 88,
+    "name": "Melancia 8",
+    "icon": "🍉",
+    "price": 110,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 89,
+    "name": "Melancia 9",
+    "icon": "🍉",
+    "price": 115,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 90,
+    "name": "Melancia 10",
+    "icon": "🍉",
+    "price": 120,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 91,
+    "name": "Melancia 11",
+    "icon": "🍉",
+    "price": 125,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 92,
+    "name": "Melancia 12",
+    "icon": "🍉",
+    "price": 130,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 93,
+    "name": "Melancia 13",
+    "icon": "🍉",
+    "price": 135,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 94,
+    "name": "Melancia 14",
+    "icon": "🍉",
+    "price": 140,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 95,
+    "name": "Melancia 15",
+    "icon": "🍉",
+    "price": 145,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 96,
+    "name": "Melancia 16",
+    "icon": "🍉",
+    "price": 150,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 97,
+    "name": "Melancia 17",
+    "icon": "🍉",
+    "price": 155,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 98,
+    "name": "Melancia 18",
+    "icon": "🍉",
+    "price": 160,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 99,
+    "name": "Melancia 19",
+    "icon": "🍉",
+    "price": 165,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 100,
+    "name": "Melancia 20",
+    "icon": "🍉",
+    "price": 170,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 101,
+    "name": "Abacaxi 1",
+    "icon": "🍍",
+    "price": 95,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 102,
+    "name": "Abacaxi 2",
+    "icon": "🍍",
+    "price": 100,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 103,
+    "name": "Abacaxi 3",
+    "icon": "🍍",
+    "price": 105,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 104,
+    "name": "Abacaxi 4",
+    "icon": "🍍",
+    "price": 110,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 105,
+    "name": "Abacaxi 5",
+    "icon": "🍍",
+    "price": 115,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 106,
+    "name": "Abacaxi 6",
+    "icon": "🍍",
+    "price": 120,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 107,
+    "name": "Abacaxi 7",
+    "icon": "🍍",
+    "price": 125,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 108,
+    "name": "Abacaxi 8",
+    "icon": "🍍",
+    "price": 130,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 109,
+    "name": "Abacaxi 9",
+    "icon": "🍍",
+    "price": 135,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 110,
+    "name": "Abacaxi 10",
+    "icon": "🍍",
+    "price": 140,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 111,
+    "name": "Abacaxi 11",
+    "icon": "🍍",
+    "price": 145,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 112,
+    "name": "Abacaxi 12",
+    "icon": "🍍",
+    "price": 150,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 113,
+    "name": "Abacaxi 13",
+    "icon": "🍍",
+    "price": 155,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 114,
+    "name": "Abacaxi 14",
+    "icon": "🍍",
+    "price": 160,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 115,
+    "name": "Abacaxi 15",
+    "icon": "🍍",
+    "price": 165,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 116,
+    "name": "Abacaxi 16",
+    "icon": "🍍",
+    "price": 170,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 117,
+    "name": "Abacaxi 17",
+    "icon": "🍍",
+    "price": 175,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 118,
+    "name": "Abacaxi 18",
+    "icon": "🍍",
+    "price": 180,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 119,
+    "name": "Abacaxi 19",
+    "icon": "🍍",
+    "price": 185,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 120,
+    "name": "Abacaxi 20",
+    "icon": "🍍",
+    "price": 190,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 121,
+    "name": "Uva 1",
+    "icon": "🍇",
+    "price": 70,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 122,
+    "name": "Uva 2",
+    "icon": "🍇",
+    "price": 75,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 123,
+    "name": "Uva 3",
+    "icon": "🍇",
+    "price": 80,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 124,
+    "name": "Uva 4",
+    "icon": "🍇",
+    "price": 85,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 125,
+    "name": "Uva 5",
+    "icon": "🍇",
+    "price": 90,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 126,
+    "name": "Uva 6",
+    "icon": "🍇",
+    "price": 95,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 127,
+    "name": "Uva 7",
+    "icon": "🍇",
+    "price": 100,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 128,
+    "name": "Uva 8",
+    "icon": "🍇",
+    "price": 105,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 129,
+    "name": "Uva 9",
+    "icon": "🍇",
+    "price": 110,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 130,
+    "name": "Uva 10",
+    "icon": "🍇",
+    "price": 115,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 131,
+    "name": "Uva 11",
+    "icon": "🍇",
+    "price": 120,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 132,
+    "name": "Uva 12",
+    "icon": "🍇",
+    "price": 125,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 133,
+    "name": "Uva 13",
+    "icon": "🍇",
+    "price": 130,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 134,
+    "name": "Uva 14",
+    "icon": "🍇",
+    "price": 135,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 135,
+    "name": "Uva 15",
+    "icon": "🍇",
+    "price": 140,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 136,
+    "name": "Uva 16",
+    "icon": "🍇",
+    "price": 145,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 137,
+    "name": "Uva 17",
+    "icon": "🍇",
+    "price": 150,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 138,
+    "name": "Uva 18",
+    "icon": "🍇",
+    "price": 155,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 139,
+    "name": "Uva 19",
+    "icon": "🍇",
+    "price": 160,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 140,
+    "name": "Uva 20",
+    "icon": "🍇",
+    "price": 165,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 141,
+    "name": "Pêssego 1",
+    "icon": "🍑",
+    "price": 80,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 142,
+    "name": "Pêssego 2",
+    "icon": "🍑",
+    "price": 85,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 143,
+    "name": "Pêssego 3",
+    "icon": "🍑",
+    "price": 90,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 144,
+    "name": "Pêssego 4",
+    "icon": "🍑",
+    "price": 95,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 145,
+    "name": "Pêssego 5",
+    "icon": "🍑",
+    "price": 100,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 146,
+    "name": "Pêssego 6",
+    "icon": "🍑",
+    "price": 105,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 147,
+    "name": "Pêssego 7",
+    "icon": "🍑",
+    "price": 110,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 148,
+    "name": "Pêssego 8",
+    "icon": "🍑",
+    "price": 115,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 149,
+    "name": "Pêssego 9",
+    "icon": "🍑",
+    "price": 120,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 150,
+    "name": "Pêssego 10",
+    "icon": "🍑",
+    "price": 125,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 151,
+    "name": "Pêssego 11",
+    "icon": "🍑",
+    "price": 130,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 152,
+    "name": "Pêssego 12",
+    "icon": "🍑",
+    "price": 135,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 153,
+    "name": "Pêssego 13",
+    "icon": "🍑",
+    "price": 140,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 154,
+    "name": "Pêssego 14",
+    "icon": "🍑",
+    "price": 145,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 155,
+    "name": "Pêssego 15",
+    "icon": "🍑",
+    "price": 150,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 156,
+    "name": "Pêssego 16",
+    "icon": "🍑",
+    "price": 155,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 157,
+    "name": "Pêssego 17",
+    "icon": "🍑",
+    "price": 160,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 158,
+    "name": "Pêssego 18",
+    "icon": "🍑",
+    "price": 165,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 159,
+    "name": "Pêssego 19",
+    "icon": "🍑",
+    "price": 170,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 160,
+    "name": "Pêssego 20",
+    "icon": "🍑",
+    "price": 175,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 161,
+    "name": "Pera 1",
+    "icon": "🍐",
+    "price": 55,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 162,
+    "name": "Pera 2",
+    "icon": "🍐",
+    "price": 60,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 163,
+    "name": "Pera 3",
+    "icon": "🍐",
+    "price": 65,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 164,
+    "name": "Pera 4",
+    "icon": "🍐",
+    "price": 70,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 165,
+    "name": "Pera 5",
+    "icon": "🍐",
+    "price": 75,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 166,
+    "name": "Pera 6",
+    "icon": "🍐",
+    "price": 80,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 167,
+    "name": "Pera 7",
+    "icon": "🍐",
+    "price": 85,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 168,
+    "name": "Pera 8",
+    "icon": "🍐",
+    "price": 90,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 169,
+    "name": "Pera 9",
+    "icon": "🍐",
+    "price": 95,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 170,
+    "name": "Pera 10",
+    "icon": "🍐",
+    "price": 100,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 171,
+    "name": "Pera 11",
+    "icon": "🍐",
+    "price": 105,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 172,
+    "name": "Pera 12",
+    "icon": "🍐",
+    "price": 110,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 173,
+    "name": "Pera 13",
+    "icon": "🍐",
+    "price": 115,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 174,
+    "name": "Pera 14",
+    "icon": "🍐",
+    "price": 120,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 175,
+    "name": "Pera 15",
+    "icon": "🍐",
+    "price": 125,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 176,
+    "name": "Pera 16",
+    "icon": "🍐",
+    "price": 130,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 177,
+    "name": "Pera 17",
+    "icon": "🍐",
+    "price": 135,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 178,
+    "name": "Pera 18",
+    "icon": "🍐",
+    "price": 140,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 179,
+    "name": "Pera 19",
+    "icon": "🍐",
+    "price": 145,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 180,
+    "name": "Pera 20",
+    "icon": "🍐",
+    "price": 150,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 181,
+    "name": "Cereja 1",
+    "icon": "🍒",
+    "price": 60,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 182,
+    "name": "Cereja 2",
+    "icon": "🍒",
+    "price": 65,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 183,
+    "name": "Cereja 3",
+    "icon": "🍒",
+    "price": 70,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 184,
+    "name": "Cereja 4",
+    "icon": "🍒",
+    "price": 75,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 185,
+    "name": "Cereja 5",
+    "icon": "🍒",
+    "price": 80,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 186,
+    "name": "Cereja 6",
+    "icon": "🍒",
+    "price": 85,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 187,
+    "name": "Cereja 7",
+    "icon": "🍒",
+    "price": 90,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 188,
+    "name": "Cereja 8",
+    "icon": "🍒",
+    "price": 95,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 189,
+    "name": "Cereja 9",
+    "icon": "🍒",
+    "price": 100,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 190,
+    "name": "Cereja 10",
+    "icon": "🍒",
+    "price": 105,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 191,
+    "name": "Cereja 11",
+    "icon": "🍒",
+    "price": 110,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 192,
+    "name": "Cereja 12",
+    "icon": "🍒",
+    "price": 115,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 193,
+    "name": "Cereja 13",
+    "icon": "🍒",
+    "price": 120,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 194,
+    "name": "Cereja 14",
+    "icon": "🍒",
+    "price": 125,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 195,
+    "name": "Cereja 15",
+    "icon": "🍒",
+    "price": 130,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 196,
+    "name": "Cereja 16",
+    "icon": "🍒",
+    "price": 135,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 197,
+    "name": "Cereja 17",
+    "icon": "🍒",
+    "price": 140,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 198,
+    "name": "Cereja 18",
+    "icon": "🍒",
+    "price": 145,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 199,
+    "name": "Cereja 19",
+    "icon": "🍒",
+    "price": 150,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 200,
+    "name": "Cereja 20",
+    "icon": "🍒",
+    "price": 155,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 201,
+    "name": "Limão 1",
+    "icon": "🍋",
+    "price": 45,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 202,
+    "name": "Limão 2",
+    "icon": "🍋",
+    "price": 50,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 203,
+    "name": "Limão 3",
+    "icon": "🍋",
+    "price": 55,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 204,
+    "name": "Limão 4",
+    "icon": "🍋",
+    "price": 60,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 205,
+    "name": "Limão 5",
+    "icon": "🍋",
+    "price": 65,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 206,
+    "name": "Limão 6",
+    "icon": "🍋",
+    "price": 70,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 207,
+    "name": "Limão 7",
+    "icon": "🍋",
+    "price": 75,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 208,
+    "name": "Limão 8",
+    "icon": "🍋",
+    "price": 80,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 209,
+    "name": "Limão 9",
+    "icon": "🍋",
+    "price": 85,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 210,
+    "name": "Limão 10",
+    "icon": "🍋",
+    "price": 90,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 211,
+    "name": "Limão 11",
+    "icon": "🍋",
+    "price": 95,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 212,
+    "name": "Limão 12",
+    "icon": "🍋",
+    "price": 100,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 213,
+    "name": "Limão 13",
+    "icon": "🍋",
+    "price": 105,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 214,
+    "name": "Limão 14",
+    "icon": "🍋",
+    "price": 110,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 215,
+    "name": "Limão 15",
+    "icon": "🍋",
+    "price": 115,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 216,
+    "name": "Limão 16",
+    "icon": "🍋",
+    "price": 120,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 217,
+    "name": "Limão 17",
+    "icon": "🍋",
+    "price": 125,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 218,
+    "name": "Limão 18",
+    "icon": "🍋",
+    "price": 130,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 219,
+    "name": "Limão 19",
+    "icon": "🍋",
+    "price": 135,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 220,
+    "name": "Limão 20",
+    "icon": "🍋",
+    "price": 140,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 221,
+    "name": "Coco 1",
+    "icon": "🥥",
+    "price": 90,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 222,
+    "name": "Coco 2",
+    "icon": "🥥",
+    "price": 95,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 223,
+    "name": "Coco 3",
+    "icon": "🥥",
+    "price": 100,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 224,
+    "name": "Coco 4",
+    "icon": "🥥",
+    "price": 105,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 225,
+    "name": "Coco 5",
+    "icon": "🥥",
+    "price": 110,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 226,
+    "name": "Coco 6",
+    "icon": "🥥",
+    "price": 115,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 227,
+    "name": "Coco 7",
+    "icon": "🥥",
+    "price": 120,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 228,
+    "name": "Coco 8",
+    "icon": "🥥",
+    "price": 125,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 229,
+    "name": "Coco 9",
+    "icon": "🥥",
+    "price": 130,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 230,
+    "name": "Coco 10",
+    "icon": "🥥",
+    "price": 135,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 231,
+    "name": "Coco 11",
+    "icon": "🥥",
+    "price": 140,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 232,
+    "name": "Coco 12",
+    "icon": "🥥",
+    "price": 145,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 233,
+    "name": "Coco 13",
+    "icon": "🥥",
+    "price": 150,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 234,
+    "name": "Coco 14",
+    "icon": "🥥",
+    "price": 155,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 235,
+    "name": "Coco 15",
+    "icon": "🥥",
+    "price": 160,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 236,
+    "name": "Coco 16",
+    "icon": "🥥",
+    "price": 165,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 237,
+    "name": "Coco 17",
+    "icon": "🥥",
+    "price": 170,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 238,
+    "name": "Coco 18",
+    "icon": "🥥",
+    "price": 175,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 239,
+    "name": "Coco 19",
+    "icon": "🥥",
+    "price": 180,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 240,
+    "name": "Coco 20",
+    "icon": "🥥",
+    "price": 185,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 241,
+    "name": "Melão 1",
+    "icon": "🍈",
+    "price": 85,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 242,
+    "name": "Melão 2",
+    "icon": "🍈",
+    "price": 90,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 243,
+    "name": "Melão 3",
+    "icon": "🍈",
+    "price": 95,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 244,
+    "name": "Melão 4",
+    "icon": "🍈",
+    "price": 100,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 245,
+    "name": "Melão 5",
+    "icon": "🍈",
+    "price": 105,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 246,
+    "name": "Melão 6",
+    "icon": "🍈",
+    "price": 110,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 247,
+    "name": "Melão 7",
+    "icon": "🍈",
+    "price": 115,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 248,
+    "name": "Melão 8",
+    "icon": "🍈",
+    "price": 120,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 249,
+    "name": "Melão 9",
+    "icon": "🍈",
+    "price": 125,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 250,
+    "name": "Melão 10",
+    "icon": "🍈",
+    "price": 130,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 251,
+    "name": "Melão 11",
+    "icon": "🍈",
+    "price": 135,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 252,
+    "name": "Melão 12",
+    "icon": "🍈",
+    "price": 140,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 253,
+    "name": "Melão 13",
+    "icon": "🍈",
+    "price": 145,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 254,
+    "name": "Melão 14",
+    "icon": "🍈",
+    "price": 150,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 255,
+    "name": "Melão 15",
+    "icon": "🍈",
+    "price": 155,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 256,
+    "name": "Melão 16",
+    "icon": "🍈",
+    "price": 160,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 257,
+    "name": "Melão 17",
+    "icon": "🍈",
+    "price": 165,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 258,
+    "name": "Melão 18",
+    "icon": "🍈",
+    "price": 170,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 259,
+    "name": "Melão 19",
+    "icon": "🍈",
+    "price": 175,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 260,
+    "name": "Melão 20",
+    "icon": "🍈",
+    "price": 180,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 261,
+    "name": "Kiwi 1",
+    "icon": "🥝",
+    "price": 75,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 262,
+    "name": "Kiwi 2",
+    "icon": "🥝",
+    "price": 80,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 263,
+    "name": "Kiwi 3",
+    "icon": "🥝",
+    "price": 85,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 264,
+    "name": "Kiwi 4",
+    "icon": "🥝",
+    "price": 90,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 265,
+    "name": "Kiwi 5",
+    "icon": "🥝",
+    "price": 95,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 266,
+    "name": "Kiwi 6",
+    "icon": "🥝",
+    "price": 100,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 267,
+    "name": "Kiwi 7",
+    "icon": "🥝",
+    "price": 105,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 268,
+    "name": "Kiwi 8",
+    "icon": "🥝",
+    "price": 110,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 269,
+    "name": "Kiwi 9",
+    "icon": "🥝",
+    "price": 115,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 270,
+    "name": "Kiwi 10",
+    "icon": "🥝",
+    "price": 120,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 271,
+    "name": "Kiwi 11",
+    "icon": "🥝",
+    "price": 125,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 272,
+    "name": "Kiwi 12",
+    "icon": "🥝",
+    "price": 130,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 273,
+    "name": "Kiwi 13",
+    "icon": "🥝",
+    "price": 135,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 274,
+    "name": "Kiwi 14",
+    "icon": "🥝",
+    "price": 140,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 275,
+    "name": "Kiwi 15",
+    "icon": "🥝",
+    "price": 145,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 276,
+    "name": "Kiwi 16",
+    "icon": "🥝",
+    "price": 150,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 277,
+    "name": "Kiwi 17",
+    "icon": "🥝",
+    "price": 155,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 278,
+    "name": "Kiwi 18",
+    "icon": "🥝",
+    "price": 160,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 279,
+    "name": "Kiwi 19",
+    "icon": "🥝",
+    "price": 165,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 280,
+    "name": "Kiwi 20",
+    "icon": "🥝",
+    "price": 170,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 281,
+    "name": "Manga 1",
+    "icon": "🥭",
+    "price": 80,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 282,
+    "name": "Manga 2",
+    "icon": "🥭",
+    "price": 85,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 283,
+    "name": "Manga 3",
+    "icon": "🥭",
+    "price": 90,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 284,
+    "name": "Manga 4",
+    "icon": "🥭",
+    "price": 95,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 285,
+    "name": "Manga 5",
+    "icon": "🥭",
+    "price": 100,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 286,
+    "name": "Manga 6",
+    "icon": "🥭",
+    "price": 105,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 287,
+    "name": "Manga 7",
+    "icon": "🥭",
+    "price": 110,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 288,
+    "name": "Manga 8",
+    "icon": "🥭",
+    "price": 115,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 289,
+    "name": "Manga 9",
+    "icon": "🥭",
+    "price": 120,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 290,
+    "name": "Manga 10",
+    "icon": "🥭",
+    "price": 125,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 291,
+    "name": "Manga 11",
+    "icon": "🥭",
+    "price": 130,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 292,
+    "name": "Manga 12",
+    "icon": "🥭",
+    "price": 135,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 293,
+    "name": "Manga 13",
+    "icon": "🥭",
+    "price": 140,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 294,
+    "name": "Manga 14",
+    "icon": "🥭",
+    "price": 145,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 295,
+    "name": "Manga 15",
+    "icon": "🥭",
+    "price": 150,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 296,
+    "name": "Manga 16",
+    "icon": "🥭",
+    "price": 155,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 297,
+    "name": "Manga 17",
+    "icon": "🥭",
+    "price": 160,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 298,
+    "name": "Manga 18",
+    "icon": "🥭",
+    "price": 165,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 299,
+    "name": "Manga 19",
+    "icon": "🥭",
+    "price": 170,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 300,
+    "name": "Manga 20",
+    "icon": "🥭",
+    "price": 175,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 301,
+    "name": "Peixe 1",
+    "icon": "🐟",
+    "price": 105,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 302,
+    "name": "Peixe 2",
+    "icon": "🐟",
+    "price": 110,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 303,
+    "name": "Peixe 3",
+    "icon": "🐟",
+    "price": 115,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 304,
+    "name": "Peixe 4",
+    "icon": "🐟",
+    "price": 120,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 305,
+    "name": "Peixe 5",
+    "icon": "🐟",
+    "price": 125,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 306,
+    "name": "Peixe 6",
+    "icon": "🐟",
+    "price": 130,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 307,
+    "name": "Peixe 7",
+    "icon": "🐟",
+    "price": 135,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 308,
+    "name": "Peixe 8",
+    "icon": "🐟",
+    "price": 140,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 309,
+    "name": "Peixe 9",
+    "icon": "🐟",
+    "price": 145,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 310,
+    "name": "Peixe 10",
+    "icon": "🐟",
+    "price": 150,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 311,
+    "name": "Peixe 11",
+    "icon": "🐟",
+    "price": 155,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 312,
+    "name": "Peixe 12",
+    "icon": "🐟",
+    "price": 160,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 313,
+    "name": "Peixe 13",
+    "icon": "🐟",
+    "price": 165,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 314,
+    "name": "Peixe 14",
+    "icon": "🐟",
+    "price": 170,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 315,
+    "name": "Peixe 15",
+    "icon": "🐟",
+    "price": 175,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 316,
+    "name": "Peixe 16",
+    "icon": "🐟",
+    "price": 180,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 317,
+    "name": "Peixe 17",
+    "icon": "🐟",
+    "price": 185,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 318,
+    "name": "Peixe 18",
+    "icon": "🐟",
+    "price": 190,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 319,
+    "name": "Peixe 19",
+    "icon": "🐟",
+    "price": 195,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 320,
+    "name": "Peixe 20",
+    "icon": "🐟",
+    "price": 200,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 321,
+    "name": "Camarão 1",
+    "icon": "🦐",
+    "price": 125,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 322,
+    "name": "Camarão 2",
+    "icon": "🦐",
+    "price": 130,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 323,
+    "name": "Camarão 3",
+    "icon": "🦐",
+    "price": 135,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 324,
+    "name": "Camarão 4",
+    "icon": "🦐",
+    "price": 140,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 325,
+    "name": "Camarão 5",
+    "icon": "🦐",
+    "price": 145,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 326,
+    "name": "Camarão 6",
+    "icon": "🦐",
+    "price": 150,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 327,
+    "name": "Camarão 7",
+    "icon": "🦐",
+    "price": 155,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 328,
+    "name": "Camarão 8",
+    "icon": "🦐",
+    "price": 160,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 329,
+    "name": "Camarão 9",
+    "icon": "🦐",
+    "price": 165,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 330,
+    "name": "Camarão 10",
+    "icon": "🦐",
+    "price": 170,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 331,
+    "name": "Camarão 11",
+    "icon": "🦐",
+    "price": 175,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 332,
+    "name": "Camarão 12",
+    "icon": "🦐",
+    "price": 180,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 333,
+    "name": "Camarão 13",
+    "icon": "🦐",
+    "price": 185,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 334,
+    "name": "Camarão 14",
+    "icon": "🦐",
+    "price": 190,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 335,
+    "name": "Camarão 15",
+    "icon": "🦐",
+    "price": 195,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 336,
+    "name": "Camarão 16",
+    "icon": "🦐",
+    "price": 200,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 337,
+    "name": "Camarão 17",
+    "icon": "🦐",
+    "price": 205,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 338,
+    "name": "Camarão 18",
+    "icon": "🦐",
+    "price": 210,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 339,
+    "name": "Camarão 19",
+    "icon": "🦐",
+    "price": 215,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 340,
+    "name": "Camarão 20",
+    "icon": "🦐",
+    "price": 220,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 341,
+    "name": "Caranguejo 1",
+    "icon": "🦀",
+    "price": 155,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 342,
+    "name": "Caranguejo 2",
+    "icon": "🦀",
+    "price": 160,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 343,
+    "name": "Caranguejo 3",
+    "icon": "🦀",
+    "price": 165,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 344,
+    "name": "Caranguejo 4",
+    "icon": "🦀",
+    "price": 170,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 345,
+    "name": "Caranguejo 5",
+    "icon": "🦀",
+    "price": 175,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 346,
+    "name": "Caranguejo 6",
+    "icon": "🦀",
+    "price": 180,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 347,
+    "name": "Caranguejo 7",
+    "icon": "🦀",
+    "price": 185,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 348,
+    "name": "Caranguejo 8",
+    "icon": "🦀",
+    "price": 190,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 349,
+    "name": "Caranguejo 9",
+    "icon": "🦀",
+    "price": 195,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 350,
+    "name": "Caranguejo 10",
+    "icon": "🦀",
+    "price": 200,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 351,
+    "name": "Caranguejo 11",
+    "icon": "🦀",
+    "price": 205,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 352,
+    "name": "Caranguejo 12",
+    "icon": "🦀",
+    "price": 210,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 353,
+    "name": "Caranguejo 13",
+    "icon": "🦀",
+    "price": 215,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 354,
+    "name": "Caranguejo 14",
+    "icon": "🦀",
+    "price": 220,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 355,
+    "name": "Caranguejo 15",
+    "icon": "🦀",
+    "price": 225,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 356,
+    "name": "Caranguejo 16",
+    "icon": "🦀",
+    "price": 230,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 357,
+    "name": "Caranguejo 17",
+    "icon": "🦀",
+    "price": 235,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 358,
+    "name": "Caranguejo 18",
+    "icon": "🦀",
+    "price": 240,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 359,
+    "name": "Caranguejo 19",
+    "icon": "🦀",
+    "price": 245,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 360,
+    "name": "Caranguejo 20",
+    "icon": "🦀",
+    "price": 250,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 361,
+    "name": "Cenoura 1",
+    "icon": "🥕",
+    "price": 40,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 362,
+    "name": "Cenoura 2",
+    "icon": "🥕",
+    "price": 45,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 363,
+    "name": "Cenoura 3",
+    "icon": "🥕",
+    "price": 50,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 364,
+    "name": "Cenoura 4",
+    "icon": "🥕",
+    "price": 55,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 365,
+    "name": "Cenoura 5",
+    "icon": "🥕",
+    "price": 60,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 366,
+    "name": "Cenoura 6",
+    "icon": "🥕",
+    "price": 65,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 367,
+    "name": "Cenoura 7",
+    "icon": "🥕",
+    "price": 70,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 368,
+    "name": "Cenoura 8",
+    "icon": "🥕",
+    "price": 75,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 369,
+    "name": "Cenoura 9",
+    "icon": "🥕",
+    "price": 80,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 370,
+    "name": "Cenoura 10",
+    "icon": "🥕",
+    "price": 85,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 371,
+    "name": "Cenoura 11",
+    "icon": "🥕",
+    "price": 90,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 372,
+    "name": "Cenoura 12",
+    "icon": "🥕",
+    "price": 95,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 373,
+    "name": "Cenoura 13",
+    "icon": "🥕",
+    "price": 100,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 374,
+    "name": "Cenoura 14",
+    "icon": "🥕",
+    "price": 105,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 375,
+    "name": "Cenoura 15",
+    "icon": "🥕",
+    "price": 110,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 376,
+    "name": "Cenoura 16",
+    "icon": "🥕",
+    "price": 115,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 377,
+    "name": "Cenoura 17",
+    "icon": "🥕",
+    "price": 120,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 378,
+    "name": "Cenoura 18",
+    "icon": "🥕",
+    "price": 125,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 379,
+    "name": "Cenoura 19",
+    "icon": "🥕",
+    "price": 130,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 380,
+    "name": "Cenoura 20",
+    "icon": "🥕",
+    "price": 135,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 381,
+    "name": "Milho 1",
+    "icon": "🌽",
+    "price": 45,
+    "description": "Alimento delicioso #1",
+    "category": "Comida"
+  },
+  {
+    "id": 382,
+    "name": "Milho 2",
+    "icon": "🌽",
+    "price": 50,
+    "description": "Alimento delicioso #2",
+    "category": "Comida"
+  },
+  {
+    "id": 383,
+    "name": "Milho 3",
+    "icon": "🌽",
+    "price": 55,
+    "description": "Alimento delicioso #3",
+    "category": "Comida"
+  },
+  {
+    "id": 384,
+    "name": "Milho 4",
+    "icon": "🌽",
+    "price": 60,
+    "description": "Alimento delicioso #4",
+    "category": "Comida"
+  },
+  {
+    "id": 385,
+    "name": "Milho 5",
+    "icon": "🌽",
+    "price": 65,
+    "description": "Alimento delicioso #5",
+    "category": "Comida"
+  },
+  {
+    "id": 386,
+    "name": "Milho 6",
+    "icon": "🌽",
+    "price": 70,
+    "description": "Alimento delicioso #6",
+    "category": "Comida"
+  },
+  {
+    "id": 387,
+    "name": "Milho 7",
+    "icon": "🌽",
+    "price": 75,
+    "description": "Alimento delicioso #7",
+    "category": "Comida"
+  },
+  {
+    "id": 388,
+    "name": "Milho 8",
+    "icon": "🌽",
+    "price": 80,
+    "description": "Alimento delicioso #8",
+    "category": "Comida"
+  },
+  {
+    "id": 389,
+    "name": "Milho 9",
+    "icon": "🌽",
+    "price": 85,
+    "description": "Alimento delicioso #9",
+    "category": "Comida"
+  },
+  {
+    "id": 390,
+    "name": "Milho 10",
+    "icon": "🌽",
+    "price": 90,
+    "description": "Alimento delicioso #10",
+    "category": "Comida"
+  },
+  {
+    "id": 391,
+    "name": "Milho 11",
+    "icon": "🌽",
+    "price": 95,
+    "description": "Alimento delicioso #11",
+    "category": "Comida"
+  },
+  {
+    "id": 392,
+    "name": "Milho 12",
+    "icon": "🌽",
+    "price": 100,
+    "description": "Alimento delicioso #12",
+    "category": "Comida"
+  },
+  {
+    "id": 393,
+    "name": "Milho 13",
+    "icon": "🌽",
+    "price": 105,
+    "description": "Alimento delicioso #13",
+    "category": "Comida"
+  },
+  {
+    "id": 394,
+    "name": "Milho 14",
+    "icon": "🌽",
+    "price": 110,
+    "description": "Alimento delicioso #14",
+    "category": "Comida"
+  },
+  {
+    "id": 395,
+    "name": "Milho 15",
+    "icon": "🌽",
+    "price": 115,
+    "description": "Alimento delicioso #15",
+    "category": "Comida"
+  },
+  {
+    "id": 396,
+    "name": "Milho 16",
+    "icon": "🌽",
+    "price": 120,
+    "description": "Alimento delicioso #16",
+    "category": "Comida"
+  },
+  {
+    "id": 397,
+    "name": "Milho 17",
+    "icon": "🌽",
+    "price": 125,
+    "description": "Alimento delicioso #17",
+    "category": "Comida"
+  },
+  {
+    "id": 398,
+    "name": "Milho 18",
+    "icon": "🌽",
+    "price": 130,
+    "description": "Alimento delicioso #18",
+    "category": "Comida"
+  },
+  {
+    "id": 399,
+    "name": "Milho 19",
+    "icon": "🌽",
+    "price": 135,
+    "description": "Alimento delicioso #19",
+    "category": "Comida"
+  },
+  {
+    "id": 400,
+    "name": "Milho 20",
+    "icon": "🌽",
+    "price": 140,
+    "description": "Alimento delicioso #20",
+    "category": "Comida"
+  },
+  {
+    "id": 401,
+    "name": "Poção de Energia 1",
+    "icon": "⚡",
+    "price": 110,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 402,
+    "name": "Poção de Energia 2",
+    "icon": "⚡",
+    "price": 120,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 403,
+    "name": "Poção de Energia 3",
+    "icon": "⚡",
+    "price": 130,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 404,
+    "name": "Poção de Energia 4",
+    "icon": "⚡",
+    "price": 140,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 405,
+    "name": "Poção de Energia 5",
+    "icon": "⚡",
+    "price": 150,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 406,
+    "name": "Poção de Energia 6",
+    "icon": "⚡",
+    "price": 160,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 407,
+    "name": "Poção de Energia 7",
+    "icon": "⚡",
+    "price": 170,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 408,
+    "name": "Poção de Energia 8",
+    "icon": "⚡",
+    "price": 180,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 409,
+    "name": "Poção de Energia 9",
+    "icon": "⚡",
+    "price": 190,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 410,
+    "name": "Poção de Energia 10",
+    "icon": "⚡",
+    "price": 200,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 411,
+    "name": "Poção de Energia 11",
+    "icon": "⚡",
+    "price": 210,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 412,
+    "name": "Poção de Energia 12",
+    "icon": "⚡",
+    "price": 220,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 413,
+    "name": "Poção de Energia 13",
+    "icon": "⚡",
+    "price": 230,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 414,
+    "name": "Poção de Energia 14",
+    "icon": "⚡",
+    "price": 240,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 415,
+    "name": "Poção de Energia 15",
+    "icon": "⚡",
+    "price": 250,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 416,
+    "name": "Poção de Energia 16",
+    "icon": "⚡",
+    "price": 260,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 417,
+    "name": "Poção de Energia 17",
+    "icon": "⚡",
+    "price": 270,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 418,
+    "name": "Poção de Energia 18",
+    "icon": "⚡",
+    "price": 280,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 419,
+    "name": "Poção de Energia 19",
+    "icon": "⚡",
+    "price": 290,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 420,
+    "name": "Poção de Energia 20",
+    "icon": "⚡",
+    "price": 300,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 421,
+    "name": "Poção de Felicidade 1",
+    "icon": "💖",
+    "price": 130,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 422,
+    "name": "Poção de Felicidade 2",
+    "icon": "💖",
+    "price": 140,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 423,
+    "name": "Poção de Felicidade 3",
+    "icon": "💖",
+    "price": 150,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 424,
+    "name": "Poção de Felicidade 4",
+    "icon": "💖",
+    "price": 160,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 425,
+    "name": "Poção de Felicidade 5",
+    "icon": "💖",
+    "price": 170,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 426,
+    "name": "Poção de Felicidade 6",
+    "icon": "💖",
+    "price": 180,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 427,
+    "name": "Poção de Felicidade 7",
+    "icon": "💖",
+    "price": 190,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 428,
+    "name": "Poção de Felicidade 8",
+    "icon": "💖",
+    "price": 200,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 429,
+    "name": "Poção de Felicidade 9",
+    "icon": "💖",
+    "price": 210,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 430,
+    "name": "Poção de Felicidade 10",
+    "icon": "💖",
+    "price": 220,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 431,
+    "name": "Poção de Felicidade 11",
+    "icon": "💖",
+    "price": 230,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 432,
+    "name": "Poção de Felicidade 12",
+    "icon": "💖",
+    "price": 240,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 433,
+    "name": "Poção de Felicidade 13",
+    "icon": "💖",
+    "price": 250,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 434,
+    "name": "Poção de Felicidade 14",
+    "icon": "💖",
+    "price": 260,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 435,
+    "name": "Poção de Felicidade 15",
+    "icon": "💖",
+    "price": 270,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 436,
+    "name": "Poção de Felicidade 16",
+    "icon": "💖",
+    "price": 280,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 437,
+    "name": "Poção de Felicidade 17",
+    "icon": "💖",
+    "price": 290,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 438,
+    "name": "Poção de Felicidade 18",
+    "icon": "💖",
+    "price": 300,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 439,
+    "name": "Poção de Felicidade 19",
+    "icon": "💖",
+    "price": 310,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 440,
+    "name": "Poção de Felicidade 20",
+    "icon": "💖",
+    "price": 320,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 441,
+    "name": "Poção de Saúde 1",
+    "icon": "💊",
+    "price": 160,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 442,
+    "name": "Poção de Saúde 2",
+    "icon": "💊",
+    "price": 170,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 443,
+    "name": "Poção de Saúde 3",
+    "icon": "💊",
+    "price": 180,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 444,
+    "name": "Poção de Saúde 4",
+    "icon": "💊",
+    "price": 190,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 445,
+    "name": "Poção de Saúde 5",
+    "icon": "💊",
+    "price": 200,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 446,
+    "name": "Poção de Saúde 6",
+    "icon": "💊",
+    "price": 210,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 447,
+    "name": "Poção de Saúde 7",
+    "icon": "💊",
+    "price": 220,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 448,
+    "name": "Poção de Saúde 8",
+    "icon": "💊",
+    "price": 230,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 449,
+    "name": "Poção de Saúde 9",
+    "icon": "💊",
+    "price": 240,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 450,
+    "name": "Poção de Saúde 10",
+    "icon": "💊",
+    "price": 250,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 451,
+    "name": "Poção de Saúde 11",
+    "icon": "💊",
+    "price": 260,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 452,
+    "name": "Poção de Saúde 12",
+    "icon": "💊",
+    "price": 270,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 453,
+    "name": "Poção de Saúde 13",
+    "icon": "💊",
+    "price": 280,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 454,
+    "name": "Poção de Saúde 14",
+    "icon": "💊",
+    "price": 290,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 455,
+    "name": "Poção de Saúde 15",
+    "icon": "💊",
+    "price": 300,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 456,
+    "name": "Poção de Saúde 16",
+    "icon": "💊",
+    "price": 310,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 457,
+    "name": "Poção de Saúde 17",
+    "icon": "💊",
+    "price": 320,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 458,
+    "name": "Poção de Saúde 18",
+    "icon": "💊",
+    "price": 330,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 459,
+    "name": "Poção de Saúde 19",
+    "icon": "💊",
+    "price": 340,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 460,
+    "name": "Poção de Saúde 20",
+    "icon": "💊",
+    "price": 350,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 461,
+    "name": "Elixir Mágico 1",
+    "icon": "🧪",
+    "price": 210,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 462,
+    "name": "Elixir Mágico 2",
+    "icon": "🧪",
+    "price": 220,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 463,
+    "name": "Elixir Mágico 3",
+    "icon": "🧪",
+    "price": 230,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 464,
+    "name": "Elixir Mágico 4",
+    "icon": "🧪",
+    "price": 240,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 465,
+    "name": "Elixir Mágico 5",
+    "icon": "🧪",
+    "price": 250,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 466,
+    "name": "Elixir Mágico 6",
+    "icon": "🧪",
+    "price": 260,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 467,
+    "name": "Elixir Mágico 7",
+    "icon": "🧪",
+    "price": 270,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 468,
+    "name": "Elixir Mágico 8",
+    "icon": "🧪",
+    "price": 280,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 469,
+    "name": "Elixir Mágico 9",
+    "icon": "🧪",
+    "price": 290,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 470,
+    "name": "Elixir Mágico 10",
+    "icon": "🧪",
+    "price": 300,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 471,
+    "name": "Elixir Mágico 11",
+    "icon": "🧪",
+    "price": 310,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 472,
+    "name": "Elixir Mágico 12",
+    "icon": "🧪",
+    "price": 320,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 473,
+    "name": "Elixir Mágico 13",
+    "icon": "🧪",
+    "price": 330,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 474,
+    "name": "Elixir Mágico 14",
+    "icon": "🧪",
+    "price": 340,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 475,
+    "name": "Elixir Mágico 15",
+    "icon": "🧪",
+    "price": 350,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 476,
+    "name": "Elixir Mágico 16",
+    "icon": "🧪",
+    "price": 360,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 477,
+    "name": "Elixir Mágico 17",
+    "icon": "🧪",
+    "price": 370,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 478,
+    "name": "Elixir Mágico 18",
+    "icon": "🧪",
+    "price": 380,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 479,
+    "name": "Elixir Mágico 19",
+    "icon": "🧪",
+    "price": 390,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 480,
+    "name": "Elixir Mágico 20",
+    "icon": "🧪",
+    "price": 400,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 481,
+    "name": "Cristal Brilhante 1",
+    "icon": "💎",
+    "price": 260,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 482,
+    "name": "Cristal Brilhante 2",
+    "icon": "💎",
+    "price": 270,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 483,
+    "name": "Cristal Brilhante 3",
+    "icon": "💎",
+    "price": 280,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 484,
+    "name": "Cristal Brilhante 4",
+    "icon": "💎",
+    "price": 290,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 485,
+    "name": "Cristal Brilhante 5",
+    "icon": "💎",
+    "price": 300,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 486,
+    "name": "Cristal Brilhante 6",
+    "icon": "💎",
+    "price": 310,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 487,
+    "name": "Cristal Brilhante 7",
+    "icon": "💎",
+    "price": 320,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 488,
+    "name": "Cristal Brilhante 8",
+    "icon": "💎",
+    "price": 330,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 489,
+    "name": "Cristal Brilhante 9",
+    "icon": "💎",
+    "price": 340,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 490,
+    "name": "Cristal Brilhante 10",
+    "icon": "💎",
+    "price": 350,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 491,
+    "name": "Cristal Brilhante 11",
+    "icon": "💎",
+    "price": 360,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 492,
+    "name": "Cristal Brilhante 12",
+    "icon": "💎",
+    "price": 370,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 493,
+    "name": "Cristal Brilhante 13",
+    "icon": "💎",
+    "price": 380,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 494,
+    "name": "Cristal Brilhante 14",
+    "icon": "💎",
+    "price": 390,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 495,
+    "name": "Cristal Brilhante 15",
+    "icon": "💎",
+    "price": 400,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 496,
+    "name": "Cristal Brilhante 16",
+    "icon": "💎",
+    "price": 410,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 497,
+    "name": "Cristal Brilhante 17",
+    "icon": "💎",
+    "price": 420,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 498,
+    "name": "Cristal Brilhante 18",
+    "icon": "💎",
+    "price": 430,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 499,
+    "name": "Cristal Brilhante 19",
+    "icon": "💎",
+    "price": 440,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 500,
+    "name": "Cristal Brilhante 20",
+    "icon": "💎",
+    "price": 450,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 501,
+    "name": "Estrela Dourada 1",
+    "icon": "⭐",
+    "price": 190,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 502,
+    "name": "Estrela Dourada 2",
+    "icon": "⭐",
+    "price": 200,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 503,
+    "name": "Estrela Dourada 3",
+    "icon": "⭐",
+    "price": 210,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 504,
+    "name": "Estrela Dourada 4",
+    "icon": "⭐",
+    "price": 220,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 505,
+    "name": "Estrela Dourada 5",
+    "icon": "⭐",
+    "price": 230,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 506,
+    "name": "Estrela Dourada 6",
+    "icon": "⭐",
+    "price": 240,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 507,
+    "name": "Estrela Dourada 7",
+    "icon": "⭐",
+    "price": 250,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 508,
+    "name": "Estrela Dourada 8",
+    "icon": "⭐",
+    "price": 260,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 509,
+    "name": "Estrela Dourada 9",
+    "icon": "⭐",
+    "price": 270,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 510,
+    "name": "Estrela Dourada 10",
+    "icon": "⭐",
+    "price": 280,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 511,
+    "name": "Estrela Dourada 11",
+    "icon": "⭐",
+    "price": 290,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 512,
+    "name": "Estrela Dourada 12",
+    "icon": "⭐",
+    "price": 300,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 513,
+    "name": "Estrela Dourada 13",
+    "icon": "⭐",
+    "price": 310,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 514,
+    "name": "Estrela Dourada 14",
+    "icon": "⭐",
+    "price": 320,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 515,
+    "name": "Estrela Dourada 15",
+    "icon": "⭐",
+    "price": 330,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 516,
+    "name": "Estrela Dourada 16",
+    "icon": "⭐",
+    "price": 340,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 517,
+    "name": "Estrela Dourada 17",
+    "icon": "⭐",
+    "price": 350,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 518,
+    "name": "Estrela Dourada 18",
+    "icon": "⭐",
+    "price": 360,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 519,
+    "name": "Estrela Dourada 19",
+    "icon": "⭐",
+    "price": 370,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 520,
+    "name": "Estrela Dourada 20",
+    "icon": "⭐",
+    "price": 380,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 521,
+    "name": "Chama Sagrada 1",
+    "icon": "🔥",
+    "price": 170,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 522,
+    "name": "Chama Sagrada 2",
+    "icon": "🔥",
+    "price": 180,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 523,
+    "name": "Chama Sagrada 3",
+    "icon": "🔥",
+    "price": 190,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 524,
+    "name": "Chama Sagrada 4",
+    "icon": "🔥",
+    "price": 200,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 525,
+    "name": "Chama Sagrada 5",
+    "icon": "🔥",
+    "price": 210,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 526,
+    "name": "Chama Sagrada 6",
+    "icon": "🔥",
+    "price": 220,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 527,
+    "name": "Chama Sagrada 7",
+    "icon": "🔥",
+    "price": 230,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 528,
+    "name": "Chama Sagrada 8",
+    "icon": "🔥",
+    "price": 240,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 529,
+    "name": "Chama Sagrada 9",
+    "icon": "🔥",
+    "price": 250,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 530,
+    "name": "Chama Sagrada 10",
+    "icon": "🔥",
+    "price": 260,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 531,
+    "name": "Chama Sagrada 11",
+    "icon": "🔥",
+    "price": 270,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 532,
+    "name": "Chama Sagrada 12",
+    "icon": "🔥",
+    "price": 280,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 533,
+    "name": "Chama Sagrada 13",
+    "icon": "🔥",
+    "price": 290,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 534,
+    "name": "Chama Sagrada 14",
+    "icon": "🔥",
+    "price": 300,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 535,
+    "name": "Chama Sagrada 15",
+    "icon": "🔥",
+    "price": 310,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 536,
+    "name": "Chama Sagrada 16",
+    "icon": "🔥",
+    "price": 320,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 537,
+    "name": "Chama Sagrada 17",
+    "icon": "🔥",
+    "price": 330,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 538,
+    "name": "Chama Sagrada 18",
+    "icon": "🔥",
+    "price": 340,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 539,
+    "name": "Chama Sagrada 19",
+    "icon": "🔥",
+    "price": 350,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 540,
+    "name": "Chama Sagrada 20",
+    "icon": "🔥",
+    "price": 360,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 541,
+    "name": "Gelo Eterno 1",
+    "icon": "❄️",
+    "price": 150,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 542,
+    "name": "Gelo Eterno 2",
+    "icon": "❄️",
+    "price": 160,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 543,
+    "name": "Gelo Eterno 3",
+    "icon": "❄️",
+    "price": 170,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 544,
+    "name": "Gelo Eterno 4",
+    "icon": "❄️",
+    "price": 180,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 545,
+    "name": "Gelo Eterno 5",
+    "icon": "❄️",
+    "price": 190,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 546,
+    "name": "Gelo Eterno 6",
+    "icon": "❄️",
+    "price": 200,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 547,
+    "name": "Gelo Eterno 7",
+    "icon": "❄️",
+    "price": 210,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 548,
+    "name": "Gelo Eterno 8",
+    "icon": "❄️",
+    "price": 220,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 549,
+    "name": "Gelo Eterno 9",
+    "icon": "❄️",
+    "price": 230,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 550,
+    "name": "Gelo Eterno 10",
+    "icon": "❄️",
+    "price": 240,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 551,
+    "name": "Gelo Eterno 11",
+    "icon": "❄️",
+    "price": 250,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 552,
+    "name": "Gelo Eterno 12",
+    "icon": "❄️",
+    "price": 260,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 553,
+    "name": "Gelo Eterno 13",
+    "icon": "❄️",
+    "price": 270,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 554,
+    "name": "Gelo Eterno 14",
+    "icon": "❄️",
+    "price": 280,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 555,
+    "name": "Gelo Eterno 15",
+    "icon": "❄️",
+    "price": 290,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 556,
+    "name": "Gelo Eterno 16",
+    "icon": "❄️",
+    "price": 300,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 557,
+    "name": "Gelo Eterno 17",
+    "icon": "❄️",
+    "price": 310,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 558,
+    "name": "Gelo Eterno 18",
+    "icon": "❄️",
+    "price": 320,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 559,
+    "name": "Gelo Eterno 19",
+    "icon": "❄️",
+    "price": 330,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 560,
+    "name": "Gelo Eterno 20",
+    "icon": "❄️",
+    "price": 340,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 561,
+    "name": "Vento Místico 1",
+    "icon": "💨",
+    "price": 140,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 562,
+    "name": "Vento Místico 2",
+    "icon": "💨",
+    "price": 150,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 563,
+    "name": "Vento Místico 3",
+    "icon": "💨",
+    "price": 160,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 564,
+    "name": "Vento Místico 4",
+    "icon": "💨",
+    "price": 170,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 565,
+    "name": "Vento Místico 5",
+    "icon": "💨",
+    "price": 180,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 566,
+    "name": "Vento Místico 6",
+    "icon": "💨",
+    "price": 190,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 567,
+    "name": "Vento Místico 7",
+    "icon": "💨",
+    "price": 200,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 568,
+    "name": "Vento Místico 8",
+    "icon": "💨",
+    "price": 210,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 569,
+    "name": "Vento Místico 9",
+    "icon": "💨",
+    "price": 220,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 570,
+    "name": "Vento Místico 10",
+    "icon": "💨",
+    "price": 230,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 571,
+    "name": "Vento Místico 11",
+    "icon": "💨",
+    "price": 240,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 572,
+    "name": "Vento Místico 12",
+    "icon": "💨",
+    "price": 250,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 573,
+    "name": "Vento Místico 13",
+    "icon": "💨",
+    "price": 260,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 574,
+    "name": "Vento Místico 14",
+    "icon": "💨",
+    "price": 270,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 575,
+    "name": "Vento Místico 15",
+    "icon": "💨",
+    "price": 280,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 576,
+    "name": "Vento Místico 16",
+    "icon": "💨",
+    "price": 290,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 577,
+    "name": "Vento Místico 17",
+    "icon": "💨",
+    "price": 300,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 578,
+    "name": "Vento Místico 18",
+    "icon": "💨",
+    "price": 310,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 579,
+    "name": "Vento Místico 19",
+    "icon": "💨",
+    "price": 320,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 580,
+    "name": "Vento Místico 20",
+    "icon": "💨",
+    "price": 330,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 581,
+    "name": "Terra Antiga 1",
+    "icon": "🪨",
+    "price": 120,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 582,
+    "name": "Terra Antiga 2",
+    "icon": "🪨",
+    "price": 130,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 583,
+    "name": "Terra Antiga 3",
+    "icon": "🪨",
+    "price": 140,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 584,
+    "name": "Terra Antiga 4",
+    "icon": "🪨",
+    "price": 150,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 585,
+    "name": "Terra Antiga 5",
+    "icon": "🪨",
+    "price": 160,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 586,
+    "name": "Terra Antiga 6",
+    "icon": "🪨",
+    "price": 170,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 587,
+    "name": "Terra Antiga 7",
+    "icon": "🪨",
+    "price": 180,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 588,
+    "name": "Terra Antiga 8",
+    "icon": "🪨",
+    "price": 190,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 589,
+    "name": "Terra Antiga 9",
+    "icon": "🪨",
+    "price": 200,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 590,
+    "name": "Terra Antiga 10",
+    "icon": "🪨",
+    "price": 210,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 591,
+    "name": "Terra Antiga 11",
+    "icon": "🪨",
+    "price": 220,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 592,
+    "name": "Terra Antiga 12",
+    "icon": "🪨",
+    "price": 230,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 593,
+    "name": "Terra Antiga 13",
+    "icon": "🪨",
+    "price": 240,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 594,
+    "name": "Terra Antiga 14",
+    "icon": "🪨",
+    "price": 250,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 595,
+    "name": "Terra Antiga 15",
+    "icon": "🪨",
+    "price": 260,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 596,
+    "name": "Terra Antiga 16",
+    "icon": "🪨",
+    "price": 270,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 597,
+    "name": "Terra Antiga 17",
+    "icon": "🪨",
+    "price": 280,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 598,
+    "name": "Terra Antiga 18",
+    "icon": "🪨",
+    "price": 290,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 599,
+    "name": "Terra Antiga 19",
+    "icon": "🪨",
+    "price": 300,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 600,
+    "name": "Terra Antiga 20",
+    "icon": "🪨",
+    "price": 310,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 601,
+    "name": "Água Pura 1",
+    "icon": "💧",
+    "price": 100,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 602,
+    "name": "Água Pura 2",
+    "icon": "💧",
+    "price": 110,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 603,
+    "name": "Água Pura 3",
+    "icon": "💧",
+    "price": 120,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 604,
+    "name": "Água Pura 4",
+    "icon": "💧",
+    "price": 130,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 605,
+    "name": "Água Pura 5",
+    "icon": "💧",
+    "price": 140,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 606,
+    "name": "Água Pura 6",
+    "icon": "💧",
+    "price": 150,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 607,
+    "name": "Água Pura 7",
+    "icon": "💧",
+    "price": 160,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 608,
+    "name": "Água Pura 8",
+    "icon": "💧",
+    "price": 170,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 609,
+    "name": "Água Pura 9",
+    "icon": "💧",
+    "price": 180,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 610,
+    "name": "Água Pura 10",
+    "icon": "💧",
+    "price": 190,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 611,
+    "name": "Água Pura 11",
+    "icon": "💧",
+    "price": 200,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 612,
+    "name": "Água Pura 12",
+    "icon": "💧",
+    "price": 210,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 613,
+    "name": "Água Pura 13",
+    "icon": "💧",
+    "price": 220,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 614,
+    "name": "Água Pura 14",
+    "icon": "💧",
+    "price": 230,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 615,
+    "name": "Água Pura 15",
+    "icon": "💧",
+    "price": 240,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 616,
+    "name": "Água Pura 16",
+    "icon": "💧",
+    "price": 250,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 617,
+    "name": "Água Pura 17",
+    "icon": "💧",
+    "price": 260,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 618,
+    "name": "Água Pura 18",
+    "icon": "💧",
+    "price": 270,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 619,
+    "name": "Água Pura 19",
+    "icon": "💧",
+    "price": 280,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 620,
+    "name": "Água Pura 20",
+    "icon": "💧",
+    "price": 290,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 621,
+    "name": "Luz Celestial 1",
+    "icon": "✨",
+    "price": 180,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 622,
+    "name": "Luz Celestial 2",
+    "icon": "✨",
+    "price": 190,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 623,
+    "name": "Luz Celestial 3",
+    "icon": "✨",
+    "price": 200,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 624,
+    "name": "Luz Celestial 4",
+    "icon": "✨",
+    "price": 210,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 625,
+    "name": "Luz Celestial 5",
+    "icon": "✨",
+    "price": 220,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 626,
+    "name": "Luz Celestial 6",
+    "icon": "✨",
+    "price": 230,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 627,
+    "name": "Luz Celestial 7",
+    "icon": "✨",
+    "price": 240,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 628,
+    "name": "Luz Celestial 8",
+    "icon": "✨",
+    "price": 250,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 629,
+    "name": "Luz Celestial 9",
+    "icon": "✨",
+    "price": 260,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 630,
+    "name": "Luz Celestial 10",
+    "icon": "✨",
+    "price": 270,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 631,
+    "name": "Luz Celestial 11",
+    "icon": "✨",
+    "price": 280,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 632,
+    "name": "Luz Celestial 12",
+    "icon": "✨",
+    "price": 290,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 633,
+    "name": "Luz Celestial 13",
+    "icon": "✨",
+    "price": 300,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 634,
+    "name": "Luz Celestial 14",
+    "icon": "✨",
+    "price": 310,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 635,
+    "name": "Luz Celestial 15",
+    "icon": "✨",
+    "price": 320,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 636,
+    "name": "Luz Celestial 16",
+    "icon": "✨",
+    "price": 330,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 637,
+    "name": "Luz Celestial 17",
+    "icon": "✨",
+    "price": 340,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 638,
+    "name": "Luz Celestial 18",
+    "icon": "✨",
+    "price": 350,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 639,
+    "name": "Luz Celestial 19",
+    "icon": "✨",
+    "price": 360,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 640,
+    "name": "Luz Celestial 20",
+    "icon": "✨",
+    "price": 370,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 641,
+    "name": "Sombra Negra 1",
+    "icon": "🌑",
+    "price": 200,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 642,
+    "name": "Sombra Negra 2",
+    "icon": "🌑",
+    "price": 210,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 643,
+    "name": "Sombra Negra 3",
+    "icon": "🌑",
+    "price": 220,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 644,
+    "name": "Sombra Negra 4",
+    "icon": "🌑",
+    "price": 230,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 645,
+    "name": "Sombra Negra 5",
+    "icon": "🌑",
+    "price": 240,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 646,
+    "name": "Sombra Negra 6",
+    "icon": "🌑",
+    "price": 250,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 647,
+    "name": "Sombra Negra 7",
+    "icon": "🌑",
+    "price": 260,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 648,
+    "name": "Sombra Negra 8",
+    "icon": "🌑",
+    "price": 270,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 649,
+    "name": "Sombra Negra 9",
+    "icon": "🌑",
+    "price": 280,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 650,
+    "name": "Sombra Negra 10",
+    "icon": "🌑",
+    "price": 290,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 651,
+    "name": "Sombra Negra 11",
+    "icon": "🌑",
+    "price": 300,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 652,
+    "name": "Sombra Negra 12",
+    "icon": "🌑",
+    "price": 310,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 653,
+    "name": "Sombra Negra 13",
+    "icon": "🌑",
+    "price": 320,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 654,
+    "name": "Sombra Negra 14",
+    "icon": "🌑",
+    "price": 330,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 655,
+    "name": "Sombra Negra 15",
+    "icon": "🌑",
+    "price": 340,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 656,
+    "name": "Sombra Negra 16",
+    "icon": "🌑",
+    "price": 350,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 657,
+    "name": "Sombra Negra 17",
+    "icon": "🌑",
+    "price": 360,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 658,
+    "name": "Sombra Negra 18",
+    "icon": "🌑",
+    "price": 370,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 659,
+    "name": "Sombra Negra 19",
+    "icon": "🌑",
+    "price": 380,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 660,
+    "name": "Sombra Negra 20",
+    "icon": "🌑",
+    "price": 390,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 661,
+    "name": "Raio Divino 1",
+    "icon": "⚡",
+    "price": 220,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 662,
+    "name": "Raio Divino 2",
+    "icon": "⚡",
+    "price": 230,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 663,
+    "name": "Raio Divino 3",
+    "icon": "⚡",
+    "price": 240,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 664,
+    "name": "Raio Divino 4",
+    "icon": "⚡",
+    "price": 250,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 665,
+    "name": "Raio Divino 5",
+    "icon": "⚡",
+    "price": 260,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 666,
+    "name": "Raio Divino 6",
+    "icon": "⚡",
+    "price": 270,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 667,
+    "name": "Raio Divino 7",
+    "icon": "⚡",
+    "price": 280,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 668,
+    "name": "Raio Divino 8",
+    "icon": "⚡",
+    "price": 290,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 669,
+    "name": "Raio Divino 9",
+    "icon": "⚡",
+    "price": 300,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 670,
+    "name": "Raio Divino 10",
+    "icon": "⚡",
+    "price": 310,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 671,
+    "name": "Raio Divino 11",
+    "icon": "⚡",
+    "price": 320,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 672,
+    "name": "Raio Divino 12",
+    "icon": "⚡",
+    "price": 330,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 673,
+    "name": "Raio Divino 13",
+    "icon": "⚡",
+    "price": 340,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 674,
+    "name": "Raio Divino 14",
+    "icon": "⚡",
+    "price": 350,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 675,
+    "name": "Raio Divino 15",
+    "icon": "⚡",
+    "price": 360,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 676,
+    "name": "Raio Divino 16",
+    "icon": "⚡",
+    "price": 370,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 677,
+    "name": "Raio Divino 17",
+    "icon": "⚡",
+    "price": 380,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 678,
+    "name": "Raio Divino 18",
+    "icon": "⚡",
+    "price": 390,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 679,
+    "name": "Raio Divino 19",
+    "icon": "⚡",
+    "price": 400,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 680,
+    "name": "Raio Divino 20",
+    "icon": "⚡",
+    "price": 410,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 681,
+    "name": "Trovão Ancestral 1",
+    "icon": "🌩️",
+    "price": 230,
+    "description": "Boost poderoso #1",
+    "category": "Boost"
+  },
+  {
+    "id": 682,
+    "name": "Trovão Ancestral 2",
+    "icon": "🌩️",
+    "price": 240,
+    "description": "Boost poderoso #2",
+    "category": "Boost"
+  },
+  {
+    "id": 683,
+    "name": "Trovão Ancestral 3",
+    "icon": "🌩️",
+    "price": 250,
+    "description": "Boost poderoso #3",
+    "category": "Boost"
+  },
+  {
+    "id": 684,
+    "name": "Trovão Ancestral 4",
+    "icon": "🌩️",
+    "price": 260,
+    "description": "Boost poderoso #4",
+    "category": "Boost"
+  },
+  {
+    "id": 685,
+    "name": "Trovão Ancestral 5",
+    "icon": "🌩️",
+    "price": 270,
+    "description": "Boost poderoso #5",
+    "category": "Boost"
+  },
+  {
+    "id": 686,
+    "name": "Trovão Ancestral 6",
+    "icon": "🌩️",
+    "price": 280,
+    "description": "Boost poderoso #6",
+    "category": "Boost"
+  },
+  {
+    "id": 687,
+    "name": "Trovão Ancestral 7",
+    "icon": "🌩️",
+    "price": 290,
+    "description": "Boost poderoso #7",
+    "category": "Boost"
+  },
+  {
+    "id": 688,
+    "name": "Trovão Ancestral 8",
+    "icon": "🌩️",
+    "price": 300,
+    "description": "Boost poderoso #8",
+    "category": "Boost"
+  },
+  {
+    "id": 689,
+    "name": "Trovão Ancestral 9",
+    "icon": "🌩️",
+    "price": 310,
+    "description": "Boost poderoso #9",
+    "category": "Boost"
+  },
+  {
+    "id": 690,
+    "name": "Trovão Ancestral 10",
+    "icon": "🌩️",
+    "price": 320,
+    "description": "Boost poderoso #10",
+    "category": "Boost"
+  },
+  {
+    "id": 691,
+    "name": "Trovão Ancestral 11",
+    "icon": "🌩️",
+    "price": 330,
+    "description": "Boost poderoso #11",
+    "category": "Boost"
+  },
+  {
+    "id": 692,
+    "name": "Trovão Ancestral 12",
+    "icon": "🌩️",
+    "price": 340,
+    "description": "Boost poderoso #12",
+    "category": "Boost"
+  },
+  {
+    "id": 693,
+    "name": "Trovão Ancestral 13",
+    "icon": "🌩️",
+    "price": 350,
+    "description": "Boost poderoso #13",
+    "category": "Boost"
+  },
+  {
+    "id": 694,
+    "name": "Trovão Ancestral 14",
+    "icon": "🌩️",
+    "price": 360,
+    "description": "Boost poderoso #14",
+    "category": "Boost"
+  },
+  {
+    "id": 695,
+    "name": "Trovão Ancestral 15",
+    "icon": "🌩️",
+    "price": 370,
+    "description": "Boost poderoso #15",
+    "category": "Boost"
+  },
+  {
+    "id": 696,
+    "name": "Trovão Ancestral 16",
+    "icon": "🌩️",
+    "price": 380,
+    "description": "Boost poderoso #16",
+    "category": "Boost"
+  },
+  {
+    "id": 697,
+    "name": "Trovão Ancestral 17",
+    "icon": "🌩️",
+    "price": 390,
+    "description": "Boost poderoso #17",
+    "category": "Boost"
+  },
+  {
+    "id": 698,
+    "name": "Trovão Ancestral 18",
+    "icon": "🌩️",
+    "price": 400,
+    "description": "Boost poderoso #18",
+    "category": "Boost"
+  },
+  {
+    "id": 699,
+    "name": "Trovão Ancestral 19",
+    "icon": "🌩️",
+    "price": 410,
+    "description": "Boost poderoso #19",
+    "category": "Boost"
+  },
+  {
+    "id": 700,
+    "name": "Trovão Ancestral 20",
+    "icon": "🌩️",
+    "price": 420,
+    "description": "Boost poderoso #20",
+    "category": "Boost"
+  },
+  {
+    "id": 701,
+    "name": "Camiseta Vermelha 1",
+    "icon": "👕",
+    "price": 83,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 702,
+    "name": "Camiseta Vermelha 2",
+    "icon": "👕",
+    "price": 91,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 703,
+    "name": "Camiseta Vermelha 3",
+    "icon": "👕",
+    "price": 99,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 704,
+    "name": "Camiseta Vermelha 4",
+    "icon": "👕",
+    "price": 107,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 705,
+    "name": "Camiseta Vermelha 5",
+    "icon": "👕",
+    "price": 115,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 706,
+    "name": "Camiseta Vermelha 6",
+    "icon": "👕",
+    "price": 123,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 707,
+    "name": "Camiseta Vermelha 7",
+    "icon": "👕",
+    "price": 131,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 708,
+    "name": "Camiseta Vermelha 8",
+    "icon": "👕",
+    "price": 139,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 709,
+    "name": "Camiseta Vermelha 9",
+    "icon": "👕",
+    "price": 147,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 710,
+    "name": "Camiseta Vermelha 10",
+    "icon": "👕",
+    "price": 155,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 711,
+    "name": "Camiseta Vermelha 11",
+    "icon": "👕",
+    "price": 163,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 712,
+    "name": "Camiseta Vermelha 12",
+    "icon": "👕",
+    "price": 171,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 713,
+    "name": "Camiseta Vermelha 13",
+    "icon": "👕",
+    "price": 179,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 714,
+    "name": "Camiseta Vermelha 14",
+    "icon": "👕",
+    "price": 187,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 715,
+    "name": "Camiseta Vermelha 15",
+    "icon": "👕",
+    "price": 195,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 716,
+    "name": "Camiseta Vermelha 16",
+    "icon": "👕",
+    "price": 203,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 717,
+    "name": "Camiseta Vermelha 17",
+    "icon": "👕",
+    "price": 211,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 718,
+    "name": "Camiseta Vermelha 18",
+    "icon": "👕",
+    "price": 219,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 719,
+    "name": "Camiseta Vermelha 19",
+    "icon": "👕",
+    "price": 227,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 720,
+    "name": "Camiseta Vermelha 20",
+    "icon": "👕",
+    "price": 235,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 721,
+    "name": "Camiseta Azul 1",
+    "icon": "👕",
+    "price": 83,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 722,
+    "name": "Camiseta Azul 2",
+    "icon": "👕",
+    "price": 91,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 723,
+    "name": "Camiseta Azul 3",
+    "icon": "👕",
+    "price": 99,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 724,
+    "name": "Camiseta Azul 4",
+    "icon": "👕",
+    "price": 107,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 725,
+    "name": "Camiseta Azul 5",
+    "icon": "👕",
+    "price": 115,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 726,
+    "name": "Camiseta Azul 6",
+    "icon": "👕",
+    "price": 123,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 727,
+    "name": "Camiseta Azul 7",
+    "icon": "👕",
+    "price": 131,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 728,
+    "name": "Camiseta Azul 8",
+    "icon": "👕",
+    "price": 139,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 729,
+    "name": "Camiseta Azul 9",
+    "icon": "👕",
+    "price": 147,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 730,
+    "name": "Camiseta Azul 10",
+    "icon": "👕",
+    "price": 155,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 731,
+    "name": "Camiseta Azul 11",
+    "icon": "👕",
+    "price": 163,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 732,
+    "name": "Camiseta Azul 12",
+    "icon": "👕",
+    "price": 171,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 733,
+    "name": "Camiseta Azul 13",
+    "icon": "👕",
+    "price": 179,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 734,
+    "name": "Camiseta Azul 14",
+    "icon": "👕",
+    "price": 187,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 735,
+    "name": "Camiseta Azul 15",
+    "icon": "👕",
+    "price": 195,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 736,
+    "name": "Camiseta Azul 16",
+    "icon": "👕",
+    "price": 203,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 737,
+    "name": "Camiseta Azul 17",
+    "icon": "👕",
+    "price": 211,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 738,
+    "name": "Camiseta Azul 18",
+    "icon": "👕",
+    "price": 219,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 739,
+    "name": "Camiseta Azul 19",
+    "icon": "👕",
+    "price": 227,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 740,
+    "name": "Camiseta Azul 20",
+    "icon": "👕",
+    "price": 235,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 741,
+    "name": "Camiseta Verde 1",
+    "icon": "👕",
+    "price": 83,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 742,
+    "name": "Camiseta Verde 2",
+    "icon": "👕",
+    "price": 91,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 743,
+    "name": "Camiseta Verde 3",
+    "icon": "👕",
+    "price": 99,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 744,
+    "name": "Camiseta Verde 4",
+    "icon": "👕",
+    "price": 107,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 745,
+    "name": "Camiseta Verde 5",
+    "icon": "👕",
+    "price": 115,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 746,
+    "name": "Camiseta Verde 6",
+    "icon": "👕",
+    "price": 123,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 747,
+    "name": "Camiseta Verde 7",
+    "icon": "👕",
+    "price": 131,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 748,
+    "name": "Camiseta Verde 8",
+    "icon": "👕",
+    "price": 139,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 749,
+    "name": "Camiseta Verde 9",
+    "icon": "👕",
+    "price": 147,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 750,
+    "name": "Camiseta Verde 10",
+    "icon": "👕",
+    "price": 155,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 751,
+    "name": "Camiseta Verde 11",
+    "icon": "👕",
+    "price": 163,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 752,
+    "name": "Camiseta Verde 12",
+    "icon": "👕",
+    "price": 171,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 753,
+    "name": "Camiseta Verde 13",
+    "icon": "👕",
+    "price": 179,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 754,
+    "name": "Camiseta Verde 14",
+    "icon": "👕",
+    "price": 187,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 755,
+    "name": "Camiseta Verde 15",
+    "icon": "👕",
+    "price": 195,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 756,
+    "name": "Camiseta Verde 16",
+    "icon": "👕",
+    "price": 203,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 757,
+    "name": "Camiseta Verde 17",
+    "icon": "👕",
+    "price": 211,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 758,
+    "name": "Camiseta Verde 18",
+    "icon": "👕",
+    "price": 219,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 759,
+    "name": "Camiseta Verde 19",
+    "icon": "👕",
+    "price": 227,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 760,
+    "name": "Camiseta Verde 20",
+    "icon": "👕",
+    "price": 235,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 761,
+    "name": "Jaqueta de Couro 1",
+    "icon": "🧥",
+    "price": 158,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 762,
+    "name": "Jaqueta de Couro 2",
+    "icon": "🧥",
+    "price": 166,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 763,
+    "name": "Jaqueta de Couro 3",
+    "icon": "🧥",
+    "price": 174,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 764,
+    "name": "Jaqueta de Couro 4",
+    "icon": "🧥",
+    "price": 182,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 765,
+    "name": "Jaqueta de Couro 5",
+    "icon": "🧥",
+    "price": 190,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 766,
+    "name": "Jaqueta de Couro 6",
+    "icon": "🧥",
+    "price": 198,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 767,
+    "name": "Jaqueta de Couro 7",
+    "icon": "🧥",
+    "price": 206,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 768,
+    "name": "Jaqueta de Couro 8",
+    "icon": "🧥",
+    "price": 214,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 769,
+    "name": "Jaqueta de Couro 9",
+    "icon": "🧥",
+    "price": 222,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 770,
+    "name": "Jaqueta de Couro 10",
+    "icon": "🧥",
+    "price": 230,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 771,
+    "name": "Jaqueta de Couro 11",
+    "icon": "🧥",
+    "price": 238,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 772,
+    "name": "Jaqueta de Couro 12",
+    "icon": "🧥",
+    "price": 246,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 773,
+    "name": "Jaqueta de Couro 13",
+    "icon": "🧥",
+    "price": 254,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 774,
+    "name": "Jaqueta de Couro 14",
+    "icon": "🧥",
+    "price": 262,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 775,
+    "name": "Jaqueta de Couro 15",
+    "icon": "🧥",
+    "price": 270,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 776,
+    "name": "Jaqueta de Couro 16",
+    "icon": "🧥",
+    "price": 278,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 777,
+    "name": "Jaqueta de Couro 17",
+    "icon": "🧥",
+    "price": 286,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 778,
+    "name": "Jaqueta de Couro 18",
+    "icon": "🧥",
+    "price": 294,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 779,
+    "name": "Jaqueta de Couro 19",
+    "icon": "🧥",
+    "price": 302,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 780,
+    "name": "Jaqueta de Couro 20",
+    "icon": "🧥",
+    "price": 310,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 781,
+    "name": "Suéter Quentinho 1",
+    "icon": "🧶",
+    "price": 108,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 782,
+    "name": "Suéter Quentinho 2",
+    "icon": "🧶",
+    "price": 116,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 783,
+    "name": "Suéter Quentinho 3",
+    "icon": "🧶",
+    "price": 124,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 784,
+    "name": "Suéter Quentinho 4",
+    "icon": "🧶",
+    "price": 132,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 785,
+    "name": "Suéter Quentinho 5",
+    "icon": "🧶",
+    "price": 140,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 786,
+    "name": "Suéter Quentinho 6",
+    "icon": "🧶",
+    "price": 148,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 787,
+    "name": "Suéter Quentinho 7",
+    "icon": "🧶",
+    "price": 156,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 788,
+    "name": "Suéter Quentinho 8",
+    "icon": "🧶",
+    "price": 164,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 789,
+    "name": "Suéter Quentinho 9",
+    "icon": "🧶",
+    "price": 172,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 790,
+    "name": "Suéter Quentinho 10",
+    "icon": "🧶",
+    "price": 180,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 791,
+    "name": "Suéter Quentinho 11",
+    "icon": "🧶",
+    "price": 188,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 792,
+    "name": "Suéter Quentinho 12",
+    "icon": "🧶",
+    "price": 196,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 793,
+    "name": "Suéter Quentinho 13",
+    "icon": "🧶",
+    "price": 204,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 794,
+    "name": "Suéter Quentinho 14",
+    "icon": "🧶",
+    "price": 212,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 795,
+    "name": "Suéter Quentinho 15",
+    "icon": "🧶",
+    "price": 220,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 796,
+    "name": "Suéter Quentinho 16",
+    "icon": "🧶",
+    "price": 228,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 797,
+    "name": "Suéter Quentinho 17",
+    "icon": "🧶",
+    "price": 236,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 798,
+    "name": "Suéter Quentinho 18",
+    "icon": "🧶",
+    "price": 244,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 799,
+    "name": "Suéter Quentinho 19",
+    "icon": "🧶",
+    "price": 252,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 800,
+    "name": "Suéter Quentinho 20",
+    "icon": "🧶",
+    "price": 260,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 801,
+    "name": "Calça Jeans 1",
+    "icon": "👖",
+    "price": 128,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 802,
+    "name": "Calça Jeans 2",
+    "icon": "👖",
+    "price": 136,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 803,
+    "name": "Calça Jeans 3",
+    "icon": "👖",
+    "price": 144,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 804,
+    "name": "Calça Jeans 4",
+    "icon": "👖",
+    "price": 152,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 805,
+    "name": "Calça Jeans 5",
+    "icon": "👖",
+    "price": 160,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 806,
+    "name": "Calça Jeans 6",
+    "icon": "👖",
+    "price": 168,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 807,
+    "name": "Calça Jeans 7",
+    "icon": "👖",
+    "price": 176,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 808,
+    "name": "Calça Jeans 8",
+    "icon": "👖",
+    "price": 184,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 809,
+    "name": "Calça Jeans 9",
+    "icon": "👖",
+    "price": 192,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 810,
+    "name": "Calça Jeans 10",
+    "icon": "👖",
+    "price": 200,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 811,
+    "name": "Calça Jeans 11",
+    "icon": "👖",
+    "price": 208,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 812,
+    "name": "Calça Jeans 12",
+    "icon": "👖",
+    "price": 216,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 813,
+    "name": "Calça Jeans 13",
+    "icon": "👖",
+    "price": 224,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 814,
+    "name": "Calça Jeans 14",
+    "icon": "👖",
+    "price": 232,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 815,
+    "name": "Calça Jeans 15",
+    "icon": "👖",
+    "price": 240,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 816,
+    "name": "Calça Jeans 16",
+    "icon": "👖",
+    "price": 248,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 817,
+    "name": "Calça Jeans 17",
+    "icon": "👖",
+    "price": 256,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 818,
+    "name": "Calça Jeans 18",
+    "icon": "👖",
+    "price": 264,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 819,
+    "name": "Calça Jeans 19",
+    "icon": "👖",
+    "price": 272,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 820,
+    "name": "Calça Jeans 20",
+    "icon": "👖",
+    "price": 280,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 821,
+    "name": "Shorts Confortável 1",
+    "icon": "🩳",
+    "price": 88,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 822,
+    "name": "Shorts Confortável 2",
+    "icon": "🩳",
+    "price": 96,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 823,
+    "name": "Shorts Confortável 3",
+    "icon": "🩳",
+    "price": 104,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 824,
+    "name": "Shorts Confortável 4",
+    "icon": "🩳",
+    "price": 112,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 825,
+    "name": "Shorts Confortável 5",
+    "icon": "🩳",
+    "price": 120,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 826,
+    "name": "Shorts Confortável 6",
+    "icon": "🩳",
+    "price": 128,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 827,
+    "name": "Shorts Confortável 7",
+    "icon": "🩳",
+    "price": 136,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 828,
+    "name": "Shorts Confortável 8",
+    "icon": "🩳",
+    "price": 144,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 829,
+    "name": "Shorts Confortável 9",
+    "icon": "🩳",
+    "price": 152,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 830,
+    "name": "Shorts Confortável 10",
+    "icon": "🩳",
+    "price": 160,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 831,
+    "name": "Shorts Confortável 11",
+    "icon": "🩳",
+    "price": 168,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 832,
+    "name": "Shorts Confortável 12",
+    "icon": "🩳",
+    "price": 176,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 833,
+    "name": "Shorts Confortável 13",
+    "icon": "🩳",
+    "price": 184,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 834,
+    "name": "Shorts Confortável 14",
+    "icon": "🩳",
+    "price": 192,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 835,
+    "name": "Shorts Confortável 15",
+    "icon": "🩳",
+    "price": 200,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 836,
+    "name": "Shorts Confortável 16",
+    "icon": "🩳",
+    "price": 208,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 837,
+    "name": "Shorts Confortável 17",
+    "icon": "🩳",
+    "price": 216,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 838,
+    "name": "Shorts Confortável 18",
+    "icon": "🩳",
+    "price": 224,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 839,
+    "name": "Shorts Confortável 19",
+    "icon": "🩳",
+    "price": 232,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 840,
+    "name": "Shorts Confortável 20",
+    "icon": "🩳",
+    "price": 240,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 841,
+    "name": "Vestido Elegante 1",
+    "icon": "👗",
+    "price": 188,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 842,
+    "name": "Vestido Elegante 2",
+    "icon": "👗",
+    "price": 196,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 843,
+    "name": "Vestido Elegante 3",
+    "icon": "👗",
+    "price": 204,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 844,
+    "name": "Vestido Elegante 4",
+    "icon": "👗",
+    "price": 212,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 845,
+    "name": "Vestido Elegante 5",
+    "icon": "👗",
+    "price": 220,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 846,
+    "name": "Vestido Elegante 6",
+    "icon": "👗",
+    "price": 228,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 847,
+    "name": "Vestido Elegante 7",
+    "icon": "👗",
+    "price": 236,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 848,
+    "name": "Vestido Elegante 8",
+    "icon": "👗",
+    "price": 244,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 849,
+    "name": "Vestido Elegante 9",
+    "icon": "👗",
+    "price": 252,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 850,
+    "name": "Vestido Elegante 10",
+    "icon": "👗",
+    "price": 260,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 851,
+    "name": "Vestido Elegante 11",
+    "icon": "👗",
+    "price": 268,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 852,
+    "name": "Vestido Elegante 12",
+    "icon": "👗",
+    "price": 276,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 853,
+    "name": "Vestido Elegante 13",
+    "icon": "👗",
+    "price": 284,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 854,
+    "name": "Vestido Elegante 14",
+    "icon": "👗",
+    "price": 292,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 855,
+    "name": "Vestido Elegante 15",
+    "icon": "👗",
+    "price": 300,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 856,
+    "name": "Vestido Elegante 16",
+    "icon": "👗",
+    "price": 308,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 857,
+    "name": "Vestido Elegante 17",
+    "icon": "👗",
+    "price": 316,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 858,
+    "name": "Vestido Elegante 18",
+    "icon": "👗",
+    "price": 324,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 859,
+    "name": "Vestido Elegante 19",
+    "icon": "👗",
+    "price": 332,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 860,
+    "name": "Vestido Elegante 20",
+    "icon": "👗",
+    "price": 340,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 861,
+    "name": "Saia Colorida 1",
+    "icon": "👗",
+    "price": 118,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 862,
+    "name": "Saia Colorida 2",
+    "icon": "👗",
+    "price": 126,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 863,
+    "name": "Saia Colorida 3",
+    "icon": "👗",
+    "price": 134,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 864,
+    "name": "Saia Colorida 4",
+    "icon": "👗",
+    "price": 142,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 865,
+    "name": "Saia Colorida 5",
+    "icon": "👗",
+    "price": 150,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 866,
+    "name": "Saia Colorida 6",
+    "icon": "👗",
+    "price": 158,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 867,
+    "name": "Saia Colorida 7",
+    "icon": "👗",
+    "price": 166,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 868,
+    "name": "Saia Colorida 8",
+    "icon": "👗",
+    "price": 174,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 869,
+    "name": "Saia Colorida 9",
+    "icon": "👗",
+    "price": 182,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 870,
+    "name": "Saia Colorida 10",
+    "icon": "👗",
+    "price": 190,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 871,
+    "name": "Saia Colorida 11",
+    "icon": "👗",
+    "price": 198,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 872,
+    "name": "Saia Colorida 12",
+    "icon": "👗",
+    "price": 206,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 873,
+    "name": "Saia Colorida 13",
+    "icon": "👗",
+    "price": 214,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 874,
+    "name": "Saia Colorida 14",
+    "icon": "👗",
+    "price": 222,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 875,
+    "name": "Saia Colorida 15",
+    "icon": "👗",
+    "price": 230,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 876,
+    "name": "Saia Colorida 16",
+    "icon": "👗",
+    "price": 238,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 877,
+    "name": "Saia Colorida 17",
+    "icon": "👗",
+    "price": 246,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 878,
+    "name": "Saia Colorida 18",
+    "icon": "👗",
+    "price": 254,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 879,
+    "name": "Saia Colorida 19",
+    "icon": "👗",
+    "price": 262,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 880,
+    "name": "Saia Colorida 20",
+    "icon": "👗",
+    "price": 270,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 881,
+    "name": "Terno Formal 1",
+    "icon": "🤵",
+    "price": 258,
+    "description": "Roupa estilosa #1",
+    "category": "Roupa"
+  },
+  {
+    "id": 882,
+    "name": "Terno Formal 2",
+    "icon": "🤵",
+    "price": 266,
+    "description": "Roupa estilosa #2",
+    "category": "Roupa"
+  },
+  {
+    "id": 883,
+    "name": "Terno Formal 3",
+    "icon": "🤵",
+    "price": 274,
+    "description": "Roupa estilosa #3",
+    "category": "Roupa"
+  },
+  {
+    "id": 884,
+    "name": "Terno Formal 4",
+    "icon": "🤵",
+    "price": 282,
+    "description": "Roupa estilosa #4",
+    "category": "Roupa"
+  },
+  {
+    "id": 885,
+    "name": "Terno Formal 5",
+    "icon": "🤵",
+    "price": 290,
+    "description": "Roupa estilosa #5",
+    "category": "Roupa"
+  },
+  {
+    "id": 886,
+    "name": "Terno Formal 6",
+    "icon": "🤵",
+    "price": 298,
+    "description": "Roupa estilosa #6",
+    "category": "Roupa"
+  },
+  {
+    "id": 887,
+    "name": "Terno Formal 7",
+    "icon": "🤵",
+    "price": 306,
+    "description": "Roupa estilosa #7",
+    "category": "Roupa"
+  },
+  {
+    "id": 888,
+    "name": "Terno Formal 8",
+    "icon": "🤵",
+    "price": 314,
+    "description": "Roupa estilosa #8",
+    "category": "Roupa"
+  },
+  {
+    "id": 889,
+    "name": "Terno Formal 9",
+    "icon": "🤵",
+    "price": 322,
+    "description": "Roupa estilosa #9",
+    "category": "Roupa"
+  },
+  {
+    "id": 890,
+    "name": "Terno Formal 10",
+    "icon": "🤵",
+    "price": 330,
+    "description": "Roupa estilosa #10",
+    "category": "Roupa"
+  },
+  {
+    "id": 891,
+    "name": "Terno Formal 11",
+    "icon": "🤵",
+    "price": 338,
+    "description": "Roupa estilosa #11",
+    "category": "Roupa"
+  },
+  {
+    "id": 892,
+    "name": "Terno Formal 12",
+    "icon": "🤵",
+    "price": 346,
+    "description": "Roupa estilosa #12",
+    "category": "Roupa"
+  },
+  {
+    "id": 893,
+    "name": "Terno Formal 13",
+    "icon": "🤵",
+    "price": 354,
+    "description": "Roupa estilosa #13",
+    "category": "Roupa"
+  },
+  {
+    "id": 894,
+    "name": "Terno Formal 14",
+    "icon": "🤵",
+    "price": 362,
+    "description": "Roupa estilosa #14",
+    "category": "Roupa"
+  },
+  {
+    "id": 895,
+    "name": "Terno Formal 15",
+    "icon": "🤵",
+    "price": 370,
+    "description": "Roupa estilosa #15",
+    "category": "Roupa"
+  },
+  {
+    "id": 896,
+    "name": "Terno Formal 16",
+    "icon": "🤵",
+    "price": 378,
+    "description": "Roupa estilosa #16",
+    "category": "Roupa"
+  },
+  {
+    "id": 897,
+    "name": "Terno Formal 17",
+    "icon": "🤵",
+    "price": 386,
+    "description": "Roupa estilosa #17",
+    "category": "Roupa"
+  },
+  {
+    "id": 898,
+    "name": "Terno Formal 18",
+    "icon": "🤵",
+    "price": 394,
+    "description": "Roupa estilosa #18",
+    "category": "Roupa"
+  },
+  {
+    "id": 899,
+    "name": "Terno Formal 19",
+    "icon": "🤵",
+    "price": 402,
+    "description": "Roupa estilosa #19",
+    "category": "Roupa"
+  },
+  {
+    "id": 900,
+    "name": "Terno Formal 20",
+    "icon": "🤵",
+    "price": 410,
+    "description": "Roupa estilosa #20",
+    "category": "Roupa"
+  },
+  {
+    "id": 901,
+    "name": "Óculos Escuros 1",
+    "icon": "😎",
+    "price": 85,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 902,
+    "name": "Óculos Escuros 2",
+    "icon": "😎",
+    "price": 90,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 903,
+    "name": "Óculos Escuros 3",
+    "icon": "😎",
+    "price": 95,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 904,
+    "name": "Óculos Escuros 4",
+    "icon": "😎",
+    "price": 100,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 905,
+    "name": "Óculos Escuros 5",
+    "icon": "😎",
+    "price": 105,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 906,
+    "name": "Óculos Escuros 6",
+    "icon": "😎",
+    "price": 110,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 907,
+    "name": "Óculos Escuros 7",
+    "icon": "😎",
+    "price": 115,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 908,
+    "name": "Óculos Escuros 8",
+    "icon": "😎",
+    "price": 120,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 909,
+    "name": "Óculos Escuros 9",
+    "icon": "😎",
+    "price": 125,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 910,
+    "name": "Óculos Escuros 10",
+    "icon": "😎",
+    "price": 130,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 911,
+    "name": "Chapéu de Festa 1",
+    "icon": "🎩",
+    "price": 65,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 912,
+    "name": "Chapéu de Festa 2",
+    "icon": "🎩",
+    "price": 70,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 913,
+    "name": "Chapéu de Festa 3",
+    "icon": "🎩",
+    "price": 75,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 914,
+    "name": "Chapéu de Festa 4",
+    "icon": "🎩",
+    "price": 80,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 915,
+    "name": "Chapéu de Festa 5",
+    "icon": "🎩",
+    "price": 85,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 916,
+    "name": "Chapéu de Festa 6",
+    "icon": "🎩",
+    "price": 90,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 917,
+    "name": "Chapéu de Festa 7",
+    "icon": "🎩",
+    "price": 95,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 918,
+    "name": "Chapéu de Festa 8",
+    "icon": "🎩",
+    "price": 100,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 919,
+    "name": "Chapéu de Festa 9",
+    "icon": "🎩",
+    "price": 105,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 920,
+    "name": "Chapéu de Festa 10",
+    "icon": "🎩",
+    "price": 110,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 921,
+    "name": "Coroa Dourada 1",
+    "icon": "👑",
+    "price": 205,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 922,
+    "name": "Coroa Dourada 2",
+    "icon": "👑",
+    "price": 210,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 923,
+    "name": "Coroa Dourada 3",
+    "icon": "👑",
+    "price": 215,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 924,
+    "name": "Coroa Dourada 4",
+    "icon": "👑",
+    "price": 220,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 925,
+    "name": "Coroa Dourada 5",
+    "icon": "👑",
+    "price": 225,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 926,
+    "name": "Coroa Dourada 6",
+    "icon": "👑",
+    "price": 230,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 927,
+    "name": "Coroa Dourada 7",
+    "icon": "👑",
+    "price": 235,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 928,
+    "name": "Coroa Dourada 8",
+    "icon": "👑",
+    "price": 240,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 929,
+    "name": "Coroa Dourada 9",
+    "icon": "👑",
+    "price": 245,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 930,
+    "name": "Coroa Dourada 10",
+    "icon": "👑",
+    "price": 250,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 931,
+    "name": "Colar de Ouro 1",
+    "icon": "📿",
+    "price": 155,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 932,
+    "name": "Colar de Ouro 2",
+    "icon": "📿",
+    "price": 160,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 933,
+    "name": "Colar de Ouro 3",
+    "icon": "📿",
+    "price": 165,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 934,
+    "name": "Colar de Ouro 4",
+    "icon": "📿",
+    "price": 170,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 935,
+    "name": "Colar de Ouro 5",
+    "icon": "📿",
+    "price": 175,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 936,
+    "name": "Colar de Ouro 6",
+    "icon": "📿",
+    "price": 180,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 937,
+    "name": "Colar de Ouro 7",
+    "icon": "📿",
+    "price": 185,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 938,
+    "name": "Colar de Ouro 8",
+    "icon": "📿",
+    "price": 190,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 939,
+    "name": "Colar de Ouro 9",
+    "icon": "📿",
+    "price": 195,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 940,
+    "name": "Colar de Ouro 10",
+    "icon": "📿",
+    "price": 200,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 941,
+    "name": "Anel Brilhante 1",
+    "icon": "💍",
+    "price": 125,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 942,
+    "name": "Anel Brilhante 2",
+    "icon": "💍",
+    "price": 130,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 943,
+    "name": "Anel Brilhante 3",
+    "icon": "💍",
+    "price": 135,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 944,
+    "name": "Anel Brilhante 4",
+    "icon": "💍",
+    "price": 140,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 945,
+    "name": "Anel Brilhante 5",
+    "icon": "💍",
+    "price": 145,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 946,
+    "name": "Anel Brilhante 6",
+    "icon": "💍",
+    "price": 150,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 947,
+    "name": "Anel Brilhante 7",
+    "icon": "💍",
+    "price": 155,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 948,
+    "name": "Anel Brilhante 8",
+    "icon": "💍",
+    "price": 160,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 949,
+    "name": "Anel Brilhante 9",
+    "icon": "💍",
+    "price": 165,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 950,
+    "name": "Anel Brilhante 10",
+    "icon": "💍",
+    "price": 170,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 951,
+    "name": "Pulseira Mágica 1",
+    "icon": "⌚",
+    "price": 105,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 952,
+    "name": "Pulseira Mágica 2",
+    "icon": "⌚",
+    "price": 110,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 953,
+    "name": "Pulseira Mágica 3",
+    "icon": "⌚",
+    "price": 115,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 954,
+    "name": "Pulseira Mágica 4",
+    "icon": "⌚",
+    "price": 120,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 955,
+    "name": "Pulseira Mágica 5",
+    "icon": "⌚",
+    "price": 125,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 956,
+    "name": "Pulseira Mágica 6",
+    "icon": "⌚",
+    "price": 130,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 957,
+    "name": "Pulseira Mágica 7",
+    "icon": "⌚",
+    "price": 135,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 958,
+    "name": "Pulseira Mágica 8",
+    "icon": "⌚",
+    "price": 140,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 959,
+    "name": "Pulseira Mágica 9",
+    "icon": "⌚",
+    "price": 145,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 960,
+    "name": "Pulseira Mágica 10",
+    "icon": "⌚",
+    "price": 150,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 961,
+    "name": "Brinco de Diamante 1",
+    "icon": "💎",
+    "price": 145,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 962,
+    "name": "Brinco de Diamante 2",
+    "icon": "💎",
+    "price": 150,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 963,
+    "name": "Brinco de Diamante 3",
+    "icon": "💎",
+    "price": 155,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 964,
+    "name": "Brinco de Diamante 4",
+    "icon": "💎",
+    "price": 160,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 965,
+    "name": "Brinco de Diamante 5",
+    "icon": "💎",
+    "price": 165,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 966,
+    "name": "Brinco de Diamante 6",
+    "icon": "💎",
+    "price": 170,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 967,
+    "name": "Brinco de Diamante 7",
+    "icon": "💎",
+    "price": 175,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 968,
+    "name": "Brinco de Diamante 8",
+    "icon": "💎",
+    "price": 180,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 969,
+    "name": "Brinco de Diamante 9",
+    "icon": "💎",
+    "price": 185,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 970,
+    "name": "Brinco de Diamante 10",
+    "icon": "💎",
+    "price": 190,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 971,
+    "name": "Lenço Colorido 1",
+    "icon": "🧣",
+    "price": 55,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 972,
+    "name": "Lenço Colorido 2",
+    "icon": "🧣",
+    "price": 60,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 973,
+    "name": "Lenço Colorido 3",
+    "icon": "🧣",
+    "price": 65,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 974,
+    "name": "Lenço Colorido 4",
+    "icon": "🧣",
+    "price": 70,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 975,
+    "name": "Lenço Colorido 5",
+    "icon": "🧣",
+    "price": 75,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 976,
+    "name": "Lenço Colorido 6",
+    "icon": "🧣",
+    "price": 80,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 977,
+    "name": "Lenço Colorido 7",
+    "icon": "🧣",
+    "price": 85,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 978,
+    "name": "Lenço Colorido 8",
+    "icon": "🧣",
+    "price": 90,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 979,
+    "name": "Lenço Colorido 9",
+    "icon": "🧣",
+    "price": 95,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 980,
+    "name": "Lenço Colorido 10",
+    "icon": "🧣",
+    "price": 100,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 981,
+    "name": "Bolsa de Couro 1",
+    "icon": "👜",
+    "price": 115,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 982,
+    "name": "Bolsa de Couro 2",
+    "icon": "👜",
+    "price": 120,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 983,
+    "name": "Bolsa de Couro 3",
+    "icon": "👜",
+    "price": 125,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 984,
+    "name": "Bolsa de Couro 4",
+    "icon": "👜",
+    "price": 130,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 985,
+    "name": "Bolsa de Couro 5",
+    "icon": "👜",
+    "price": 135,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 986,
+    "name": "Bolsa de Couro 6",
+    "icon": "👜",
+    "price": 140,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 987,
+    "name": "Bolsa de Couro 7",
+    "icon": "👜",
+    "price": 145,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 988,
+    "name": "Bolsa de Couro 8",
+    "icon": "👜",
+    "price": 150,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 989,
+    "name": "Bolsa de Couro 9",
+    "icon": "👜",
+    "price": 155,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 990,
+    "name": "Bolsa de Couro 10",
+    "icon": "👜",
+    "price": 160,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  },
+  {
+    "id": 991,
+    "name": "Sapato Elegante 1",
+    "icon": "👞",
+    "price": 135,
+    "description": "Acessório especial #1",
+    "category": "Acessório"
+  },
+  {
+    "id": 992,
+    "name": "Sapato Elegante 2",
+    "icon": "👞",
+    "price": 140,
+    "description": "Acessório especial #2",
+    "category": "Acessório"
+  },
+  {
+    "id": 993,
+    "name": "Sapato Elegante 3",
+    "icon": "👞",
+    "price": 145,
+    "description": "Acessório especial #3",
+    "category": "Acessório"
+  },
+  {
+    "id": 994,
+    "name": "Sapato Elegante 4",
+    "icon": "👞",
+    "price": 150,
+    "description": "Acessório especial #4",
+    "category": "Acessório"
+  },
+  {
+    "id": 995,
+    "name": "Sapato Elegante 5",
+    "icon": "👞",
+    "price": 155,
+    "description": "Acessório especial #5",
+    "category": "Acessório"
+  },
+  {
+    "id": 996,
+    "name": "Sapato Elegante 6",
+    "icon": "👞",
+    "price": 160,
+    "description": "Acessório especial #6",
+    "category": "Acessório"
+  },
+  {
+    "id": 997,
+    "name": "Sapato Elegante 7",
+    "icon": "👞",
+    "price": 165,
+    "description": "Acessório especial #7",
+    "category": "Acessório"
+  },
+  {
+    "id": 998,
+    "name": "Sapato Elegante 8",
+    "icon": "👞",
+    "price": 170,
+    "description": "Acessório especial #8",
+    "category": "Acessório"
+  },
+  {
+    "id": 999,
+    "name": "Sapato Elegante 9",
+    "icon": "👞",
+    "price": 175,
+    "description": "Acessório especial #9",
+    "category": "Acessório"
+  },
+  {
+    "id": 1000,
+    "name": "Sapato Elegante 10",
+    "icon": "👞",
+    "price": 180,
+    "description": "Acessório especial #10",
+    "category": "Acessório"
+  }
+]

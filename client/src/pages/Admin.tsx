@@ -84,13 +84,13 @@ export default function Admin() {
       const saved = localStorage.getItem("capyzen_game");
       if (saved) {
         const game = JSON.parse(saved);
-        game.capybara.hunger = 100;
-        game.capybara.happiness = 100;
-        game.capybara.energy = 100;
-        game.capybara.health = 100;
-        game.capybara.poop = 0;
-        game.capybara.thirst = 100;
-        game.capybara.hygiene = 100;
+        game.hunger = 100;
+        game.happiness = 100;
+        game.energy = 100;
+        game.health = 100;
+        game.poop = 0;
+        game.thirst = 100;
+        game.hygiene = 100;
         localStorage.setItem("capyzen_game", JSON.stringify(game));
         loadAllGames();
         alert("✅ Todos os stats foram maximizados!");
@@ -292,34 +292,34 @@ export default function Admin() {
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
                       <span className="text-slate-400">Jogador:</span>
-                      <p className="font-bold">{game.player.username}</p>
+                      <p className="font-bold">{game.playerName}</p>
                     </div>
                     <div>
                       <span className="text-slate-400">Capivara:</span>
-                      <p className="font-bold">{game.player.capyName}</p>
+                      <p className="font-bold">{game.capyName}</p>
                     </div>
                     <div>
                       <span className="text-slate-400">Nível:</span>
                       <p className="font-bold text-blue-400">
-                        {game.player.level}
+                        {game.level}
                       </p>
                     </div>
                     <div>
                       <span className="text-slate-400">Moedas:</span>
                       <p className="font-bold text-yellow-400">
-                        {game.player.coins}
+                        {game.coins}
                       </p>
                     </div>
                     <div>
                       <span className="text-slate-400">Fome:</span>
                       <p className="font-bold">
-                        {Math.round(game.capybara.hunger)}%
+                        {Math.round(game.hunger)}%
                       </p>
                     </div>
                     <div>
                       <span className="text-slate-400">Felicidade:</span>
                       <p className="font-bold">
-                        {Math.round(game.capybara.happiness)}%
+                        {Math.round(game.happiness)}%
                       </p>
                     </div>
                   </div>

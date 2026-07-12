@@ -7,6 +7,7 @@ interface Note {
   time: number;
   lane: number;
   hit: boolean;
+  missed: boolean;
 }
 
 interface GameStats {
@@ -56,6 +57,10 @@ export default function FNF() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(0);
+  const notesRef = useRef<Note[]>([]);
+  const statsRef = useRef<GameStats>({ score: 0, combo: 0, health: 100 });
+  const gameOverRef = useRef(false);
+  const wonRef = useRef(false);
 
   // Gerar notas para a música
   const generateNotes = () => {
@@ -64,15 +69,21 @@ export default function FNF() {
       newNotes.push({
         id: i,
         time: i * 0.5,
-        lane: Math.floor(Math.random() * 4),
+        lane: i % 4,
         hit: false,
+        missed: false,
       });
     }
     setNotes(newNotes);
+    notesRef.current = newNotes;
   };
 
   // Iniciar jogo
   const startGame = () => {
+    if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+    gameOverRef.current = false;
+    wonRef.current = false;
+    statsRef.current = { score: 0, combo: 0, health: 100 };
     generateNotes();
     setGameStarted(true);
     setGameStats({ score: 0, combo: 0, health: 100 });
@@ -82,7 +93,34 @@ export default function FNF() {
     startTimeRef.current = Date.now();
 
     gameLoopRef.current = setInterval(() => {
-      setCurrentTime((Date.now() - startTimeRef.current) / 1000);
+      const elapsed = (Date.now() - startTimeRef.current) / 1000;
+      setCurrentTime(elapsed);
+
+      let statsChanged = false;
+      const updatedNotes = notesRef.current.map((note) => {
+        if (!note.hit && !note.missed && elapsed - note.time > 0.5) {
+          statsChanged = true;
+          statsRef.current = {
+            ...statsRef.current,
+            combo: 0,
+            health: Math.max(0, statsRef.current.health - 5),
+          };
+          return { ...note, missed: true };
+        }
+        return note;
+      });
+
+      if (statsChanged) {
+        notesRef.current = updatedNotes;
+        setNotes(updatedNotes);
+        setGameStats({ ...statsRef.current });
+
+        if (statsRef.current.health <= 0 && !gameOverRef.current) {
+          gameOverRef.current = true;
+          setGameOver(true);
+          if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+        }
+      }
     }, 16);
   };
 
@@ -160,9 +198,9 @@ export default function FNF() {
         const gameState = localStorage.getItem('capyzen_game');
         if (gameState) {
           const parsed = JSON.parse(gameState);
-          parsed.player.coins += 1000000;
+          parsed.player.coins += 500;
           localStorage.setItem('capyzen_game', JSON.stringify(parsed));
-          alert('🎉 Parabéns! Você completou todas as músicas e ganhou 1.000.000 de moedas! 💰');
+          alert('🎉 Parabéns! Você completou todas as músicas e ganhou 500 de moedas! 💰');
         }
       }
 
@@ -263,7 +301,7 @@ export default function FNF() {
             <Link href="/">
               <Button variant="outline">🐹 Jogo</Button>
             </Link>
-            <Link href="/loja">
+            <Link href="/">
               <Button variant="outline">🛍️ Loja</Button>
             </Link>
           </nav>
@@ -433,7 +471,7 @@ export default function FNF() {
             <li>✅ Pressione as teclas <span className="font-bold">A S D F</span> quando as notas chegarem ao receptor</li>
             <li>✅ Acerte as notas para ganhar pontos e aumentar o combo</li>
             <li>✅ Errar as notas reduz sua saúde</li>
-            <li>✅ Complete todas as 5 músicas para ganhar 1.000.000 de moedas! 💰</li>
+            <li>✅ Complete todas as 5 músicas para ganhar 500 de moedas! 💰</li>
           </ul>
         </div>
       </div>
