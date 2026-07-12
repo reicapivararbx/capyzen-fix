@@ -1,0 +1,11 @@
+services:
+  capyzen:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - path: .env
+        required: false
+    restart: unless-stopped
