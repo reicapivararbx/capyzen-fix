@@ -83,111 +83,133 @@ export default function GameView({ gameState, capyX, capyY }: GameViewProps) {
     }
   }
 
-  // Draw realistic capybara based on the photo
   function drawCapybaraRealistic(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
-    // Corpo principal - GRANDE, RECHONCHUDO E FOFO
-    ctx.fillStyle = '#D4C5B9'; // Bege claro
+    ctx.fillStyle = '#C4A882';
     ctx.beginPath();
-    ctx.ellipse(x, y + 20, 95, 75, 0, 0, Math.PI * 2);
+    ctx.ellipse(x - 68, y + 15, 10, 8, -0.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Barriga ainda mais clara
-    ctx.fillStyle = '#E8DDD2';
+    ctx.fillStyle = '#D4B896';
     ctx.beginPath();
-    ctx.ellipse(x, y + 25, 70, 55, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 30, 60, 50, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Cabeça MUITO GRANDE - característica principal da capivara
-    ctx.fillStyle = '#D4C5B9';
+    ctx.fillStyle = '#E8D5BF';
     ctx.beginPath();
-    ctx.arc(x, y - 35, 70, 0, Math.PI * 2);
+    ctx.ellipse(x, y + 35, 42, 35, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Focinho GRANDE E ARREDONDADO - como na foto
-    ctx.fillStyle = '#E8DDD2';
+    ctx.fillStyle = '#C4A882';
     ctx.beginPath();
-    ctx.ellipse(x + 15, y - 20, 45, 42, 0, 0, Math.PI * 2);
+    ctx.ellipse(x - 35, y + 72, 16, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(x + 35, y + 72, 16, 12, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // SEM ORELHAS VISÍVEIS (ou MUITO PEQUENAS)
-    ctx.fillStyle = '#C4B5A0';
+    ctx.fillStyle = '#B89B78';
     ctx.beginPath();
-    ctx.arc(x - 50, y - 65, 8, 0, Math.PI * 2);
+    ctx.ellipse(x - 35, y + 80, 14, 8, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 50, y - 65, 8, 0, Math.PI * 2);
+    ctx.ellipse(x + 35, y + 80, 14, 8, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Olhos PEQUENOS E REDONDOS (não grandes como antes)
+    ctx.fillStyle = '#D4B896';
+    ctx.beginPath();
+    ctx.arc(x, y - 25, 62, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#E8C8A8';
+    ctx.beginPath();
+    ctx.ellipse(x - 35, y - 10, 18, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(x + 35, y - 10, 18, 14, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#E8D5BF';
+    ctx.beginPath();
+    ctx.ellipse(x + 10, y - 8, 35, 30, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#C4A882';
+    ctx.beginPath();
+    ctx.ellipse(x - 45, y - 65, 12, 10, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#E8C8A8';
+    ctx.beginPath();
+    ctx.ellipse(x - 45, y - 65, 7, 6, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#C4A882';
+    ctx.beginPath();
+    ctx.ellipse(x + 45, y - 65, 12, 10, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#E8C8A8';
+    ctx.beginPath();
+    ctx.ellipse(x + 45, y - 65, 7, 6, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
     ctx.fillStyle = '#2C2C2C';
     ctx.beginPath();
-    ctx.arc(x - 10, y - 50, 7, 0, Math.PI * 2);
+    ctx.ellipse(x - 15, y - 30, 10, 11, 0, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 30, y - 50, 7, 0, Math.PI * 2);
+    ctx.ellipse(x + 25, y - 30, 10, 11, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Brilho nos olhos
     ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
-    ctx.arc(x - 8, y - 52, 3, 0, Math.PI * 2);
+    ctx.arc(x - 12, y - 33, 5, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 32, y - 52, 3, 0, Math.PI * 2);
+    ctx.arc(x + 28, y - 33, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Nariz GRANDE, AZULADO/CINZENTO - como na foto
-    ctx.fillStyle = '#9BA8B5'; // Cinza azulado
+    ctx.fillStyle = '#FFFFFF';
     ctx.beginPath();
-    ctx.ellipse(x + 20, y - 10, 15, 13, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Narinas
-    ctx.fillStyle = '#6B7A8A';
-    ctx.beginPath();
-    ctx.arc(x + 12, y - 10, 4, 0, Math.PI * 2);
+    ctx.arc(x - 18, y - 27, 2.5, 0, Math.PI * 2);
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(x + 28, y - 10, 4, 0, Math.PI * 2);
+    ctx.arc(x + 22, y - 27, 2.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Boca - expressão dócil
-    ctx.strokeStyle = '#9BA8B5';
-    ctx.lineWidth = 2;
+    ctx.fillStyle = '#8B7B6B';
     ctx.beginPath();
-    ctx.arc(x + 20, y + 5, 12, 0, Math.PI, false);
-    ctx.stroke();
+    ctx.ellipse(x + 10, y - 8, 8, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-    // Patas dianteiras - CURTAS E GROSSAS
-    ctx.fillStyle = '#D4C5B9';
-    ctx.fillRect(x - 60, y + 70, 32, 50);
-    ctx.fillRect(x + 30, y + 70, 32, 50);
+    ctx.fillStyle = '#A89888';
+    ctx.beginPath();
+    ctx.arc(x + 8, y - 10, 3, 0, Math.PI * 2);
+    ctx.fill();
 
-    // Patas traseiras - CURTAS E GROSSAS
-    ctx.fillStyle = '#C4B5A0';
-    ctx.fillRect(x - 70, y + 50, 25, 45);
-    ctx.fillRect(x + 45, y + 50, 25, 45);
-
-    // Cauda fofa
-    ctx.strokeStyle = '#D4C5B9';
-    ctx.lineWidth = 28;
+    ctx.strokeStyle = '#8B7B6B';
+    ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.beginPath();
-    ctx.moveTo(x - 85, y + 25);
-    ctx.quadraticCurveTo(x - 150, y - 10, x - 120, y - 85);
+    ctx.arc(x, y + 2, 14, 0.15, Math.PI - 0.15, false);
     ctx.stroke();
 
-    // Sombreado para profundidade
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillStyle = 'rgba(255, 150, 150, 0.35)';
     ctx.beginPath();
-    ctx.ellipse(x, y + 85, 95, 15, 0, 0, Math.PI * 2);
+    ctx.ellipse(x - 30, y - 10, 12, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(x + 40, y - 10, 12, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+    ctx.beginPath();
+    ctx.ellipse(x, y + 88, 65, 10, 0, 0, Math.PI * 2);
     ctx.fill();
 
     // Draw equipped items
     if (equippedItems.includes('hat')) {
       ctx.fillStyle = '#FF6B6B';
       ctx.beginPath();
-      ctx.arc(x, y - 105, 20, 0, Math.PI * 2);
+      ctx.arc(x, y - 87, 18, 0, Math.PI * 2);
       ctx.fill();
     }
   }

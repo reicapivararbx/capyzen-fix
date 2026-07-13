@@ -30,6 +30,7 @@ interface Song {
 }
 
 export default function FNF() {
+  const [platform, setPlatform] = useState<'pc' | 'mobile' | null>(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameStats, setGameStats] = useState<GameStats>({
     score: 0,
@@ -124,9 +125,42 @@ export default function FNF() {
     }, 16);
   };
 
+  const handleLaneHit = (lane: number) => {
+    const hitNote = notes.find(
+      (n) =>
+        !n.hit &&
+        n.lane === lane &&
+        Math.abs(n.time - currentTime) < 0.2
+    );
+
+    if (hitNote) {
+      const updated = notes.map((n) => (n.id === hitNote.id ? { ...n, hit: true } : n));
+      notesRef.current = updated;
+      setNotes(updated);
+      statsRef.current = {
+        ...statsRef.current,
+        score: statsRef.current.score + 100,
+        combo: statsRef.current.combo + 1,
+      };
+      setGameStats({ ...statsRef.current });
+    } else {
+      statsRef.current = {
+        ...statsRef.current,
+        combo: 0,
+        health: Math.max(0, statsRef.current.health - 10),
+      };
+      setGameStats({ ...statsRef.current });
+      if (statsRef.current.health <= 0 && !gameOverRef.current) {
+        gameOverRef.current = true;
+        setGameOver(true);
+        if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+      }
+    }
+  };
+
   // Detectar tecla pressionada com eventos otimizados
   useEffect(() => {
-    if (!gameStarted || gameOver || won) return;
+    if (!gameStarted || gameOver || won || platform !== 'pc') return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const keyMap: Record<string, number> = {
@@ -140,42 +174,12 @@ export default function FNF() {
       if (lane === undefined) return;
 
       e.preventDefault();
-
-      const hitNote = notes.find(
-        (n) =>
-          !n.hit &&
-          n.lane === lane &&
-          Math.abs(n.time - currentTime) < 0.2
-      );
-
-      if (hitNote) {
-        const updated = notes.map((n) => (n.id === hitNote.id ? { ...n, hit: true } : n));
-        notesRef.current = updated;
-        setNotes(updated);
-        statsRef.current = {
-          ...statsRef.current,
-          score: statsRef.current.score + 100,
-          combo: statsRef.current.combo + 1,
-        };
-        setGameStats({ ...statsRef.current });
-      } else {
-        statsRef.current = {
-          ...statsRef.current,
-          combo: 0,
-          health: Math.max(0, statsRef.current.health - 10),
-        };
-        setGameStats({ ...statsRef.current });
-        if (statsRef.current.health <= 0 && !gameOverRef.current) {
-          gameOverRef.current = true;
-          setGameOver(true);
-          if (gameLoopRef.current) clearInterval(gameLoopRef.current);
-        }
-      }
+      handleLaneHit(lane);
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameStarted, gameOver, won, notes, currentTime]);
+  }, [gameStarted, gameOver, won, platform, notes, currentTime]);
 
   // Verificar game over
   useEffect(() => {
@@ -314,111 +318,140 @@ export default function FNF() {
           </nav>
         </div>
 
-        <div className="bg-slate-900 rounded-lg overflow-hidden shadow-2xl">
-          <canvas
-            ref={canvasRef}
-            width={800}
-            height={600}
-            className="w-full bg-slate-800"
-          />
+        {/* Seleção de plataforma */}
+        {!platform && (
+          <div className="text-center">
+            <h2 className="text-3xl font-bold text-white mb-6">🎮 Como você vai jogar?</h2>
+            <div className="flex gap-4 justify-center">
+              <Button onClick={() => setPlatform('pc')} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-xl">
+                🖥️ PC<br/><span className="text-sm">(Teclado: A, S, D, F)</span>
+              </Button>
+              <Button onClick={() => setPlatform('mobile')} className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-xl">
+                📱 Mobile<br/><span className="text-sm">(Touch)</span>
+              </Button>
+            </div>
+          </div>
+        )}
 
-          <div className="p-6 bg-slate-800 border-t border-slate-700">
-            <div className="grid grid-cols-4 gap-4 mb-6">
-              <div className="bg-slate-700 p-4 rounded-lg">
-                <p className="text-slate-400 text-sm">Pontuação</p>
-                <p className="text-2xl font-bold text-white">{gameStats.score}</p>
-              </div>
-              <div className="bg-slate-700 p-4 rounded-lg">
-                <p className="text-slate-400 text-sm">Combo</p>
-                <p className="text-2xl font-bold text-yellow-400">{gameStats.combo}</p>
-              </div>
-              <div className="bg-slate-700 p-4 rounded-lg">
-                <p className="text-slate-400 text-sm">Saúde</p>
-                <div className="w-full bg-slate-600 rounded-full h-2 mt-2">
-                  <div
-                    className="bg-red-500 h-2 rounded-full transition-all"
-                    style={{ width: `${gameStats.health}%` }}
-                  />
+        {platform && (
+          <div className="bg-slate-900 rounded-lg overflow-hidden shadow-2xl">
+            <canvas
+              ref={canvasRef}
+              width={800}
+              height={600}
+              className="w-full bg-slate-800"
+            />
+
+            <div className="p-6 bg-slate-800 border-t border-slate-700">
+              <div className="grid grid-cols-4 gap-4 mb-6">
+                <div className="bg-slate-700 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Pontuação</p>
+                  <p className="text-2xl font-bold text-white">{gameStats.score}</p>
+                </div>
+                <div className="bg-slate-700 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Combo</p>
+                  <p className="text-2xl font-bold text-yellow-400">{gameStats.combo}</p>
+                </div>
+                <div className="bg-slate-700 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Saúde</p>
+                  <div className="w-full bg-slate-600 rounded-full h-2 mt-2">
+                    <div
+                      className="bg-red-500 h-2 rounded-full transition-all"
+                      style={{ width: `${gameStats.health}%` }}
+                    />
+                  </div>
+                </div>
+                <div className="bg-slate-700 p-4 rounded-lg">
+                  <p className="text-slate-400 text-sm">Tempo</p>
+                  <p className="text-2xl font-bold text-white">{currentTime.toFixed(1)}s</p>
                 </div>
               </div>
-              <div className="bg-slate-700 p-4 rounded-lg">
-                <p className="text-slate-400 text-sm">Tempo</p>
-                <p className="text-2xl font-bold text-white">{currentTime.toFixed(1)}s</p>
-              </div>
-            </div>
 
-            <div className="text-center mb-6">
-              <p className="text-white text-lg mb-3">Pressione as teclas: <span className="font-bold">A S D F</span></p>
-              <div className="flex gap-2 justify-center">
-                <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">A</div>
-                <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">S</div>
-                <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">D</div>
-                <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">F</div>
-              </div>
-            </div>
-
-            <div className="flex gap-4 justify-center">
-              {!gameStarted && (
-                <Button
-                  onClick={startGame}
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-                >
-                  🎮 Começar Batalha
-                </Button>
+              {platform === 'pc' && gameStarted && !gameOver && !won && (
+                <div className="text-center mb-6">
+                  <p className="text-white text-lg mb-3">Pressione as teclas: <span className="font-bold">A S D F</span></p>
+                  <div className="flex gap-2 justify-center">
+                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">A</div>
+                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">S</div>
+                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">D</div>
+                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">F</div>
+                  </div>
+                </div>
               )}
 
-              {gameOver && (
-                <div className="text-center w-full">
-                  <p className="text-3xl font-bold text-red-500 mb-4">💔 Game Over!</p>
+              <div className="flex gap-4 justify-center">
+                {!gameStarted && (
                   <Button
                     onClick={startGame}
                     className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
                   >
-                    🔄 Tentar Novamente
+                    🎮 Começar Batalha
                   </Button>
-                </div>
-              )}
+                )}
 
-              {won && (
-                <div className="text-center w-full">
-                  <p className="text-3xl font-bold text-green-500 mb-4">🎉 Vitória!</p>
-                  <p className="text-white text-xl mb-4">Pontuação Final: {gameStats.score}</p>
-                  <div className="flex gap-2 justify-center flex-wrap">
-                    {currentSongIndex < songs.length - 1 ? (
-                      <Button
-                        onClick={() => {
-                          setCurrentSongIndex(currentSongIndex + 1);
-                          setGameStarted(false);
-                          setWon(false);
-                        }}
-                        className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-                      >
-                        ➡️ Próxima Música
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => {
-                          setCurrentSongIndex(0);
-                          setGameStarted(false);
-                          setWon(false);
-                        }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
-                      >
-                        🔄 Recomeçar do Início
-                      </Button>
-                    )}
+                {gameOver && (
+                  <div className="text-center w-full">
+                    <p className="text-3xl font-bold text-red-500 mb-4">💔 Game Over!</p>
                     <Button
-                      onClick={() => setShowAchievements(true)}
-                      className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 text-lg"
+                      onClick={startGame}
+                      className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
                     >
-                      🏆 Conquistas
+                      🔄 Tentar Novamente
                     </Button>
                   </div>
-                </div>
-              )}
+                )}
+
+                {won && (
+                  <div className="text-center w-full">
+                    <p className="text-3xl font-bold text-green-500 mb-4">🎉 Vitória!</p>
+                    <p className="text-white text-xl mb-4">Pontuação Final: {gameStats.score}</p>
+                    <div className="flex gap-2 justify-center flex-wrap">
+                      {currentSongIndex < songs.length - 1 ? (
+                        <Button
+                          onClick={() => {
+                            setCurrentSongIndex(currentSongIndex + 1);
+                            setGameStarted(false);
+                            setWon(false);
+                          }}
+                          className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
+                        >
+                          ➡️ Próxima Música
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            setCurrentSongIndex(0);
+                            setGameStarted(false);
+                            setWon(false);
+                          }}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                        >
+                          🔄 Recomeçar do Início
+                        </Button>
+                      )}
+                      <Button
+                        onClick={() => setShowAchievements(true)}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 text-lg"
+                      >
+                        🏆 Conquistas
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
+        {/* Botões touch para mobile */}
+        {platform === 'mobile' && gameStarted && !gameOver && !won && (
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/90 flex gap-2 justify-center">
+            <button onTouchStart={() => handleLaneHit(0)} className="w-20 h-20 bg-blue-600 rounded-xl text-white font-bold text-2xl active:bg-blue-800">A</button>
+            <button onTouchStart={() => handleLaneHit(1)} className="w-20 h-20 bg-green-600 rounded-xl text-white font-bold text-2xl active:bg-green-800">S</button>
+            <button onTouchStart={() => handleLaneHit(2)} className="w-20 h-20 bg-yellow-600 rounded-xl text-white font-bold text-2xl active:bg-yellow-800">D</button>
+            <button onTouchStart={() => handleLaneHit(3)} className="w-20 h-20 bg-red-600 rounded-xl text-white font-bold text-2xl active:bg-red-800">F</button>
+          </div>
+        )}
 
         {/* Progresso das Músicas */}
         <div className="mt-8 bg-slate-800 p-6 rounded-lg text-white">
