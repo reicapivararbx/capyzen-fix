@@ -56,6 +56,7 @@ export default function Home() {
     };
     setGameState(newState);
     setIsLoggedIn(true);
+    localStorage.setItem('capyzen_start', new Date().toISOString());
     localStorage.setItem('capyzen_game', JSON.stringify(newState));
   };
 
@@ -164,7 +165,10 @@ export default function Home() {
           newState.happiness = Math.max(0, newState.happiness - 0.5);
         }
 
-        newState.age = Math.floor((Date.now() - new Date(localStorage.getItem('capyzen_start') || Date.now()).getTime()) / 1000 / 60);
+        const startTime = localStorage.getItem('capyzen_start');
+        if (startTime) {
+          newState.age = Math.max(0, Math.floor((Date.now() - new Date(startTime).getTime()) / 1000 / 60));
+        }
 
         localStorage.setItem('capyzen_game', JSON.stringify(newState));
         return newState;

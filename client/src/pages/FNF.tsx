@@ -149,20 +149,27 @@ export default function FNF() {
       );
 
       if (hitNote) {
-        setNotes((prev) =>
-          prev.map((n) => (n.id === hitNote.id ? { ...n, hit: true } : n))
-        );
-        setGameStats((prev) => ({
-          ...prev,
-          score: prev.score + 100,
-          combo: prev.combo + 1,
-        }));
+        const updated = notes.map((n) => (n.id === hitNote.id ? { ...n, hit: true } : n));
+        notesRef.current = updated;
+        setNotes(updated);
+        statsRef.current = {
+          ...statsRef.current,
+          score: statsRef.current.score + 100,
+          combo: statsRef.current.combo + 1,
+        };
+        setGameStats({ ...statsRef.current });
       } else {
-        setGameStats((prev) => ({
-          ...prev,
+        statsRef.current = {
+          ...statsRef.current,
           combo: 0,
-          health: Math.max(0, prev.health - 10),
-        }));
+          health: Math.max(0, statsRef.current.health - 10),
+        };
+        setGameStats({ ...statsRef.current });
+        if (statsRef.current.health <= 0 && !gameOverRef.current) {
+          gameOverRef.current = true;
+          setGameOver(true);
+          if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+        }
       }
     };
 
@@ -180,7 +187,7 @@ export default function FNF() {
 
   // Verificar vitória e desbloquear conquistas
   useEffect(() => {
-    if (gameStarted && notes.length > 0 && notes.every((n) => n.hit)) {
+    if (gameStarted && notes.length > 0 && notes.every((n) => n.hit || n.missed) && !gameOverRef.current) {
       setWon(true);
       if (gameLoopRef.current) clearInterval(gameLoopRef.current);
 
@@ -244,7 +251,7 @@ export default function FNF() {
       if (note.hit) return;
 
       const x = note.lane * laneWidth + laneWidth / 2;
-      const y = laneY - (currentTime - note.time) * 200;
+      const y = laneY + (currentTime - note.time) * 200;
 
       if (y < -50 || y > canvas.height) return;
 
