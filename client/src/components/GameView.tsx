@@ -55,8 +55,8 @@ export default function GameView({ gameState, capyX, capyY }: GameViewProps) {
     drawFlower(ctx, 350, 320, '#FF69B4');
     drawFlower(ctx, 480, 330, '#FFB6C1');
 
-    // Draw capybara - USANDO IMAGEM REAL
-    drawCapybaraWithImage(ctx, capyX, capyY, gameState.equippedItems);
+    // Draw capybara - procedurally drawn
+    drawCapybaraRealistic(ctx, capyX, capyY, gameState.equippedItems);
 
     // Draw name and level
     ctx.fillStyle = '#2C3E50';
@@ -68,18 +68,6 @@ export default function GameView({ gameState, capyX, capyY }: GameViewProps) {
     ctx.fillStyle = '#555';
     ctx.fillText(`Lv${gameState.level}`, capyX, capyY - 110);
   }, [gameState, capyX, capyY]);
-
-  // Draw capybara using the real image
-  function drawCapybaraWithImage(ctx: CanvasRenderingContext2D, x: number, y: number, equippedItems: string[]) {
-    const img = new Image();
-    img.src = '/capybara.png';
-    img.onload = () => {
-      ctx.drawImage(img, x - 50, y - 50, 100, 100);
-      equippedItems.forEach((item, idx) => {
-        drawItemOnCapybara(ctx, x, y - 60 - (idx * 25), item);
-      });
-    };
-  }
 
   function drawItemOnCapybara(ctx: CanvasRenderingContext2D, x: number, y: number, item: string) {
     if (item.includes('food')) {
