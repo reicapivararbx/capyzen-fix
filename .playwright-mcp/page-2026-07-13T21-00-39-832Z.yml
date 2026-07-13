@@ -1,0 +1,4 @@
+- generic [ref=e4]:
+  - heading "An unexpected error occurred." [level=2] [ref=e7]
+  - generic [ref=e8]: "TypeError: Invalid URL at l1 (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:97:8428) at R3 (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:97:8683) at _3 (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:97:14618) at Tl (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:48100) at Zl (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:70901) at bm (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:81233) at Zm (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:117003) at Tv (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:116049) at yu (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:115881) at Vm (https://dev.zanona.com.br/matteo/assets/index--KoVHHgh.js:48:112674)"
+  - button "Reload Page" [ref=e10] [cursor=pointer]
