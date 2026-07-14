@@ -2,51 +2,42 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
+import { loadGameState, updateGameState } from "@/lib/game-save";
+import type { GameState } from "@/types/game";
 import shopItems from "@shared/shop-items.json";
 
 const ITEMS_PER_PAGE = 50;
 
 export default function Shop() {
-  const [gameState, setGameState] = useState<any>(null);
+  const [gameState, setGameState] = useState<GameState | null>(null);
   const [notification, setNotification] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("capyzen_game");
-      if (saved) {
-        setGameState(JSON.parse(saved));
-      }
-    } catch (e) {
-      console.error("Erro ao carregar:", e);
+    const state = loadGameState();
+    if (state.playerName || state.capyName) {
+      setGameState(state);
+    } else {
+      setGameState(null);
     }
   }, []);
 
   const buyItem = (item: any) => {
     if (!gameState) return;
 
-    if (gameState.player.coins < item.price) {
+    if (gameState.coins < item.price) {
       setNotification("❌ Moedas insuficientes!");
       setTimeout(() => setNotification(""), 3000);
       return;
     }
 
-    const updated = {
-      ...gameState,
-      player: {
-        ...gameState.player,
-        coins: gameState.player.coins - item.price,
-      },
-      capybara: {
-        ...gameState.capybara,
-        equippedItems: [...gameState.capybara.equippedItems, item.name],
-      },
-    };
-
+    const updated = updateGameState({
+      coins: gameState.coins - item.price,
+      equippedItems: [...gameState.equippedItems, item.name],
+    });
     setGameState(updated);
-    localStorage.setItem("capyzen_game", JSON.stringify(updated));
     setNotification(`✅ Comprou ${item.name}! A capivara está usando agora!`);
     setTimeout(() => setNotification(""), 3000);
   };
@@ -70,7 +61,13 @@ export default function Shop() {
   if (!gameState) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <p className="text-slate-400">Carregando...</p>
+        <div className="text-center">
+          <p className="text-slate-400 text-lg mb-4">Nenhum jogo salvo encontrado</p>
+          <p className="text-slate-500 text-sm mb-6">Crie um novo jogo antes de visitar a loja.</p>
+          <Button variant="outline" onClick={() => window.location.href = '/'}>
+            🐹 Criar Novo Jogo
+          </Button>
+        </div>
       </div>
     );
   }
@@ -99,7 +96,7 @@ export default function Shop() {
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold">Suas Moedas</h2>
             <div className="text-3xl font-bold text-yellow-400">
-              💰 {gameState.player.coins}
+              💰 {gameState.coins}
             </div>
           </div>
         </Card>

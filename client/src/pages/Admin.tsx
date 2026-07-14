@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
+import { loadGameState, saveGameState, updateGameState, DEFAULT_GAME_STATE } from "@/lib/game-save";
+import type { GameState } from "@/types/game";
 
 export default function Admin() {
   const [authStep, setAuthStep] = useState<"password" | "question" | "authenticated">("password");
@@ -9,7 +11,7 @@ export default function Admin() {
   const [passwordError, setPasswordError] = useState("");
   const [questionAnswer, setQuestionAnswer] = useState("");
   const [questionError, setQuestionError] = useState("");
-  const [allGames, setAllGames] = useState<any[]>([]);
+  const [allGames, setAllGames] = useState<GameState[]>([]);
 
   // Senhas válidas
   const VALID_PASSWORDS = [
@@ -45,75 +47,61 @@ export default function Admin() {
   };
 
   const loadAllGames = () => {
-    try {
-      const saved = localStorage.getItem("capyzen_game");
-      if (saved) {
-        const game = JSON.parse(saved);
-        setAllGames([game]);
-      }
-    } catch (e) {
-      console.error("Erro ao carregar:", e);
+    const state = loadGameState();
+    if (state.playerName || state.capyName) {
+      setAllGames([state]);
+    } else {
+      setAllGames([]);
     }
   };
 
   const resetAllData = () => {
     if (confirm("Tem certeza que deseja resetar TODOS os dados?")) {
-      localStorage.removeItem("capyzen_game");
+      saveGameState({ ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_GAME_STATE.inventory } });
       setAllGames([]);
       alert("Todos os dados foram deletados!");
     }
   };
 
   const giveCoins = (amount: number) => {
-    try {
-      const saved = localStorage.getItem("capyzen_game");
-      if (saved) {
-        const game = JSON.parse(saved);
-        game.player.coins += amount;
-        localStorage.setItem("capyzen_game", JSON.stringify(game));
-        loadAllGames();
-        alert(`✅ ${amount} moedas adicionadas!`);
-      }
-    } catch (e) {
-      console.error("Erro:", e);
+    const state = loadGameState();
+    if (!state.playerName && !state.capyName) {
+      alert("Nenhum jogo salvo encontrado!");
+      return;
     }
+    const updated = updateGameState({ coins: state.coins + amount });
+    setAllGames([updated]);
+    alert(`✅ ${amount} moedas adicionadas!`);
   };
 
   const setMaxStats = () => {
-    try {
-      const saved = localStorage.getItem("capyzen_game");
-      if (saved) {
-        const game = JSON.parse(saved);
-        game.hunger = 100;
-        game.happiness = 100;
-        game.energy = 100;
-        game.health = 100;
-        game.poop = 0;
-        game.thirst = 100;
-        game.hygiene = 100;
-        localStorage.setItem("capyzen_game", JSON.stringify(game));
-        loadAllGames();
-        alert("✅ Todos os stats foram maximizados!");
-      }
-    } catch (e) {
-      console.error("Erro:", e);
+    const state = loadGameState();
+    if (!state.playerName && !state.capyName) {
+      alert("Nenhum jogo salvo encontrado!");
+      return;
     }
+    const updated = updateGameState({
+      hunger: 100,
+      happiness: 100,
+      energy: 100,
+      health: 100,
+      poop: 0,
+      thirst: 100,
+      hygiene: 100,
+    });
+    loadAllGames();
+    alert("✅ Todos os stats foram maximizados!");
   };
 
   const levelUp = () => {
-    try {
-      const saved = localStorage.getItem("capyzen_game");
-      if (saved) {
-        const game = JSON.parse(saved);
-        game.player.level += 1;
-        game.player.xp = 0;
-        localStorage.setItem("capyzen_game", JSON.stringify(game));
-        loadAllGames();
-        alert("✅ Nível aumentado!");
-      }
-    } catch (e) {
-      console.error("Erro:", e);
+    const state = loadGameState();
+    if (!state.playerName && !state.capyName) {
+      alert("Nenhum jogo salvo encontrado!");
+      return;
     }
+    const updated = updateGameState({ level: state.level + 1, xp: 0 });
+    setAllGames([updated]);
+    alert("✅ Nível aumentado!");
   };
 
   // Tela de Senha
