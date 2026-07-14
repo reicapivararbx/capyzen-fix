@@ -1,134 +1,115 @@
-# CapyZen Game - TODO
+# CapyZen Game - Status real do MVP
 
-## Bugs a Corrigir
-- [x] Corrigir bugs gerais do jogo
-- [x] Consertar barrinhas que não se mexem
-- [x] Melhorar UI do jogo inteiro
+> Este documento reflete o estado real do projeto. Itens marcados como concluídos possuem código e testes no repositório.
 
-## Painel Admin
-- [x] Pedir senha apenas uma vez (não pedir novamente ao fechar)
-- [x] Adicionar opção "Fechar com Senha" no painel
+---
 
-## Testes
-- [x] Testar TODAS as funcionalidades do jogo
-- [x] Criar testes Vitest para lógica do jogo (35 testes)
-- [x] Todos os testes passando
+## ✅ Concluído (com evidência)
 
-## Funcionalidades Implementadas
-- [x] Sistema de login com root/root
-- [x] Criação de usuários
-- [x] 26 comidas na loja
-- [x] 50+ conquistas
-- [x] 8 jogos com levels e custos
-- [x] Capivara que cresce com levels
-- [x] Sistema de poop/hunger
-- [x] Painel admin redesenhado
-- [x] UI fofinha com gradientes pastéis
-- [x] Barrinhas de status melhoradas
+### Game Core (FNF Engine — T2-T4)
+- [x] FNF rhythm game (`client/src/pages/FNF.tsx`) — 5 músicas, 4 lanes (A/S/D/F), sistema de combo/health/score, suporte PC + Mobile (touch), achievements integrados
+- [x] Canvas-based rendering com animação de notas e capivara
 
+### Safe Lifecycle (T3+T5)
+- [x] Save/Load com parse seguro (`client/src/lib/game-save.ts`) — `parseGameState`, `loadGameState`, `saveGameState`, `updateGameState`
+- [x] Migração automática de legacy nested format (`flattenLegacySave`)
+- [x] Safe parsing: nunca lança exceção em dados corrompidos
+- [x] Testes de save/load (`client/src/lib/game-save.test.ts` — 18 testes)
 
-## Bugs Reportados - Nova Sessão (CORRIGIDOS)
-- [x] Restaurar leaderboard que sumiu - CORRIGIDO! Leaderboard agora atualiza automaticamente
-- [x] Capivara sumiu - deixar mais bonita e visível - CORRIGIDO! Capivara 67% maior com olhos brilhosos
-- [x] Adicionar cooldown de 10 segundos para ganhar moedas (passiva) - CORRIGIDO! Cooldown alterado de 1s para 10s
-- [x] Barrinhas não se mexem - corrigir animação - CORRIGIDO! Barrinhas animam a cada frame (lifeLoop a cada 500ms)
-- [x] Score está absurdo - revisar lógica de cálculo - CORRIGIDO! Score soma apenas moedas + migração para saves antigos
+### UI Responsiva (T6)
+- [x] Layout responsivo com Tailwind CSS e gradientes pastéis
+- [x] Componentes shadcn/ui integrados (dialog, card, button, etc.)
+- [x] Tela de login (`client/src/components/LoginScreen.tsx`)
+- [x] Capivara com crescimento por level (`client/src/components/GameCanvas.tsx`)
+- [x] Barrinhas de status animadas (`client/src/components/StatsPanel.tsx`)
+- [x] Painel admin com autenticação em 2 passos (`client/src/pages/Admin.tsx`)
+- [x] Leaderboard com sorting e medals (`client/src/components/ImprovedLeaderboard.tsx` + backend tRPC)
 
-## Melhorias Adicionais
-- [x] Mover passiveCoinGain para dentro do useEffect (evita múltiplos intervalos)
-- [x] Adicionar botão de Ranking com modal de leaderboard
-- [x] Melhorar capivara com olhos brilhosos, nariz maior, boca sorridente
-- [x] Aumentar tamanho da capivara de 30 para 50 pixels
-- [x] Adicionar migração para resetar score antigo (> 1 milhão)
+### Admin / Shop Fix (T7)
+- [x] Admin: senha + pergunta de segurança, fechar com senha
+- [x] Loja com 1000 itens (400 Comida, 200 Roupa, 100 Acessório, 300 Boost) (`client/src/pages/Shop.tsx`, `shared/shop-items.json`)
+- [x] 26 tipos de comida no inventário (`client/src/types/game.ts`)
+- [x] Sistema de compra com verificação de moedas
 
+### Game Logic (testada)
+- [x] Sistema de level up (XP → level)
+- [x] Sistema de comida (fome, poop)
+- [x] Sistema de banheiro (reduz poop, recompensa coins)
+- [x] Sistema de carinho (aumenta happiness, custa coins)
+- [x] Sistema de trabalho (coins + XP, aumenta fome)
+- [x] Sistema de score
+- [x] Passive coin gain com cooldown de 10s
+- [x] Auth (login/criação de usuário) — `client/src/pages/Home.tsx`, `server/routers.ts`
 
-## Nova Sessão - UI de Senha Capybara + Leaderboard Melhorada
-- [x] Criar UI de Senha Capybara criativa com tema divertido - COMPLETO!
-- [x] Criar nova Leaderboard melhorada e visual - COMPLETO!
-- [x] Integrar componentes ao Home.tsx - Componentes criados, problema de renderização do botão
-- [x] Testar no browser - Todos os componentes funcionam, capivara melhorada
-- [x] Salvar checkpoint - Próximo passo
+### Testes (T1 — parte)
+- [x] 5 arquivos de teste: `client/src/pages/Home.test.ts` (36 testes), `client/src/lib/game-save.test.ts` (18 testes), `server/game-logic.test.ts` (37 testes), `server/input-validation.test.ts` (23 testes), `server/auth.logout.test.ts` (2 testes)
+- [x] Testes de validação de entrada (login, criação de usuário)
+- [x] Testes de lógica do jogo (level, food, bathroom, affection, work, score, status bars)
+- [x] Testes de proteção de localStorage (QuotaExceededError, JSON.parse)
+- [x] Testes de estado (initial state, bounds validation)
+- [x] Testes de admin (validação de senha)
+- [x] Testes de game over conditions
+- [x] Testes de save/load/migration
+- [x] Documento de testes manuais (`MANUAL_TESTING.md`)
 
+---
 
-## Bug Reportado - Conquistas Não Funcionam
-- [x] Investigar por que as conquistas não estão sendo desbloqueadas - CORRIGIDO!
-- [x] Corrigir a lógica de desbloqueio de conquistas - Adicionado unlockAchievement() e useEffect
-- [x] Testar todas as conquistas no browser - Funcionando perfeitamente!
+## 🔄 Em andamento / Parcial
 
+- **Achievements**: Hook `useAchievements.ts` existe com unlock + persistência, mas apenas 3 achievements definidos (no FNF.tsx). Sem definição central de 50+ conquistas.
+- **Leaderboard**: Frontend + backend tRPC implementados, mas apenas score/level sorting. Sem histórico ou filtros avançados.
+- **Error Boundary**: `ErrorBoundary.tsx` existe mas é genérico (sem fallback específico por componente).
+- **Custom hooks**: `useAchievements`, `useGameState`, `useCooldown`, `useGameAuth` existem, mas `useGameState` ainda tem `any` e lógica de sync imperfeita.
 
-## 🔍 AUDITORIA COMPLETA DO JOGO
-
-### Fase 1: Auditoria de Bugs - COMPLETA!
-- [x] Bug #1: Remover console.log de produção - CORRIGIDO!
-- [x] Bug #2: Validar entrada em handleLogin e handleCreateUser - CORRIGIDO!
-- [x] Bug #3: Adicionar try-catch em JSON.parse - CORRIGIDO!
-- [x] Bug #4: Sincronização de stateRef - VERIFICADO (OK)
-- [x] Bug #5: Otimizar setTimeout (cleanup) - CORRIGIDO (hook useCooldown)!
-- [x] Bug #6: Reduzir type safety (any) - VERIFICADO (OK)
-- [x] Bug #7: Revisar código do servidor (routers.ts, db.ts) - VERIFICADO (OK)
-- [x] Bug #8: Verificar limites de localStorage - CORRIGIDO (try-catch)!
-- [x] Bug #9: Verificar vazamento de memória - VERIFICADO (OK)
-- [x] Bug #10: Revisar performance do canvas - CORRIGIDO (otimizado useEffect)!
-
-### Fase 2: Testes Completos - COMPLETA!
-- [x] Criar 19 testes de validacao de entrada
-- [x] Executar 54 testes Vitest (todos passando)
-- [x] Testar logica de jogo (34 testes)
-- [x] Testar autenticacao (1 teste)
-- [x] Testar validacao de entrada
-- [x] Testar protecao de localStorage
-- [x] Criar documento de testes manuais (MANUAL_TESTING.md)
-- [x] Testar Trabalhar (Work) - validado em testes
-- [x] Testar Comer (Feed) - validado em testes
-- [x] Testar Banheiro (Bathroom) - validado em testes
-- [x] Testar Carinho (Affection) - validado em testes
-- [x] Testar Loja (Shop) - validado em testes
-- [x] Testar Cores (Colors) - validado em testes
-- [x] Testar Jogos (Games) - validado em testes
-- [x] Testar Conquistas (Achievements) - validado em testes
-- [x] Testar Progresso (Save/Load/Delete) - validado em testes
-- [x] Testar Admin Panel - validado em testes
-- [x] Testar Ranking - validado em testes
-- [x] Testar Reviver - validado em testes
-- [x] Testar Sair (Logout) - validado em testes
-
-### Fase 3: Refatoração e Otimização
-- [ ] Extrair funções grandes em componentes menores
+### Refatoração e Otimização (parcial)
+- [ ] Extrair funções grandes em componentes menores (Home.tsx com 346 linhas, FNF.tsx com 520)
 - [ ] Adicionar tipos explícitos (reduzir 'any')
 - [ ] Otimizar renderização do canvas
 - [ ] Implementar lazy loading para modals
-- [ ] Adicionar error boundaries
-- [ ] Melhorar estrutura de pastas
-- [ ] Documentar funções principais
-- [ ] Adicionar comentários em código complexo
-- [ ] Refatorar handleLogin e handleCreateUser
-- [ ] Criar custom hooks para lógica reutilizável
+- [ ] Documentar funções principais com JSDoc
 
-### Fase 4: Redesenho de UIs
-- [ ] Redesenhar tela de login
-- [ ] Redesenhar tela principal do jogo
-- [ ] Redesenhar modal de loja
-- [ ] Redesenhar modal de conquistas
-- [ ] Redesenhar modal de ranking
-- [ ] Redesenhar painel admin
+---
 
-### Fase 5: Sistema de Chat
-- [ ] Chat Global
-- [ ] Chat Local
-- [ ] Chat Privado (DM)
-- [ ] Chat de Time
-- [ ] Histórico de mensagens
-- [ ] Indicador de digitação
-- [ ] Timestamps
-- [ ] Notificações sonoras
-- [ ] Filtro de palavrões
-- [ ] Sistema de moderação
+## 📋 Backlog (próximas rodadas)
 
-### Fase 6: Painel Administrativo
-- [ ] Autenticação em 2 etapas
-- [ ] Implementar 100 comandos admin
-- [ ] Interface do painel
+### Multiplayer / Social
+- Chat Global / Local / Privado (DM) / Time
+- Amigos, Clãs/Guildas
+- Histórico de mensagens, indicador de digitação, timestamps, notificações sonoras
+- Filtro de palavrões, sistema de moderação
+- Visitar casa de outros jogadores
 
-### Fase 7: Testes Finais
-- [ ] Testar tudo novamente
-- [ ] Salvar checkpoint final
+### Economia Avançada
+- Loja premium com gemas
+- Leilão entre jogadores
+- Banco, empréstimo, investimento
+- Roubo, seguro, taxas
+- Mercado negro
+
+### Conteúdo do Jogo
+- 8 jogos (atualmente só FNF implementado)
+- 50+ conquistas (atualmente só 3 no FNF)
+- Quests diárias/semanais
+- Passe de batalha
+- Eventos temáticos
+
+### Mundo / Exploração
+- Mapa explorável, biomas, NPCs
+- Dungeons, chefes, tesouros
+- Sistema de craft
+
+### PvP
+- Batalhas 1v1, em equipe
+- Torneios
+- Sistema de tipos (fogo, água, grama)
+
+### Painel Admin (expansão)
+- Autenticação em 2 etapas (completa)
+- 100 comandos admin
+- Interface do painel avançada
+
+### Infra
+- Backend-dependent features avançadas
+- Leaderboard em tempo real
+- Notificações push
+- Cache e performance
