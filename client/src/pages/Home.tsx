@@ -293,54 +293,51 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 flex flex-col overflow-x-hidden">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-3xl font-bold">🐹 CapyZen</h1>
-          <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[44px] min-w-[44px]">
-            🚪 Sair
-          </Button>
+      <div className="max-w-7xl mx-auto w-full">
+        {/* Header + Nav */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold shrink-0">🐹 CapyZen</h1>
+          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+            <Button className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px] text-sm sm:text-base">
+              🛍️ Loja
+            </Button>
+            <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[44px] text-sm sm:text-base">
+              ⚙️ Admin
+            </Button>
+            <Button onClick={() => window.location.href = '/matteo/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[44px] text-sm sm:text-base">
+              🎵 FNF
+            </Button>
+            <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[44px] min-w-[44px] text-sm sm:text-base">
+              🚪 Sair
+            </Button>
+          </div>
         </div>
 
+        {/* Main area: canvas + stats + actions */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-          {/* Canvas */}
-          <div className="lg:col-span-3">
+          {/* Canvas + Actions column */}
+          <div className="lg:col-span-3 flex flex-col gap-4">
             <div className="bg-gray-800 rounded-lg p-4 border border-purple-400">
               <div className="aspect-[560/400] max-w-full">
                 <GameView gameState={gameState} capyX={capyX} capyY={capyY} />
               </div>
             </div>
+            <GameControls onAction={performAction} />
           </div>
 
-          {/* Stats */}
-          <StatsPanel gameState={gameState} />
-        </div>
-
-        {/* Actions */}
-        <GameControls onAction={performAction} />
-
-        {/* Navigation */}
-        <div className="mt-4 flex gap-2 flex-wrap">
-          <Button className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 min-h-[44px]">
-            💾 Salvar Jogo
-          </Button>
-          <Button className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px]">
-            🛍️ Loja
-          </Button>
-          <Button className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[44px]">
-            ⚙️ Admin
-          </Button>
-          <Button onClick={() => window.location.href = '/matteo/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[44px]">
-            🎵 FNF Batalha
-          </Button>
-          <Button onClick={() => setShowBugReport(true)} className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 min-h-[44px]">
-            🐛 Reportar Bug
-          </Button>
-        </div>
-
-        {/* Tip */}
-        <div className="mt-4 bg-blue-900 border border-blue-400 rounded-lg p-3 text-sm">
-          💡 <strong>Dica:</strong> Use WASD ou Setas para mover a capivara! Cuide bem dela para ganhar mais moedas e experiência.
+          {/* Stats + Tools column */}
+          <div className="flex flex-col gap-4">
+            <StatsPanel gameState={gameState} />
+            <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 min-h-[44px]">
+              💾 Salvar
+            </Button>
+            <Button onClick={() => setShowBugReport(true)} className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 min-h-[44px]">
+              🐛 Reportar Bug
+            </Button>
+            <div className="bg-blue-900/50 border border-blue-400/50 rounded-lg p-3 text-xs leading-relaxed">
+              💡 <strong>Dica:</strong> Use WASD ou Setas para mover a capivara!
+            </div>
+          </div>
         </div>
       </div>
 
