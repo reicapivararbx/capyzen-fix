@@ -95,6 +95,9 @@ function toGameState(save: GameSave): GameState {
     playerName: '',
     capyName: '',
     age: 0,
+    fnfSongsCompleted: 0,
+    fnfHighestCombo: 0,
+    millionRewardClaimed: false,
   };
 }
 

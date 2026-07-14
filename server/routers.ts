@@ -67,6 +67,9 @@ const gameStateSchema = z.object({
   playerName: z.string(),
   capyName: z.string(),
   age: z.number(),
+  fnfSongsCompleted: z.number().optional().default(0),
+  fnfHighestCombo: z.number().optional().default(0),
+  millionRewardClaimed: z.boolean().optional().default(false),
 });
 
 export const appRouter = router({

@@ -35,6 +35,9 @@ export interface GameState {
   playerName: string;
   capyName: string;
   age: number;
+  fnfSongsCompleted: number;
+  fnfHighestCombo: number;
+  millionRewardClaimed: boolean;
 }
 
 export interface Inventory {
