@@ -243,6 +243,6 @@ export default function GameView({ gameState, capyX, capyY }: GameViewProps) {
   }
 
   return (
-    <canvas ref={canvasRef} width={560} height={400} className="w-full border-2 border-purple-400 rounded" />
+    <canvas ref={canvasRef} width={560} height={400} className="w-full h-full border-2 border-purple-400 rounded" />
   );
 }

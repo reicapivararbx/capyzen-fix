@@ -13,9 +13,9 @@ const ACTIONS = [
 
 export default function GameControls({ onAction }: { onAction: (action: string) => void }) {
   return (
-    <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-2">
+    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
       {ACTIONS.map((btn) => (
-        <Button key={btn.action} onClick={() => onAction(btn.action)} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold">
+        <Button key={btn.action} onClick={() => onAction(btn.action)} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold min-h-[44px] min-w-[44px]">
           {btn.label}
         </Button>
       ))}
