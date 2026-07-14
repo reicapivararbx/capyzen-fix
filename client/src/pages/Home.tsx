@@ -239,34 +239,20 @@ export default function Home() {
   }, [isLoggedIn]);
 
   // Report bug
-  const reportBug = async () => {
+  const reportBug = () => {
     if (!bugTitle.trim() || !bugDescription.trim()) {
       alert('Por favor, preencha todos os campos!');
       return;
     }
 
-    try {
-      const response = await fetch(`/api/send-bug-report`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: bugTitle,
-          description: bugDescription,
-          player: gameState.playerName,
-          capybara: gameState.capyName,
-        }),
-      });
-
-      if (response.ok) {
-        alert('Bug reportado com sucesso! Obrigado por nos ajudar! 🐛');
-        setBugTitle('');
-        setBugDescription('');
-        setShowBugReport(false);
-      }
-    } catch (error) {
-      console.error('Erro ao reportar bug:', error);
-      alert('Erro ao reportar bug. Tente novamente.');
-    }
+    const subject = encodeURIComponent(`[CapyZen Bug] ${bugTitle}`);
+    const body = encodeURIComponent(
+      `Jogador: ${gameState.playerName}\nCapivara: ${gameState.capyName}\n\n${bugDescription}`,
+    );
+    window.open(`mailto:acontasecundaria222@gmail.com?subject=${subject}&body=${body}`, '_blank');
+    setBugTitle('');
+    setBugDescription('');
+    setShowBugReport(false);
   };
 
   if (loading) return <div className="flex items-center justify-center h-screen">Carregando...</div>;

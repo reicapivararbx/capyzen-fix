@@ -197,8 +197,7 @@ export default function FNF() {
       const score = state.score;
       const maxCombo = state.maxCombo;
       const saved = loadGameState();
-      const already = saved.fnfSongsCompleted > selectedSong;
-      const completed = already
+      const completed = !passed
         ? saved.fnfSongsCompleted
         : Math.max(saved.fnfSongsCompleted, selectedSong + 1);
       const bestCombo = Math.max(saved.fnfHighestCombo, maxCombo);
@@ -760,11 +759,11 @@ export default function FNF() {
           ))}
         </div>
       ) : (
-        <div className="flex items-center justify-center gap-6 px-4 py-2 bg-gray-950 border-t border-gray-800 text-xs text-gray-500">
-          <span>← <span className="text-gray-300">A</span></span>
-          <span>↓ <span className="text-gray-300">S</span></span>
-          <span>↑ <span className="text-gray-300">D</span></span>
-          <span>→ <span className="text-gray-300">F</span></span>
+        <div className="flex items-center justify-center gap-6 px-4 py-2 bg-gray-950 border-t border-gray-800 text-xs text-gray-400">
+          <span>Pressione <kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">A</kbd> <span className="text-gray-500">←</span></span>
+          <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">S</kbd> <span className="text-gray-500">↓</span></span>
+          <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">D</kbd> <span className="text-gray-500">↑</span></span>
+          <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">F</kbd> <span className="text-gray-500">→</span></span>
         </div>
       )}
     </div>
