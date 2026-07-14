@@ -1,520 +1,803 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'wouter';
+import {
+  generateChart,
+  createInitialState,
+  processKeyPress,
+  processKeyRelease,
+  processSongTick,
+} from '@/features/fnf/engine';
+import type {
+  Chart,
+  EngineState,
+  Lane,
+  EngineEvent,
+} from '@/features/fnf/engine';
+import { loadGameState, updateGameState } from '@/lib/game-save';
 
-interface Note {
+const SONG_NAMES = [
+  'Tropical Dawn',
+  'Pixel Storm',
+  'Neon Nights',
+  'Crystal Cave',
+  'Final Boss',
+];
+
+const LANE_COLORS = ['#ef4444', '#3b82f6', '#22c55e', '#eab308'];
+
+const LANE_DIRECTIONS: [string, string, string, string] = ['←', '↓', '↑', '→'];
+
+const LANE_FREQ: [number, number, number, number] = [262, 294, 330, 349];
+
+const LEAD_IN_MS = 2000;
+
+function computeNoteY(
+  noteTimeMs: number,
+  songPositionMs: number,
+  receptorY: number,
+  topY: number,
+): number {
+  const diff = noteTimeMs - songPositionMs;
+  if (diff > LEAD_IN_MS) return topY - 100;
+  const t = 1 - diff / LEAD_IN_MS;
+  return topY + t * (receptorY - topY);
+}
+
+class AudioManager {
+  private ctx: AudioContext | null = null;
+  private ready = false;
+
+  init(): void {
+    if (this.ctx) return;
+    try {
+      this.ctx = new AudioContext();
+    } catch {
+      /* no audio available */
+    }
+  }
+
+  resume(): void {
+    if (this.ready || !this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      void this.ctx.resume();
+    }
+    this.ready = true;
+  }
+
+  private tone(
+    freq: number,
+    dur: number,
+    vol = 0.3,
+    type: OscillatorType = 'square',
+  ): void {
+    if (!this.ctx) return;
+    try {
+      const o = this.ctx.createOscillator();
+      const g = this.ctx.createGain();
+      o.type = type;
+      o.frequency.value = freq;
+      const now = this.ctx.currentTime;
+      g.gain.setValueAtTime(vol, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + dur);
+      o.connect(g);
+      g.connect(this.ctx.destination);
+      o.start(now);
+      o.stop(now + dur);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  lane(l: Lane): void {
+    this.tone(LANE_FREQ[l], 0.08, 0.25);
+  }
+
+  miss(): void {
+    this.tone(150, 0.25, 0.15, 'sawtooth');
+  }
+
+  countdown(): void {
+    this.tone(440, 0.12, 0.2);
+  }
+
+  go(): void {
+    this.tone(660, 0.3, 0.25);
+  }
+
+  fanfare(): void {
+    [523, 659, 784, 1047].forEach((f, i) => {
+      setTimeout(() => this.tone(f, 0.3, 0.25, 'triangle'), i * 150);
+    });
+  }
+}
+
+const JUDGMENT_COLORS: Record<string, string> = {
+  perfect: '#fbbf24',
+  good: '#60a5fa',
+  miss: '#ef4444',
+};
+
+interface Popup {
   id: number;
-  time: number;
-  lane: number;
-  hit: boolean;
-  missed: boolean;
+  text: string;
+  x: number;
+  y: number;
+  life: number;
+  color: string;
 }
 
-interface GameStats {
-  score: number;
-  combo: number;
-  health: number;
-}
-
-interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  unlocked: boolean;
-}
-
-interface Song {
-  id: string;
-  name: string;
-  completed: boolean;
-}
+type Screen = 'song_select' | 'countdown' | 'playing' | 'result';
 
 export default function FNF() {
-  const [platform, setPlatform] = useState<'pc' | 'mobile' | null>(null);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [gameStats, setGameStats] = useState<GameStats>({
-    score: 0,
-    combo: 0,
-    health: 100,
+  const [screen, setScreen] = useState<Screen>('song_select');
+  const [selectedSong, setSelectedSong] = useState(0);
+  const [songsCleared, setSongsCleared] = useState<boolean[]>(() => {
+    try {
+      const s = loadGameState();
+      return [0, 1, 2, 3, 4].map((i) => s.fnfSongsCompleted > i);
+    } catch {
+      return [false, false, false, false, false];
+    }
   });
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
-  const [won, setWon] = useState(false);
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [songs, setSongs] = useState<Song[]>([
-    { id: 'song1', name: '🎵 Música 1', completed: false },
-    { id: 'song2', name: '🎵 Música 2', completed: false },
-    { id: 'song3', name: '🎵 Música 3', completed: false },
-    { id: 'song4', name: '🎵 Música 4', completed: false },
-    { id: 'song5', name: '🎵 Música 5', completed: false },
-  ]);
-  const [achievements, setAchievements] = useState<Achievement[]>([
-    { id: 'first_win', name: '🏆 Primeira Vitória', description: 'Vença uma música', unlocked: false },
-    { id: 'all_songs', name: '👑 Rei da Música', description: 'Complete todas as 5 músicas', unlocked: false },
-    { id: 'perfect_combo', name: '⭐ Combo Perfeito', description: 'Acerte 20 notas seguidas', unlocked: false },
-  ]);
-  const [showAchievements, setShowAchievements] = useState(false);
+  const [countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
+    null,
+  );
+  const [displayScore, setDisplayScore] = useState(0);
+  const [displayCombo, setDisplayCombo] = useState(0);
+  const [displayHealth, setDisplayHealth] = useState(100);
+  const [gameResult, setGameResult] = useState<{
+    score: number;
+    maxCombo: number;
+    passed: boolean;
+    millionReward: boolean;
+  } | null>(null);
+  const [touchSupported] = useState(
+    () => 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+  );
+
+  const engineRef = useRef<EngineState>(createInitialState());
+  const chartRef = useRef<Chart>(generateChart(0));
+  const audioRef = useRef<AudioManager>(new AudioManager());
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const gameLoopRef = useRef<NodeJS.Timeout | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const notesRef = useRef<Note[]>([]);
-  const statsRef = useRef<GameStats>({ score: 0, combo: 0, health: 100 });
-  const gameOverRef = useRef(false);
-  const wonRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef(0);
+  const lastFrameRef = useRef(0);
+  const popupsRef = useRef<Popup[]>([]);
+  const popupIdRef = useRef(0);
+  const displayScoreRef = useRef(0);
+  const displayComboRef = useRef(0);
+  const displayHealthRef = useRef(100);
+  const pressedKeysRef = useRef<Set<string>>(new Set());
 
-  // Gerar notas para a música
-  const generateNotes = () => {
-    const newNotes: Note[] = [];
-    for (let i = 0; i < 50; i++) {
-      newNotes.push({
-        id: i,
-        time: i * 0.5,
-        lane: i % 4,
-        hit: false,
-        missed: false,
+  useEffect(() => {
+    audioRef.current.init();
+  }, []);
+
+  const addPopup = useCallback(
+    (text: string, lane: Lane, canvasWidth: number, receptorY: number) => {
+      const laneW = Math.min((canvasWidth - 80) / 4, 120);
+      const total = laneW * 4 + 4 * 3;
+      const sx = (canvasWidth - total) / 2;
+      const x = sx + lane * (laneW + 4) + laneW / 2;
+      const color = JUDGMENT_COLORS[text] ?? '#ffffff';
+      popupsRef.current.push({
+        id: popupIdRef.current++,
+        text: text === 'perfect' ? 'PERFEITO' : text === 'good' ? 'BOM' : text === 'miss' ? 'ERROU' : 'HOLD',
+        x,
+        y: receptorY - 30,
+        life: 1,
+        color,
       });
-    }
-    setNotes(newNotes);
-    notesRef.current = newNotes;
-  };
+    },
+    [],
+  );
 
-  // Iniciar jogo
-  const startGame = () => {
-    if (gameLoopRef.current) clearInterval(gameLoopRef.current);
-    gameOverRef.current = false;
-    wonRef.current = false;
-    statsRef.current = { score: 0, combo: 0, health: 100 };
-    generateNotes();
-    setGameStarted(true);
-    setGameStats({ score: 0, combo: 0, health: 100 });
-    setGameOver(false);
-    setWon(false);
-    setCurrentTime(0);
-    startTimeRef.current = Date.now();
-
-    gameLoopRef.current = setInterval(() => {
-      const elapsed = (Date.now() - startTimeRef.current) / 1000;
-      setCurrentTime(elapsed);
-
-      let statsChanged = false;
-      const updatedNotes = notesRef.current.map((note) => {
-        if (!note.hit && !note.missed && elapsed - note.time > 0.5) {
-          statsChanged = true;
-          statsRef.current = {
-            ...statsRef.current,
-            combo: 0,
-            health: Math.max(0, statsRef.current.health - 5),
-          };
-          return { ...note, missed: true };
-        }
-        return note;
+  const handleSongClear = useCallback(
+    (state: EngineState) => {
+      const passed = state.health > 0;
+      const score = state.score;
+      const maxCombo = state.maxCombo;
+      const saved = loadGameState();
+      const already = saved.fnfSongsCompleted > selectedSong;
+      const completed = already
+        ? saved.fnfSongsCompleted
+        : Math.max(saved.fnfSongsCompleted, selectedSong + 1);
+      const bestCombo = Math.max(saved.fnfHighestCombo, maxCombo);
+      const coinsAdd = Math.floor(score / 10);
+      let finalCoins = saved.coins + coinsAdd;
+      let millionReward = false;
+      if (completed >= 5 && !saved.millionRewardClaimed) {
+        finalCoins += 1_000_000;
+        millionReward = true;
+      }
+      updateGameState({
+        fnfSongsCompleted: completed,
+        fnfHighestCombo: bestCombo,
+        coins: finalCoins,
+        millionRewardClaimed: saved.millionRewardClaimed || millionReward,
       });
+      setSongsCleared([0, 1, 2, 3, 4].map((i) => completed > i));
+      if (passed) {
+        audioRef.current.fanfare();
+      }
+      setGameResult({ score, maxCombo, passed, millionReward });
+      setScreen('result');
+    },
+    [selectedSong],
+  );
 
-      if (statsChanged) {
-        notesRef.current = updatedNotes;
-        setNotes(updatedNotes);
-        setGameStats({ ...statsRef.current });
-
-        if (statsRef.current.health <= 0 && !gameOverRef.current) {
-          gameOverRef.current = true;
-          setGameOver(true);
-          if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+  const handleEngineEvent = useCallback(
+    (event: EngineEvent, chart: Chart) => {
+      const audio = audioRef.current;
+      const canvas = canvasRef.current;
+      const cw = canvas?.width ?? 800;
+      const receptorY = (canvas?.height ?? 600) - 80;
+      switch (event.type) {
+        case 'note_hit': {
+          if (event.judgment && event.noteIndex !== undefined) {
+            const note = chart.notes[event.noteIndex];
+            audio.lane(note.lane);
+            addPopup(event.judgment, note.lane, cw, receptorY);
+          }
+          break;
+        }
+        case 'note_miss': {
+          audio.miss();
+          if (event.noteIndex !== undefined) {
+            const note = chart.notes[event.noteIndex];
+            addPopup('miss', note.lane, cw, receptorY);
+          }
+          break;
+        }
+        case 'hold_complete': {
+          if (event.noteIndex !== undefined) {
+            const note = chart.notes[event.noteIndex];
+            addPopup('good', note.lane, cw, receptorY);
+          }
+          break;
+        }
+        case 'hold_dropped': {
+          audio.miss();
+          if (event.noteIndex !== undefined) {
+            const note = chart.notes[event.noteIndex];
+            addPopup('miss', note.lane, cw, receptorY);
+          }
+          break;
+        }
+        case 'death': {
+          handleSongClear(engineRef.current);
+          break;
+        }
+        case 'song_end': {
+          handleSongClear(engineRef.current);
+          break;
         }
       }
-    }, 16);
-  };
+    },
+    [addPopup, handleSongClear],
+  );
 
-  const handleLaneHit = (lane: number) => {
-    const hitNote = notes.find(
-      (n) =>
-        !n.hit &&
-        n.lane === lane &&
-        Math.abs(n.time - currentTime) < 0.2
-    );
-
-    if (hitNote) {
-      const updated = notes.map((n) => (n.id === hitNote.id ? { ...n, hit: true } : n));
-      notesRef.current = updated;
-      setNotes(updated);
-      statsRef.current = {
-        ...statsRef.current,
-        score: statsRef.current.score + 100,
-        combo: statsRef.current.combo + 1,
-      };
-      setGameStats({ ...statsRef.current });
-    } else {
-      statsRef.current = {
-        ...statsRef.current,
-        combo: 0,
-        health: Math.max(0, statsRef.current.health - 10),
-      };
-      setGameStats({ ...statsRef.current });
-      if (statsRef.current.health <= 0 && !gameOverRef.current) {
-        gameOverRef.current = true;
-        setGameOver(true);
-        if (gameLoopRef.current) clearInterval(gameLoopRef.current);
+  const tick = useCallback(
+    (chart: Chart, dt: number) => {
+      const engine = engineRef.current;
+      if (engine.health <= 0 || engine.songEnded) return;
+      const result = processSongTick(engine, dt, chart);
+      engineRef.current = result.state;
+      for (const ev of result.events) {
+        handleEngineEvent(ev, chart);
       }
-    }
-  };
+    },
+    [handleEngineEvent],
+  );
 
-  // Detectar tecla pressionada com eventos otimizados
-  useEffect(() => {
-    if (!gameStarted || gameOver || won || platform !== 'pc') return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const keyMap: Record<string, number> = {
-        'a': 0, 'A': 0,
-        's': 1, 'S': 1,
-        'd': 2, 'D': 2,
-        'f': 3, 'F': 3,
-      };
-
-      const lane = keyMap[e.key];
-      if (lane === undefined) return;
-
-      e.preventDefault();
-      handleLaneHit(lane);
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [gameStarted, gameOver, won, platform, notes, currentTime]);
-
-  // Verificar game over
-  useEffect(() => {
-    if (gameStats.health <= 0) {
-      setGameOver(true);
-      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
-    }
-  }, [gameStats.health]);
-
-  // Verificar vitória e desbloquear conquistas
-  useEffect(() => {
-    if (gameStarted && notes.length > 0 && notes.every((n) => n.hit || n.missed) && !gameOverRef.current) {
-      setWon(true);
-      if (gameLoopRef.current) clearInterval(gameLoopRef.current);
-
-      // Marcar música como completa
-      const newSongs = [...songs];
-      newSongs[currentSongIndex].completed = true;
-      setSongs(newSongs);
-
-      // Desbloquear conquistas
-      const newAchievements = [...achievements];
-      newAchievements[0].unlocked = true;
-
-      if (newSongs.every((s) => s.completed)) {
-        newAchievements[1].unlocked = true;
-        const gameState = localStorage.getItem('capyzen_game');
-        if (gameState) {
-          const parsed = JSON.parse(gameState);
-          parsed.player.coins += 500;
-          localStorage.setItem('capyzen_game', JSON.stringify(parsed));
-          alert('🎉 Parabéns! Você completou todas as músicas e ganhou 500 de moedas! 💰');
-        }
-      }
-
-      if (gameStats.combo >= 20) {
-        newAchievements[2].unlocked = true;
-      }
-
-      setAchievements(newAchievements);
-    }
-  }, [notes, gameStarted, currentSongIndex, gameStats.combo, songs, achievements]);
-
-  // Desenhar jogo
-  useEffect(() => {
+  const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    gradient.addColorStop(0, '#16213e');
-    gradient.addColorStop(1, '#0f3460');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    const laneWidth = canvas.width / 4;
-    const laneY = canvas.height - 150;
+    const container = containerRef.current;
+    if (!container) return;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = container.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(0, 0, w, h);
+    const laneCount = 4;
+    const gap = 4;
+    const laneW = Math.min((w - 80) / laneCount, 120);
+    const totalW = laneW * laneCount + gap * (laneCount - 1);
+    const startX = (w - totalW) / 2;
+    const receptorY = h - 80;
+    const topY = 0;
+    const state = engineRef.current;
+    const chart = chartRef.current;
 
     for (let i = 0; i < 4; i++) {
-      ctx.fillStyle = i % 2 === 0 ? '#2a2a4e' : '#1f1f3a';
-      ctx.fillRect(i * laneWidth, 0, laneWidth, canvas.height);
-
-      ctx.fillStyle = '#4a90e2';
-      ctx.fillRect(i * laneWidth + 10, laneY, laneWidth - 20, 80);
-      ctx.strokeStyle = '#fff';
+      const x = startX + i * (laneW + gap);
+      const color = LANE_COLORS[i];
+      ctx.fillStyle = color + '15';
+      ctx.fillRect(x, 0, laneW, h);
+      ctx.strokeStyle = color + '40';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, 0, laneW, h);
+      ctx.fillStyle = color + '80';
+      ctx.fillRect(x, receptorY - 25, laneW, 50);
+      ctx.strokeStyle = color;
       ctx.lineWidth = 2;
-      ctx.strokeRect(i * laneWidth + 10, laneY, laneWidth - 20, 80);
+      ctx.strokeRect(x, receptorY - 25, laneW, 50);
+      drawArrow(ctx, x + laneW / 2, receptorY, i, color, 1);
     }
 
-    notes.forEach((note) => {
-      if (note.hit) return;
+    for (let i = 0; i < chart.notes.length; i++) {
+      const note = chart.notes[i];
+      const hasResult = state.noteResults.some((r) => r.noteIndex === i);
+      const isActive = state.activeHolds.get(note.lane as Lane) === i;
+      if (hasResult && !isActive) continue;
+      const headY = computeNoteY(note.timeMs, state.songPositionMs, receptorY, topY);
+      if (headY < -100 && headY > h + 100) continue;
+      const x = startX + note.lane * (laneW + gap);
+      const color = LANE_COLORS[note.lane];
+      if (note.kind === 'hold') {
+        const tailEndY = computeNoteY(
+          note.timeMs + note.durationMs,
+          state.songPositionMs,
+          receptorY,
+          topY,
+        );
+        const tTop = Math.max(0, Math.min(headY, tailEndY));
+        const tBot = Math.min(Math.max(headY, tailEndY), receptorY - 20);
+        if (tBot > tTop + 4) {
+          ctx.fillStyle = color + '50';
+          ctx.fillRect(x + 4, tTop, laneW - 8, tBot - tTop);
+        }
+      }
+      drawArrow(ctx, x + laneW / 2, headY, note.lane, color, 0.9);
+    }
 
-      const x = note.lane * laneWidth + laneWidth / 2;
-      const y = laneY + (currentTime - note.time) * 200;
+    const popups = popupsRef.current;
+    for (let i = popups.length - 1; i >= 0; i--) {
+      const p = popups[i];
+      if (p.life <= 0) continue;
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.font = 'bold 22px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(p.text, p.x, p.y);
+      ctx.restore();
+      p.life -= 0.025;
+      p.y -= 1.2;
+      if (p.life <= 0) {
+        popups.splice(i, 1);
+      }
+    }
+    const progress = state.songEnded
+      ? 1
+      : state.songPositionMs / chart.songDurationMs;
+    ctx.fillStyle = '#22c55e44';
+    ctx.fillRect(0, 0, w * progress, 3);
+    ctx.fillStyle = '#22c55e';
+    ctx.fillRect(0, 0, w * progress, 2);
+  }, []);
 
-      if (y < -50 || y > canvas.height) return;
+  useEffect(() => {
+    if (screen !== 'playing') return;
+    const chart = chartRef.current;
+    lastFrameRef.current = performance.now();
+    const loop = (now: number) => {
+      const dt = Math.min(now - lastFrameRef.current, 50);
+      lastFrameRef.current = now;
+      if (dt >= 1) {
+        tick(chart, dt);
+      }
+      drawCanvas();
+      const state = engineRef.current;
+      if (displayScoreRef.current !== state.score) {
+        displayScoreRef.current = state.score;
+        setDisplayScore(state.score);
+      }
+      if (displayComboRef.current !== state.combo) {
+        displayComboRef.current = state.combo;
+        setDisplayCombo(state.combo);
+      }
+      if (displayHealthRef.current !== state.health) {
+        displayHealthRef.current = state.health;
+        setDisplayHealth(state.health);
+      }
+      if (!state.songEnded && state.health > 0) {
+        frameRef.current = requestAnimationFrame(loop);
+      }
+    };
+    frameRef.current = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(frameRef.current);
+  }, [screen, tick, drawCanvas]);
 
-      ctx.fillStyle = '#e74c3c';
-      ctx.beginPath();
-      ctx.arc(x, y, 20, 0, Math.PI * 2);
-      ctx.fill();
+  useEffect(() => {
+    if (screen !== 'countdown') return;
+    const audio = audioRef.current;
+    audio.resume();
+    audio.countdown();
+    let step = 3;
+    const timer = setInterval(() => {
+      step--;
+      if (step > 0) {
+        setCountdownValue(step);
+        audio.countdown();
+      } else if (step === 0) {
+        setCountdownValue('GO');
+        audio.go();
+      } else {
+        clearInterval(timer);
+        setCountdownValue(null);
+        setScreen('playing');
+      }
+    }, 800);
+    return () => clearInterval(timer);
+  }, [screen]);
 
-      ctx.strokeStyle = '#fff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-    });
+  const startSong = useCallback((idx: number) => {
+    audioRef.current.resume();
+    setSelectedSong(idx);
+    const chart = generateChart(idx);
+    chartRef.current = chart;
+    engineRef.current = createInitialState();
+    popupsRef.current = [];
+    displayScoreRef.current = 0;
+    displayComboRef.current = 0;
+    displayHealthRef.current = 100;
+    setDisplayScore(0);
+    setDisplayCombo(0);
+    setDisplayHealth(100);
+    setGameResult(null);
+    setCountdownValue(3);
+    setScreen('countdown');
+  }, []);
 
-    const capyX = 50;
-    const capyY = 50;
+  useEffect(() => {
+    if (screen !== 'playing') return;
+    const down = (e: KeyboardEvent) => {
+      const lane = keyToLane(e.key);
+      if (lane === undefined) return;
+      e.preventDefault();
+      if (pressedKeysRef.current.has(e.key)) return;
+      pressedKeysRef.current.add(e.key);
+      const state = engineRef.current;
+      const chart = chartRef.current;
+      const result = processKeyPress(state, lane, state.songPositionMs, chart);
+      engineRef.current = result.state;
+      for (const ev of result.events) {
+        handleEngineEvent(ev, chart);
+      }
+    };
+    const up = (e: KeyboardEvent) => {
+      const lane = keyToLane(e.key);
+      if (lane === undefined) return;
+      e.preventDefault();
+      pressedKeysRef.current.delete(e.key);
+      const state = engineRef.current;
+      const chart = chartRef.current;
+      const result = processKeyRelease(
+        state,
+        lane,
+        state.songPositionMs,
+        chart,
+      );
+      engineRef.current = result.state;
+      for (const ev of result.events) {
+        handleEngineEvent(ev, chart);
+      }
+    };
+    window.addEventListener('keydown', down);
+    window.addEventListener('keyup', up);
+    return () => {
+      window.removeEventListener('keydown', down);
+      window.removeEventListener('keyup', up);
+      pressedKeysRef.current.clear();
+    };
+  }, [screen, handleEngineEvent]);
 
-    ctx.fillStyle = '#d4a574';
-    ctx.beginPath();
-    ctx.ellipse(capyX, capyY, 30, 40, 0, 0, Math.PI * 2);
-    ctx.fill();
+  const handleTouchPress = useCallback(
+    (lane: Lane) => {
+      const state = engineRef.current;
+      const chart = chartRef.current;
+      const result = processKeyPress(state, lane, state.songPositionMs, chart);
+      engineRef.current = result.state;
+      for (const ev of result.events) {
+        handleEngineEvent(ev, chart);
+      }
+    },
+    [handleEngineEvent],
+  );
 
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.arc(capyX - 10, capyY - 10, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(capyX + 10, capyY - 10, 5, 0, Math.PI * 2);
-    ctx.fill();
+  const handleTouchRelease = useCallback(
+    (lane: Lane) => {
+      const state = engineRef.current;
+      const chart = chartRef.current;
+      const result = processKeyRelease(
+        state,
+        lane,
+        state.songPositionMs,
+        chart,
+      );
+      engineRef.current = result.state;
+      for (const ev of result.events) {
+        handleEngineEvent(ev, chart);
+      }
+    },
+    [handleEngineEvent],
+  );
 
-    const enemyX = canvas.width - 50;
-    ctx.fillStyle = '#e74c3c';
-    ctx.beginPath();
-    ctx.ellipse(enemyX, capyY, 30, 40, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = '#000';
-    ctx.beginPath();
-    ctx.arc(enemyX - 10, capyY - 10, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(enemyX + 10, capyY - 10, 5, 0, Math.PI * 2);
-    ctx.fill();
-  }, [notes, currentTime, gameStarted]);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-cyan-600 p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">🎵 CapyZen FNF</h1>
-            <p className="text-white/80">Música {currentSongIndex + 1}/5: {songs[currentSongIndex].name}</p>
-          </div>
-          <nav className="flex gap-4">
-            <Link href="/">
-              <Button variant="outline">🐹 Jogo</Button>
-            </Link>
-            <Link href="/">
-              <Button variant="outline">🛍️ Loja</Button>
-            </Link>
-          </nav>
+  if (screen === 'song_select') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+          <h1 className="text-2xl font-bold">🎵 FNF Rhythm</h1>
+          <Link href="/">
+            <Button
+              variant="outline"
+              className="text-white border-gray-600 hover:bg-gray-800"
+            >
+              ← Voltar
+            </Button>
+          </Link>
         </div>
-
-        {/* Seleção de plataforma */}
-        {!platform && (
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white mb-6">🎮 Como você vai jogar?</h2>
-            <div className="flex gap-4 justify-center">
-              <Button onClick={() => setPlatform('pc')} className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-xl">
-                🖥️ PC<br/><span className="text-sm">(Teclado: A, S, D, F)</span>
-              </Button>
-              <Button onClick={() => setPlatform('mobile')} className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 text-xl">
-                📱 Mobile<br/><span className="text-sm">(Touch)</span>
-              </Button>
-            </div>
-          </div>
-        )}
-
-        {platform && (
-          <div className="bg-slate-900 rounded-lg overflow-hidden shadow-2xl">
-            <canvas
-              ref={canvasRef}
-              width={800}
-              height={600}
-              className="w-full bg-slate-800"
-            />
-
-            <div className="p-6 bg-slate-800 border-t border-slate-700">
-              <div className="grid grid-cols-4 gap-4 mb-6">
-                <div className="bg-slate-700 p-4 rounded-lg">
-                  <p className="text-slate-400 text-sm">Pontuação</p>
-                  <p className="text-2xl font-bold text-white">{gameStats.score}</p>
-                </div>
-                <div className="bg-slate-700 p-4 rounded-lg">
-                  <p className="text-slate-400 text-sm">Combo</p>
-                  <p className="text-2xl font-bold text-yellow-400">{gameStats.combo}</p>
-                </div>
-                <div className="bg-slate-700 p-4 rounded-lg">
-                  <p className="text-slate-400 text-sm">Saúde</p>
-                  <div className="w-full bg-slate-600 rounded-full h-2 mt-2">
-                    <div
-                      className="bg-red-500 h-2 rounded-full transition-all"
-                      style={{ width: `${gameStats.health}%` }}
-                    />
-                  </div>
-                </div>
-                <div className="bg-slate-700 p-4 rounded-lg">
-                  <p className="text-slate-400 text-sm">Tempo</p>
-                  <p className="text-2xl font-bold text-white">{currentTime.toFixed(1)}s</p>
-                </div>
-              </div>
-
-              {platform === 'pc' && gameStarted && !gameOver && !won && (
-                <div className="text-center mb-6">
-                  <p className="text-white text-lg mb-3">Pressione as teclas: <span className="font-bold">A S D F</span></p>
-                  <div className="flex gap-2 justify-center">
-                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">A</div>
-                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">S</div>
-                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">D</div>
-                    <div className="bg-blue-600 px-4 py-2 rounded text-white font-bold">F</div>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-4 justify-center">
-                {!gameStarted && (
-                  <Button
-                    onClick={startGame}
-                    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-                  >
-                    🎮 Começar Batalha
-                  </Button>
-                )}
-
-                {gameOver && (
-                  <div className="text-center w-full">
-                    <p className="text-3xl font-bold text-red-500 mb-4">💔 Game Over!</p>
-                    <Button
-                      onClick={startGame}
-                      className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-                    >
-                      🔄 Tentar Novamente
-                    </Button>
-                  </div>
-                )}
-
-                {won && (
-                  <div className="text-center w-full">
-                    <p className="text-3xl font-bold text-green-500 mb-4">🎉 Vitória!</p>
-                    <p className="text-white text-xl mb-4">Pontuação Final: {gameStats.score}</p>
-                    <div className="flex gap-2 justify-center flex-wrap">
-                      {currentSongIndex < songs.length - 1 ? (
-                        <Button
-                          onClick={() => {
-                            setCurrentSongIndex(currentSongIndex + 1);
-                            setGameStarted(false);
-                            setWon(false);
-                          }}
-                          className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg"
-                        >
-                          ➡️ Próxima Música
-                        </Button>
-                      ) : (
-                        <Button
-                          onClick={() => {
-                            setCurrentSongIndex(0);
-                            setGameStarted(false);
-                            setWon(false);
-                          }}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
-                        >
-                          🔄 Recomeçar do Início
-                        </Button>
-                      )}
-                      <Button
-                        onClick={() => setShowAchievements(true)}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-3 text-lg"
-                      >
-                        🏆 Conquistas
-                      </Button>
+        <div className="flex-1 flex flex-col items-center justify-center p-4 gap-6">
+          <h2 className="text-3xl font-bold">Selecione uma música</h2>
+          <div className="w-full max-w-md flex flex-col gap-3">
+            {SONG_NAMES.map((name, i) => {
+              const cleared = songsCleared[i];
+              const locked = i > 0 && !songsCleared[i - 1];
+              return (
+                <button
+                  key={i}
+                  disabled={locked}
+                  type="button"
+                  onClick={() => startSong(i)}
+                  className={`p-4 rounded-lg text-left flex items-center justify-between transition-colors ${
+                    cleared
+                      ? 'bg-green-900/40 border border-green-600'
+                      : locked
+                        ? 'bg-gray-800/30 border border-gray-700 opacity-50 cursor-not-allowed'
+                        : 'bg-gray-800 border border-gray-700 hover:border-blue-500 hover:bg-gray-750'
+                  }`}
+                >
+                  <div>
+                    <div className="text-lg font-semibold">
+                      {cleared ? '✅' : locked ? '🔒' : '🎵'} {name}
+                    </div>
+                    <div className="text-sm text-gray-400 mt-0.5">
+                      {cleared
+                        ? 'Completa'
+                        : locked
+                          ? 'Complete a música anterior'
+                          : 'Disponível'}
                     </div>
                   </div>
-                )}
-              </div>
-            </div>
+                </button>
+              );
+            })}
           </div>
-        )}
-
-        {/* Botões touch para mobile */}
-        {platform === 'mobile' && gameStarted && !gameOver && !won && (
-          <div className="fixed bottom-0 left-0 right-0 p-4 bg-slate-900/90 flex gap-2 justify-center">
-            <button onTouchStart={() => handleLaneHit(0)} className="w-20 h-20 bg-blue-600 rounded-xl text-white font-bold text-2xl active:bg-blue-800">A</button>
-            <button onTouchStart={() => handleLaneHit(1)} className="w-20 h-20 bg-green-600 rounded-xl text-white font-bold text-2xl active:bg-green-800">S</button>
-            <button onTouchStart={() => handleLaneHit(2)} className="w-20 h-20 bg-yellow-600 rounded-xl text-white font-bold text-2xl active:bg-yellow-800">D</button>
-            <button onTouchStart={() => handleLaneHit(3)} className="w-20 h-20 bg-red-600 rounded-xl text-white font-bold text-2xl active:bg-red-800">F</button>
-          </div>
-        )}
-
-        {/* Progresso das Músicas */}
-        <div className="mt-8 bg-slate-800 p-6 rounded-lg text-white">
-          <h3 className="text-xl font-bold mb-4">📋 Progresso das Músicas:</h3>
-          <div className="grid grid-cols-5 gap-2">
-            {songs.map((song, idx) => (
-              <div
-                key={song.id}
-                className={`p-4 rounded-lg text-center font-bold ${
-                  song.completed
-                    ? 'bg-green-600'
-                    : idx === currentSongIndex
-                    ? 'bg-yellow-600'
-                    : 'bg-slate-700'
-                }`}
-              >
-                {song.completed ? '✅' : idx === currentSongIndex ? '▶️' : '⏸️'} {song.name}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Modal de Conquistas */}
-        {showAchievements && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-slate-900 rounded-lg p-8 max-w-md w-full border border-yellow-400">
-              <h2 className="text-3xl font-bold mb-6 text-yellow-400">🏆 Conquistas</h2>
-              <div className="space-y-4 mb-6">
-                {achievements.map((achievement) => (
-                  <div
-                    key={achievement.id}
-                    className={`p-4 rounded-lg border-2 ${
-                      achievement.unlocked
-                        ? 'bg-yellow-900 border-yellow-400'
-                        : 'bg-slate-700 border-slate-600 opacity-50'
-                    }`}
-                  >
-                    <p className="text-lg font-bold">{achievement.name}</p>
-                    <p className="text-sm text-slate-300">{achievement.description}</p>
-                    {achievement.unlocked && <p className="text-yellow-300 mt-2">✅ Desbloqueada!</p>}
-                  </div>
-                ))}
-              </div>
-              <Button
-                onClick={() => setShowAchievements(false)}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Fechar
-              </Button>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-8 bg-slate-800 p-6 rounded-lg text-white">
-          <h3 className="text-xl font-bold mb-4">📖 Como Jogar:</h3>
-          <ul className="space-y-2">
-            <li>✅ Pressione as teclas <span className="font-bold">A S D F</span> quando as notas chegarem ao receptor</li>
-            <li>✅ Acerte as notas para ganhar pontos e aumentar o combo</li>
-            <li>✅ Errar as notas reduz sua saúde</li>
-            <li>✅ Complete todas as 5 músicas para ganhar 500 de moedas! 💰</li>
-          </ul>
         </div>
       </div>
+    );
+  }
+
+  if (screen === 'countdown') {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+        <div
+          key={String(countdownValue)}
+          className="text-9xl font-bold animate-ping"
+        >
+          {countdownValue === 'GO' ? 'GO!' : countdownValue}
+        </div>
+      </div>
+    );
+  }
+
+  if (screen === 'result' && gameResult) {
+    const r = gameResult;
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
+        <div className="bg-gray-800 rounded-xl p-8 max-w-sm w-full border border-gray-700 text-center">
+          <div className="text-6xl mb-4">
+            {r.passed ? '🎉' : '💔'}
+          </div>
+          <h2
+            className={`text-3xl font-bold mb-2 ${r.passed ? 'text-green-400' : 'text-red-400'}`}
+          >
+            {r.passed ? 'VITÓRIA!' : 'DERROTA!'}
+          </h2>
+          {r.millionReward && (
+            <div className="bg-yellow-900/50 border border-yellow-500 rounded-lg p-3 mb-4">
+              <div className="text-yellow-400 text-lg font-bold">
+                🎉 1 MILHÃO DE MOEDAS! 🎉
+              </div>
+              <div className="text-yellow-300 text-sm mt-1">
+                Parabéns por completar todas as músicas!
+              </div>
+            </div>
+          )}
+          <div className="space-y-2 mb-6 text-left">
+            <div className="flex justify-between">
+              <span className="text-gray-400">Pontuação</span>
+              <span className="font-bold text-xl">{r.score.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Máximo Combo</span>
+              <span className="font-bold text-yellow-400">{r.maxCombo}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Status</span>
+              <span className={r.passed ? 'text-green-400' : 'text-red-400'}>
+                {r.passed ? 'Aprovado' : 'Reprovado'}
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-3">
+            <Button
+              onClick={() => startSong(selectedSong)}
+              className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+            >
+              🔄 Tentar Novamente
+            </Button>
+            <Button
+              onClick={() => {
+                setGameResult(null);
+                setScreen('song_select');
+              }}
+              variant="outline"
+              className="text-white border-gray-600 hover:bg-gray-700 w-full"
+            >
+              ← Voltar às Músicas
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+      <div className="flex items-center justify-between px-4 py-2 bg-gray-950 border-b border-gray-800">
+        <div className="flex items-center gap-4 text-sm">
+          <span className="text-gray-400">
+            {SONG_NAMES[selectedSong]}
+          </span>
+          <div className="flex items-center gap-1">
+            <span className="text-gray-500">HP</span>
+            <div className="w-32 bg-gray-700 rounded-full h-3 overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all duration-100 ${
+                  displayHealth > 50
+                    ? 'bg-green-500'
+                    : displayHealth > 25
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                }`}
+                style={{ width: `${displayHealth}%` }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 text-sm">
+          <span className="text-gray-300 font-mono">
+            Score:{' '}
+            <span className="text-white font-bold">
+              {displayScore.toLocaleString()}
+            </span>
+          </span>
+          <span className="text-gray-300 font-mono">
+            Combo:{' '}
+            <span className="text-yellow-400 font-bold">
+              {displayCombo > 0 ? `${displayCombo}x` : '-'}
+            </span>
+          </span>
+        </div>
+      </div>
+      <div ref={containerRef} className="flex-1 relative">
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      </div>
+      {touchSupported && (
+        <div className="flex items-center justify-center gap-3 px-4 py-4 bg-gray-950 border-t border-gray-800">
+          {([0, 1, 2, 3] as const).map((lane) => (
+            <button
+              key={lane}
+              type="button"
+              onPointerDown={(e) => {
+                e.preventDefault();
+                handleTouchPress(lane);
+              }}
+              onPointerUp={(e) => {
+                e.preventDefault();
+                handleTouchRelease(lane);
+              }}
+              onPointerLeave={(e) => {
+                e.preventDefault();
+                handleTouchRelease(lane);
+              }}
+              onContextMenu={(e) => e.preventDefault()}
+              className={`w-20 h-20 rounded-xl text-2xl font-bold flex items-center justify-center select-none touch-none active:scale-95 transition-transform`}
+              style={{
+                backgroundColor: LANE_COLORS[lane] + '60',
+                border: `2px solid ${LANE_COLORS[lane]}`,
+                color: LANE_COLORS[lane],
+                touchAction: 'none',
+              }}
+            >
+              {LANE_DIRECTIONS[lane]}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
+}
+
+const KEY_MAP: Record<string, Lane> = {};
+const MAPPINGS: [string, Lane][] = [
+  ['ArrowLeft', 0],
+  ['a', 0],
+  ['A', 0],
+  ['d', 0],
+  ['D', 0],
+  ['ArrowDown', 1],
+  ['s', 1],
+  ['S', 1],
+  ['f', 1],
+  ['F', 1],
+  ['ArrowUp', 2],
+  ['w', 2],
+  ['W', 2],
+  ['j', 2],
+  ['J', 2],
+  ['ArrowRight', 3],
+  ['k', 3],
+  ['K', 3],
+];
+for (const [k, l] of MAPPINGS) KEY_MAP[k] = l;
+
+function keyToLane(key: string): Lane | undefined {
+  return KEY_MAP[key];
+}
+
+const ARROW_ROTATIONS: [number, number, number, number] = [
+  -Math.PI / 2,
+  Math.PI,
+  0,
+  Math.PI / 2,
+];
+
+function drawArrow(
+  ctx: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  dir: number,
+  color: string,
+  alpha: number,
+): void {
+  const size = 18;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(cx, cy);
+  ctx.rotate(ARROW_ROTATIONS[dir]);
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.lineTo(-size * 0.7, size * 0.4);
+  ctx.lineTo(size * 0.7, size * 0.4);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.strokeStyle = '#ffffffaa';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+  ctx.restore();
 }
