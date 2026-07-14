@@ -152,9 +152,7 @@ export default function FNF() {
     passed: boolean;
     millionReward: boolean;
   } | null>(null);
-  const [touchSupported] = useState(
-    () => 'ontouchstart' in window || navigator.maxTouchPoints > 0,
-  );
+  const [inputMode, setInputMode] = useState<'keyboard' | 'touch'>('keyboard');
 
   const engineRef = useRef<EngineState>(createInitialState());
   const chartRef = useRef<Chart>(generateChart(0));
@@ -551,6 +549,30 @@ export default function FNF() {
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4 gap-6">
           <h2 className="text-3xl font-bold">Selecione uma música</h2>
+          <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
+            <button
+              type="button"
+              onClick={() => setInputMode('keyboard')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                inputMode === 'keyboard'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              ⌨️ PC (Teclado)
+            </button>
+            <button
+              type="button"
+              onClick={() => setInputMode('touch')}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                inputMode === 'touch'
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              👆 Mobile (Touch)
+            </button>
+          </div>
           <div className="w-full max-w-md flex flex-col gap-3">
             {SONG_NAMES.map((name, i) => {
               const cleared = songsCleared[i];
@@ -706,7 +728,7 @@ export default function FNF() {
       <div ref={containerRef} className="flex-1 relative">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
       </div>
-      {touchSupported && (
+      {inputMode === 'touch' ? (
         <div className="flex items-center justify-center gap-3 px-4 py-4 bg-gray-950 border-t border-gray-800">
           {([0, 1, 2, 3] as const).map((lane) => (
             <button
@@ -737,6 +759,13 @@ export default function FNF() {
             </button>
           ))}
         </div>
+      ) : (
+        <div className="flex items-center justify-center gap-6 px-4 py-2 bg-gray-950 border-t border-gray-800 text-xs text-gray-500">
+          <span>← <span className="text-gray-300">A</span></span>
+          <span>↓ <span className="text-gray-300">S</span></span>
+          <span>↑ <span className="text-gray-300">D</span></span>
+          <span>→ <span className="text-gray-300">F</span></span>
+        </div>
       )}
     </div>
   );
@@ -747,19 +776,19 @@ const MAPPINGS: [string, Lane][] = [
   ['ArrowLeft', 0],
   ['a', 0],
   ['A', 0],
-  ['d', 0],
-  ['D', 0],
   ['ArrowDown', 1],
   ['s', 1],
   ['S', 1],
-  ['f', 1],
-  ['F', 1],
   ['ArrowUp', 2],
+  ['d', 2],
+  ['D', 2],
   ['w', 2],
   ['W', 2],
   ['j', 2],
   ['J', 2],
   ['ArrowRight', 3],
+  ['f', 3],
+  ['F', 3],
   ['k', 3],
   ['K', 3],
 ];
