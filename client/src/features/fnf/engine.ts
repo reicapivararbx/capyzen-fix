@@ -1,6 +1,6 @@
 type NoteKind = "tap" | "hold";
 type Lane = 0 | 1 | 2 | 3;
-type Judgment = "perfect" | "good" | "miss";
+type Judgment = "perfect" | "good" | "bad" | "miss";
 
 interface Note {
   kind: NoteKind;
@@ -12,6 +12,7 @@ interface Note {
 interface Chart {
   notes: Note[];
   songDurationMs: number;
+  bpm: number;
 }
 
 interface EngineState {
@@ -23,6 +24,10 @@ interface EngineState {
   songEnded: boolean;
   noteResults: Array<{ noteIndex: number; judgment: Judgment; timeMs: number }>;
   activeHolds: Map<Lane, number>;
+  perfectCount: number;
+  goodCount: number;
+  badCount: number;
+  missCount: number;
 }
 
 interface EngineEvent {
@@ -45,26 +50,30 @@ function createRng(seed: number): () => number {
 
 function generateChart(songIndex: number): Chart {
   const rng = createRng(songIndex * 2654435761 + 12345);
-  const songDurationMs = 30000;
+  const bpm = [120, 130, 140, 150, 160][songIndex] || 120;
+  const seconds = [30, 45, 60, 75, 90][songIndex] || 30;
+  const songDurationMs = seconds * 1000;
+  const beatMs = (60_000 / bpm);
+  const totalBeats = Math.floor((songDurationMs - 1500) / beatMs);
   const notes: Note[] = [];
 
-  let timeMs = 2000 + Math.floor(rng() * 1000);
-  const noteKinds: NoteKind[] = ["tap", "tap", "tap", "hold", "hold", "tap", "hold", "tap", "tap", "hold"];
-
-  while (timeMs < songDurationMs - 1500) {
+  for (let beat = 0; beat < totalBeats; beat++) {
+    const timeMs = beat * beatMs + 2000;
+    const noise = rng();
+    const shouldPlace = noise < 0.55 + 0.15 * Math.sin(beat * 0.3);
+    if (!shouldPlace) continue;
     const lane = Math.floor(rng() * 4) as Lane;
-    const isHold = rng() < 0.35;
-    const durationMs = isHold ? Math.round(500 + rng() * 1500) : 0;
+    const isHold = rng() < 0.3;
+    const durationMs = isHold ? Math.round(beatMs * (1 + rng() * 3)) : 0;
     notes.push({
       kind: isHold ? "hold" : "tap",
       lane,
       timeMs: Math.round(timeMs),
       durationMs,
     });
-    timeMs += 400 + rng() * 600;
   }
 
-  return { notes, songDurationMs };
+  return { notes, songDurationMs, bpm };
 }
 
 function createInitialState(): EngineState {
@@ -77,19 +86,25 @@ function createInitialState(): EngineState {
     songEnded: false,
     noteResults: [],
     activeHolds: new Map(),
+    perfectCount: 0,
+    goodCount: 0,
+    badCount: 0,
+    missCount: 0,
   };
 }
 
 function judgeNote(songPositionMs: number, noteTimeMs: number): Judgment {
   const diff = Math.abs(songPositionMs - noteTimeMs);
-  if (diff <= 80) return "perfect";
-  if (diff <= 150) return "good";
+  if (diff <= 45) return "perfect";
+  if (diff <= 90) return "good";
+  if (diff <= 135) return "bad";
   return "miss";
 }
 
 function calculateScore(judgment: Judgment, combo: number): number {
   if (judgment === "perfect") return 300 + Math.floor(combo / 10) * 50;
   if (judgment === "good") return 100 + Math.floor(combo / 10) * 25;
+  if (judgment === "bad") return 50 + Math.floor(combo / 10) * 10;
   return 0;
 }
 
@@ -97,10 +112,12 @@ function calculateHealthChange(judgment: Judgment, kind: NoteKind): number {
   if (kind === "tap") {
     if (judgment === "perfect") return 2;
     if (judgment === "good") return 1;
+    if (judgment === "bad") return 0;
     return -5;
   }
   if (judgment === "perfect") return 3;
   if (judgment === "good") return 1;
+  if (judgment === "bad") return 0;
   return -7;
 }
 
@@ -123,6 +140,11 @@ function processNoteHit(
   const newScore = state.score + scoreIncrease;
   const healthChange = calculateHealthChange(judgment, note.kind);
   let newHealth = Math.min(100, Math.max(0, state.health + healthChange));
+
+  const newPerfectCount = state.perfectCount + (judgment === "perfect" ? 1 : 0);
+  const newGoodCount = state.goodCount + (judgment === "good" ? 1 : 0);
+  const newBadCount = state.badCount + (judgment === "bad" ? 1 : 0);
+  const newMissCount = state.missCount + (judgment === "miss" ? 1 : 0);
 
   const noteResult = { noteIndex, judgment, timeMs: songPositionMs };
   const events: EngineEvent[] = [];
@@ -160,6 +182,10 @@ function processNoteHit(
       health: newHealth,
       noteResults: [...state.noteResults, noteResult],
       activeHolds: newActiveHolds,
+      perfectCount: newPerfectCount,
+      goodCount: newGoodCount,
+      badCount: newBadCount,
+      missCount: newMissCount,
     },
     events,
   };
@@ -244,11 +270,12 @@ function processSongTick(
   for (let i = 0; i < chart.notes.length; i++) {
     if (newState.noteResults.some((r) => r.noteIndex === i)) continue;
     const note = chart.notes[i];
-    if (newPosition > note.timeMs + 150) {
-      const missResult = { noteIndex: i, judgment: "miss" as Judgment, timeMs: note.timeMs + 150 };
+    if (newPosition > note.timeMs + 135) {
+      const missResult = { noteIndex: i, judgment: "miss" as Judgment, timeMs: note.timeMs + 135 };
       newState = {
         ...newState,
         noteResults: [...newState.noteResults, missResult],
+        missCount: newState.missCount + 1,
       };
       if (newState.health > 0) {
         const healthChange = calculateHealthChange("miss", note.kind);
@@ -265,7 +292,7 @@ function processSongTick(
       } else {
         newState = { ...newState, combo: 0 };
       }
-      events.push({ type: "note_miss", timeMs: note.timeMs + 150, noteIndex: i });
+      events.push({ type: "note_miss", timeMs: note.timeMs + 135, noteIndex: i });
     }
   }
 
@@ -286,14 +313,14 @@ function processKeyPress(
   if (state.health <= 0) return { state, events: [] };
 
   let nearestIdx = -1;
-  let nearestDiff = 151;
+  let nearestDiff = 136;
 
   for (let i = 0; i < chart.notes.length; i++) {
     if (state.noteResults.some((r) => r.noteIndex === i)) continue;
     const note = chart.notes[i];
     if (note.lane !== lane) continue;
     const diff = Math.abs(songPositionMs - note.timeMs);
-    if (diff <= 150 && diff < nearestDiff) {
+    if (diff <= 135 && diff < nearestDiff) {
       nearestDiff = diff;
       nearestIdx = i;
     }
@@ -313,6 +340,21 @@ function processKeyRelease(
   return processHoldRelease(state, lane, songPositionMs, chart);
 }
 
+function getAccuracy(state: EngineState): number {
+  const total = state.perfectCount + state.goodCount + state.badCount + state.missCount;
+  if (total === 0) return 0;
+  return (state.perfectCount * 100 + state.goodCount * 75 + state.badCount * 25) / total;
+}
+
+function getRatingLetter(accuracy: number): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
+  if (accuracy >= 95) return 'S';
+  if (accuracy >= 85) return 'A';
+  if (accuracy >= 70) return 'B';
+  if (accuracy >= 50) return 'C';
+  if (accuracy >= 30) return 'D';
+  return 'F';
+}
+
 export type { NoteKind, Lane, Judgment, Note, Chart, EngineState, EngineEvent };
 export {
   generateChart,
@@ -325,4 +367,6 @@ export {
   processSongTick,
   processKeyPress,
   processKeyRelease,
+  getAccuracy,
+  getRatingLetter,
 };

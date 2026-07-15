@@ -9,6 +9,8 @@ import {
   processHoldRelease,
   processSongTick,
   processKeyPress,
+  getAccuracy,
+  getRatingLetter,
 } from "./engine";
 import type { Chart, EngineState, Lane } from "./engine";
 
@@ -16,6 +18,7 @@ function holdChart(lane: Lane, timeMs: number, durationMs: number): Chart {
   return {
     notes: [{ kind: "hold", lane, timeMs, durationMs }],
     songDurationMs: 10000,
+    bpm: 120,
   };
 }
 
@@ -23,7 +26,16 @@ function tapChart(lane: Lane, timeMs: number): Chart {
   return {
     notes: [{ kind: "tap", lane, timeMs, durationMs: 0 }],
     songDurationMs: 10000,
+    bpm: 120,
   };
+}
+
+function emptyChart(): Chart {
+  return { notes: [], songDurationMs: 10000, bpm: 120 };
+}
+
+function chart5000(): Chart {
+  return { notes: [], songDurationMs: 5000, bpm: 120 };
 }
 
 describe("generateChart", () => {
@@ -51,25 +63,37 @@ describe("generateChart", () => {
     expect(chart.notes.some((n) => n.kind === "tap")).toBe(true);
     expect(chart.notes.some((n) => n.kind === "hold")).toBe(true);
   });
+
+  it("has bpm field", () => {
+    const chart = generateChart(0);
+    expect(chart.bpm).toBeGreaterThan(0);
+  });
 });
 
 describe("judgeNote", () => {
-  it("perfect within 80ms", () => {
+  it("perfect within 45ms", () => {
     expect(judgeNote(1000, 1000)).toBe("perfect");
-    expect(judgeNote(1080, 1000)).toBe("perfect");
-    expect(judgeNote(920, 1000)).toBe("perfect");
+    expect(judgeNote(1045, 1000)).toBe("perfect");
+    expect(judgeNote(955, 1000)).toBe("perfect");
   });
 
-  it("good within 150ms", () => {
-    expect(judgeNote(1150, 1000)).toBe("good");
-    expect(judgeNote(850, 1000)).toBe("good");
-    expect(judgeNote(1081, 1000)).toBe("good");
-    expect(judgeNote(919, 1000)).toBe("good");
+  it("good within 45-90ms", () => {
+    expect(judgeNote(1090, 1000)).toBe("good");
+    expect(judgeNote(910, 1000)).toBe("good");
+    expect(judgeNote(1046, 1000)).toBe("good");
+    expect(judgeNote(954, 1000)).toBe("good");
   });
 
-  it("miss beyond 150ms", () => {
-    expect(judgeNote(1151, 1000)).toBe("miss");
-    expect(judgeNote(849, 1000)).toBe("miss");
+  it("bad within 90-135ms", () => {
+    expect(judgeNote(1135, 1000)).toBe("bad");
+    expect(judgeNote(865, 1000)).toBe("bad");
+    expect(judgeNote(1091, 1000)).toBe("bad");
+    expect(judgeNote(909, 1000)).toBe("bad");
+  });
+
+  it("miss beyond 135ms", () => {
+    expect(judgeNote(1136, 1000)).toBe("miss");
+    expect(judgeNote(864, 1000)).toBe("miss");
     expect(judgeNote(2000, 1000)).toBe("miss");
     expect(judgeNote(0, 1000)).toBe("miss");
   });
@@ -90,6 +114,13 @@ describe("calculateScore", () => {
     expect(calculateScore("good", 24)).toBe(150);
   });
 
+  it("bad: 50 + floor(combo/10) * 10", () => {
+    expect(calculateScore("bad", 0)).toBe(50);
+    expect(calculateScore("bad", 9)).toBe(50);
+    expect(calculateScore("bad", 10)).toBe(60);
+    expect(calculateScore("bad", 24)).toBe(70);
+  });
+
   it("miss: 0 regardless of combo", () => {
     expect(calculateScore("miss", 0)).toBe(0);
     expect(calculateScore("miss", 50)).toBe(0);
@@ -97,15 +128,17 @@ describe("calculateScore", () => {
 });
 
 describe("calculateHealthChange", () => {
-  it("tap: perfect +2, good +1, miss -5", () => {
+  it("tap: perfect +2, good +1, bad 0, miss -5", () => {
     expect(calculateHealthChange("perfect", "tap")).toBe(2);
     expect(calculateHealthChange("good", "tap")).toBe(1);
+    expect(calculateHealthChange("bad", "tap")).toBe(0);
     expect(calculateHealthChange("miss", "tap")).toBe(-5);
   });
 
-  it("hold: perfect +3, good +1, miss -7", () => {
+  it("hold: perfect +3, good +1, bad 0, miss -7", () => {
     expect(calculateHealthChange("perfect", "hold")).toBe(3);
     expect(calculateHealthChange("good", "hold")).toBe(1);
+    expect(calculateHealthChange("bad", "hold")).toBe(0);
     expect(calculateHealthChange("miss", "hold")).toBe(-7);
   });
 });
@@ -130,7 +163,7 @@ describe("processNoteHit", () => {
     expect(events[0].type).toBe("note_miss");
   });
 
-  it("same note twice → no double score", () => {
+  it("same note twice -> no double score", () => {
     const chart = tapChart(0, 5000);
     const state = createInitialState();
     const { state: first } = processNoteHit(state, 0, 5000, chart);
@@ -148,10 +181,27 @@ describe("processNoteHit", () => {
     expect(newState.noteResults.length).toBe(1);
     expect(newState.noteResults[0].judgment).toBe("perfect");
   });
+
+  it("tracks perfectCount on perfect hit", () => {
+    const chart = tapChart(0, 5000);
+    const state = createInitialState();
+    const { state: newState } = processNoteHit(state, 0, 5000, chart);
+    expect(newState.perfectCount).toBe(1);
+    expect(newState.goodCount).toBe(0);
+    expect(newState.badCount).toBe(0);
+    expect(newState.missCount).toBe(0);
+  });
+
+  it("tracks missCount on miss", () => {
+    const chart = tapChart(0, 5000);
+    const state = createInitialState();
+    const { state: newState } = processNoteHit(state, 0, 6000, chart);
+    expect(newState.missCount).toBe(1);
+  });
 });
 
 describe("processKeyPress", () => {
-  it("hit a note → score increases", () => {
+  it("hit a note -> score increases", () => {
     const chart = tapChart(0, 5000);
     const state = createInitialState();
     const { state: newState, events } = processKeyPress(state, 0, 5000, chart);
@@ -159,14 +209,14 @@ describe("processKeyPress", () => {
     expect(events.length).toBeGreaterThan(0);
   });
 
-  it("wrong lane → no-op", () => {
+  it("wrong lane -> no-op", () => {
     const chart = tapChart(1, 5000);
     const state = createInitialState();
     const { state: newState } = processKeyPress(state, 0, 5000, chart);
     expect(newState).toEqual(state);
   });
 
-  it("same note twice → no double score", () => {
+  it("same note twice -> no double score", () => {
     const chart = tapChart(0, 5000);
     const state = createInitialState();
     const { state: first } = processKeyPress(state, 0, 5000, chart);
@@ -175,7 +225,7 @@ describe("processKeyPress", () => {
     expect(second.score).toBe(first.score);
   });
 
-  it("empty press when no note in window → no-op", () => {
+  it("empty press when no note in window -> no-op", () => {
     const chart = tapChart(0, 5000);
     const state = createInitialState();
     const { state: newState } = processKeyPress(state, 0, 1000, chart);
@@ -189,6 +239,7 @@ describe("processKeyPress", () => {
         { kind: "tap", lane: 0, timeMs: 5300, durationMs: 0 },
       ],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state = createInitialState();
     const { state: newState } = processKeyPress(state, 0, 5100, chart);
@@ -203,6 +254,7 @@ describe("processKeyPress", () => {
         { kind: "tap", lane: 0, timeMs: 3000, durationMs: 0 },
       ],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const nearDeath: EngineState = { ...createInitialState(), health: 3 };
     const { state: afterDeath } = processNoteHit(nearDeath, 0, 2000, chart);
@@ -215,7 +267,7 @@ describe("processKeyPress", () => {
 });
 
 describe("processHoldRelease", () => {
-  it("hold >= 90% → hold_complete", () => {
+  it("hold >= 90% -> hold_complete", () => {
     const chart = holdChart(0, 1000, 2000);
     const state = createInitialState();
     const { state: afterHit } = processNoteHit(state, 0, 1000, chart);
@@ -230,7 +282,7 @@ describe("processHoldRelease", () => {
     expect(events[0].type).toBe("hold_complete");
   });
 
-  it("hold < 90% → hold_dropped", () => {
+  it("hold < 90% -> hold_dropped", () => {
     const chart = holdChart(0, 1000, 2000);
     const state = createInitialState();
     const { state: afterHit } = processNoteHit(state, 0, 1000, chart);
@@ -254,7 +306,7 @@ describe("processHoldRelease", () => {
     expect(events[0].type).toBe("hold_dropped");
   });
 
-  it("hold exactly at 90% coverage → hold_complete", () => {
+  it("hold exactly at 90% coverage -> hold_complete", () => {
     const chart = holdChart(0, 1000, 2000);
     const state = createInitialState();
     const { state: afterHit } = processNoteHit(state, 0, 1000, chart);
@@ -262,7 +314,7 @@ describe("processHoldRelease", () => {
     expect(events[0].type).toBe("hold_complete");
   });
 
-  it("no active hold on lane → no-op", () => {
+  it("no active hold on lane -> no-op", () => {
     const chart = holdChart(0, 1000, 2000);
     const state = createInitialState();
     const { state: newState } = processHoldRelease(state, 1, 2000, chart);
@@ -281,7 +333,7 @@ describe("processHoldRelease", () => {
 
 describe("processSongTick", () => {
   it("advances song position", () => {
-    const chart: Chart = { notes: [], songDurationMs: 10000 };
+    const chart = emptyChart();
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 1000, chart);
     expect(newState.songPositionMs).toBe(1000);
@@ -291,6 +343,7 @@ describe("processSongTick", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 2000, chart);
@@ -299,7 +352,7 @@ describe("processSongTick", () => {
   });
 
   it("reaches song end", () => {
-    const chart: Chart = { notes: [], songDurationMs: 5000 };
+    const chart = chart5000();
     const state = createInitialState();
     const { state: newState, events } = processSongTick(state, 5000, chart);
     expect(newState.songPositionMs).toBe(5000);
@@ -308,7 +361,7 @@ describe("processSongTick", () => {
   });
 
   it("does not emit song_end twice", () => {
-    const chart: Chart = { notes: [], songDurationMs: 5000 };
+    const chart = chart5000();
     const state = createInitialState();
     const { state: afterFirst } = processSongTick(state, 5000, chart);
     expect(afterFirst.songEnded).toBe(true);
@@ -323,6 +376,17 @@ describe("processSongTick", () => {
     expect(afterHit.activeHolds.has(0)).toBe(true);
     const { events } = processSongTick(afterHit, 2000, chart);
     expect(events.some((e) => e.type === "hold_complete" || e.type === "hold_dropped")).toBe(true);
+  });
+
+  it("auto-miss increments missCount", () => {
+    const chart: Chart = {
+      notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
+      songDurationMs: 10000,
+      bpm: 120,
+    };
+    const state = createInitialState();
+    const { state: newState } = processSongTick(state, 2000, chart);
+    expect(newState.missCount).toBe(1);
   });
 });
 
@@ -339,10 +403,11 @@ describe("processKeyRelease", () => {
 });
 
 describe("health and death", () => {
-  it("health reaches 0 → death event", () => {
+  it("health reaches 0 -> death event", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state: EngineState = { ...createInitialState(), health: 3 };
     const { state: newState, events } = processNoteHit(state, 0, 2000, chart);
@@ -358,6 +423,7 @@ describe("health and death", () => {
         { kind: "tap", lane: 1, timeMs: 2000, durationMs: 0 },
       ],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state: EngineState = { ...createInitialState(), health: 3 };
     const { state: afterDeath } = processNoteHit(state, 0, 2000, chart);
@@ -374,6 +440,7 @@ describe("health and death", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state: EngineState = { ...createInitialState(), health: 1 };
     const { state: newState } = processNoteHit(state, 0, 2000, chart);
@@ -384,6 +451,7 @@ describe("health and death", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state: EngineState = { ...createInitialState(), health: 99 };
     const { state: newState } = processNoteHit(state, 0, 1000, chart);
@@ -397,6 +465,7 @@ describe("health and death", () => {
         { kind: "tap", lane: 1, timeMs: 3000, durationMs: 0 },
       ],
       songDurationMs: 10000,
+      bpm: 120,
     };
     let state = createInitialState();
     const { state: s1 } = processNoteHit(state, 0, 1000, chart);
@@ -409,7 +478,7 @@ describe("health and death", () => {
 
 describe("edge cases", () => {
   it("song ends exactly at duration boundary", () => {
-    const chart: Chart = { notes: [], songDurationMs: 5000 };
+    const chart = chart5000();
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 5000, chart);
     expect(newState.songPositionMs).toBe(5000);
@@ -423,6 +492,7 @@ describe("edge cases", () => {
         { kind: "tap", lane: 1, timeMs: 800, durationMs: 0 },
       ],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 2000, chart);
@@ -446,6 +516,7 @@ describe("edge cases", () => {
         { kind: "hold", lane: 1, timeMs: 1100, durationMs: 1000 },
       ],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const state: EngineState = { ...createInitialState(), health: 4 };
     const { state: afterHit } = processNoteHit(state, 0, 1000, chart);
@@ -463,9 +534,77 @@ describe("edge cases", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 5000, durationMs: 0 }],
       songDurationMs: 10000,
+      bpm: 120,
     };
     const deadState: EngineState = { ...createInitialState(), health: 0 };
     const { state: newState } = processKeyPress(deadState, 0, 5000, chart);
     expect(newState).toEqual(deadState);
+  });
+});
+
+describe("getAccuracy", () => {
+  it("perfect + good + bad + miss = accuracy weighted by quality", () => {
+    const state: EngineState = {
+      ...createInitialState(),
+      perfectCount: 10,
+      goodCount: 5,
+      badCount: 3,
+      missCount: 2,
+    };
+    const acc = getAccuracy(state);
+    const expected = (10 * 100 + 5 * 75 + 3 * 25) / 20;
+    expect(acc).toBeCloseTo(expected);
+  });
+
+  it("all perfect = 100%", () => {
+    const state: EngineState = {
+      ...createInitialState(),
+      perfectCount: 50,
+    };
+    expect(getAccuracy(state)).toBe(100);
+  });
+
+  it("all miss = 0%", () => {
+    const state: EngineState = {
+      ...createInitialState(),
+      missCount: 50,
+    };
+    expect(getAccuracy(state)).toBe(0);
+  });
+
+  it("no notes = 0%", () => {
+    expect(getAccuracy(createInitialState())).toBe(0);
+  });
+});
+
+describe("getRatingLetter", () => {
+  it("S for >= 95", () => {
+    expect(getRatingLetter(95)).toBe("S");
+    expect(getRatingLetter(100)).toBe("S");
+  });
+
+  it("A for 85-94", () => {
+    expect(getRatingLetter(85)).toBe("A");
+    expect(getRatingLetter(94)).toBe("A");
+  });
+
+  it("B for 70-84", () => {
+    expect(getRatingLetter(70)).toBe("B");
+    expect(getRatingLetter(84)).toBe("B");
+  });
+
+  it("C for 50-69", () => {
+    expect(getRatingLetter(50)).toBe("C");
+    expect(getRatingLetter(69)).toBe("C");
+  });
+
+  it("D for 30-49", () => {
+    expect(getRatingLetter(30)).toBe("D");
+    expect(getRatingLetter(49)).toBe("D");
+  });
+
+  it("F for < 30", () => {
+    expect(getRatingLetter(0)).toBe("F");
+    expect(getRatingLetter(29)).toBe("F");
   });
 });
