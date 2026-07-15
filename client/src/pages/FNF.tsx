@@ -30,8 +30,6 @@ const LANE_COLORS: [string, string, string, string] = ['#a855f7', '#3b82f6', '#2
 
 const LANE_DIRECTIONS: [string, string, string, string] = ['←', '↓', '↑', '→'];
 
-const LANE_FREQ: [number, number, number, number] = [262, 294, 330, 349];
-
 function computeLeadIn(bpm: number): number {
   return Math.round((60_000 / bpm) * 4);
 }
@@ -52,13 +50,58 @@ function computeNoteY(
 class AudioManager {
   private ctx: AudioContext | null = null;
   private ready = false;
+  private buffers: Record<string, AudioBuffer> = {};
+  private loaded = false;
+
+  private static SFX = {
+    lane0: '/sfx/ah_medium.mp3',
+    lane1: '/sfx/ai_short.mp3',
+    lane2: '/sfx/ah_short.mp3',
+    lane3: '/sfx/auh_medium.mp3',
+    miss: '/sfx/fnf-missnote-1.mp3',
+    death: '/sfx/fnf-lost-sfx.mp3',
+    countdown: '/sfx/3-2-1-go-sound-effect.mp3',
+  } as const;
 
   init(): void {
     if (this.ctx) return;
     try {
       this.ctx = new AudioContext();
+      void this.loadAll();
     } catch {
       /* no audio available */
+    }
+  }
+
+  private async loadAll(): Promise<void> {
+    if (!this.ctx) return;
+    const ctx = this.ctx;
+    for (const [key, url] of Object.entries(AudioManager.SFX)) {
+      try {
+        const resp = await fetch(url);
+        const arrayBuf = await resp.arrayBuffer();
+        this.buffers[key] = await ctx.decodeAudioData(arrayBuf);
+      } catch {
+        /* ignore */
+      }
+    }
+    this.loaded = true;
+  }
+
+  private play(name: string, vol = 1): void {
+    if (!this.ctx) return;
+    const buf = this.buffers[name];
+    if (!buf) return;
+    try {
+      const src = this.ctx.createBufferSource();
+      const gain = this.ctx.createGain();
+      src.buffer = buf;
+      gain.gain.value = vol;
+      src.connect(gain);
+      gain.connect(this.ctx.destination);
+      src.start(0);
+    } catch {
+      /* ignore */
     }
   }
 
@@ -70,50 +113,25 @@ class AudioManager {
     this.ready = true;
   }
 
-  private tone(
-    freq: number,
-    dur: number,
-    vol = 0.3,
-    type: OscillatorType = 'square',
-  ): void {
-    if (!this.ctx) return;
-    try {
-      const o = this.ctx.createOscillator();
-      const g = this.ctx.createGain();
-      o.type = type;
-      o.frequency.value = freq;
-      const now = this.ctx.currentTime;
-      g.gain.setValueAtTime(vol, now);
-      g.gain.exponentialRampToValueAtTime(0.001, now + dur);
-      o.connect(g);
-      g.connect(this.ctx.destination);
-      o.start(now);
-      o.stop(now + dur);
-    } catch {
-      /* ignore */
-    }
-  }
-
   lane(l: Lane): void {
-    this.tone(LANE_FREQ[l], 0.08, 0.25);
+    this.play(`lane${l}`, 0.8);
   }
 
   miss(): void {
-    this.tone(150, 0.25, 0.15, 'sawtooth');
+    this.play('miss', 0.8);
   }
 
   countdown(): void {
-    this.tone(440, 0.12, 0.2);
+    this.play('countdown', 1);
   }
 
   go(): void {
-    this.tone(660, 0.3, 0.25);
+    /* countdown sound covers GO */
   }
 
   fanfare(): void {
-    [523, 659, 784, 1047].forEach((f, i) => {
-      setTimeout(() => this.tone(f, 0.3, 0.25, 'triangle'), i * 150);
-    });
+    /* victory — keep as fallback */
+    this.play('countdown', 0.5);
   }
 }
 
