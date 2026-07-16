@@ -23,12 +23,19 @@ const SONG_NAMES = [
   'Pixel Storm',
   'Neon Nights',
   'Crystal Cave',
-  'Final Boss',
+  'Crimson Typhoon',
+  'Electric Shock',
+  'Deep Blue',
+  'Moonlight',
+  'Hyper Drive',
+  'Sunset Groove',
 ];
 
-const LANE_COLORS: [string, string, string, string] = ['#a855f7', '#3b82f6', '#22c55e', '#ef4444'];
+const LANE_COLORS: [string, string, string, string] = ['#c24bf0', '#00a3ff', '#36c44a', '#ff4a52'];
 
 const LANE_DIRECTIONS: [string, string, string, string] = ['←', '↓', '↑', '→'];
+
+const OPP_LANE_COLORS: [string, string, string, string] = ['#a64bd0', '#0077cc', '#2a9c3e', '#cc404a'];
 
 function computeLeadIn(bpm: number): number {
   return Math.round((60_000 / bpm) * 4);
@@ -54,13 +61,13 @@ class AudioManager {
   private loaded = false;
 
   private static SFX = {
-    lane0: '/sfx/ah_medium.mp3',
-    lane1: '/sfx/ai_short.mp3',
-    lane2: '/sfx/ah_short.mp3',
-    lane3: '/sfx/auh_medium.mp3',
-    miss: '/sfx/fnf-missnote-1.mp3',
-    death: '/sfx/fnf-lost-sfx.mp3',
-    countdown: '/sfx/3-2-1-go-sound-effect.mp3',
+    hit: `${import.meta.env.BASE_URL}sfx/gunshot.mp3`,
+    fah: `${import.meta.env.BASE_URL}sfx/fah.mp3`,
+    death: `${import.meta.env.BASE_URL}sfx/fnf-lost-sfx.mp3`,
+    intro3: `${import.meta.env.BASE_URL}sfx/intro3.mp3`,
+    intro2: `${import.meta.env.BASE_URL}sfx/intro2.mp3`,
+    intro1: `${import.meta.env.BASE_URL}sfx/intro1.mp3`,
+    introgo: `${import.meta.env.BASE_URL}sfx/introgo.mp3`,
   } as const;
 
   init(): void {
@@ -113,25 +120,26 @@ class AudioManager {
     this.ready = true;
   }
 
-  lane(l: Lane): void {
-    this.play(`lane${l}`, 0.8);
+  hit(): void {
+    this.play('hit', 0.6);
   }
 
-  miss(): void {
-    this.play('miss', 0.8);
+  fah(): void {
+    this.play('fah', 0.8);
   }
 
-  countdown(): void {
-    this.play('countdown', 1);
+  countdown(step: number): void {
+    const key = step === 3 ? 'intro3' : step === 2 ? 'intro2' : step === 1 ? 'intro1' : 'introgo';
+    this.play(key, 1);
   }
 
   go(): void {
-    /* countdown sound covers GO */
+    this.play('introgo', 1);
   }
 
   fanfare(): void {
     /* victory — keep as fallback */
-    this.play('countdown', 0.5);
+    this.play('introgo', 0.5);
   }
 }
 
@@ -195,6 +203,9 @@ export default function FNF() {
   const pressedKeysRef = useRef<Set<string>>(new Set());
   const pressedLanesRef = useRef<Set<Lane>>(new Set());
   const leadInMsRef = useRef(2000);
+  const oppHitLanesRef = useRef<[number, number, number, number]>([0, 0, 0, 0]);
+  const oppHitSetRef = useRef<Set<number>>(new Set());
+  const splashRef = useRef<{ x: number; y: number; vx: number; vy: number; color: string; life: number; star?: boolean }[]>([]);
 
   useEffect(() => {
     audioRef.current.init();
@@ -215,6 +226,29 @@ export default function FNF() {
         life: 1,
         color,
       });
+    },
+    [],
+  );
+
+  const addSplash = useCallback(
+    (lane: Lane, canvasWidth: number, receptorY: number) => {
+      const laneW = Math.min((canvasWidth - 140) / 8, 70);
+      const laneGap = 3;
+      const setGap = 50;
+      const oppSetW = laneW * 4 + laneGap * 3;
+      const playerStartX = (canvasWidth - (oppSetW * 2 + setGap)) / 2 + oppSetW + setGap;
+      const px = playerStartX + lane * (laneW + laneGap) + laneW / 2;
+      const color = LANE_COLORS[lane];
+      for (let i = 0; i < 10; i++) {
+        const ang = (Math.PI * 2 * i) / 10 + Math.random() * 0.3;
+        const spd = 2 + Math.random() * 3;
+        splashRef.current.push({ x: px, y: receptorY, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd - 1, color, life: 1 });
+      }
+      for (let i = 0; i < 3; i++) {
+        const ang = (Math.PI * 2 * i) / 3 + Math.random() * 0.5;
+        const spd = 3 + Math.random() * 3;
+        splashRef.current.push({ x: px, y: receptorY, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd - 1, color: '#ffffff', life: 0.8, star: true });
+      }
     },
     [],
   );
@@ -264,13 +298,14 @@ export default function FNF() {
         case 'note_hit': {
           if (event.judgment && event.noteIndex !== undefined) {
             const note = chart.notes[event.noteIndex];
-            audio.lane(note.lane);
+            audio.hit();
             addPopup(event.judgment, note.lane, cw, receptorY);
+            addSplash(note.lane, cw, receptorY);
           }
           break;
         }
         case 'note_miss': {
-          audio.miss();
+          audio.fah();
           if (event.noteIndex !== undefined) {
             const note = chart.notes[event.noteIndex];
             addPopup('miss', note.lane, cw, receptorY);
@@ -285,7 +320,7 @@ export default function FNF() {
           break;
         }
         case 'hold_dropped': {
-          audio.miss();
+          audio.fah();
           if (event.noteIndex !== undefined) {
             const note = chart.notes[event.noteIndex];
             addPopup('miss', note.lane, cw, receptorY);
@@ -305,7 +340,7 @@ export default function FNF() {
         }
       }
     },
-    [addPopup, handleSongClear],
+    [addPopup, addSplash, handleSongClear],
   );
 
   const tick = useCallback(
@@ -340,40 +375,78 @@ export default function FNF() {
     ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = '#0f172a';
     ctx.fillRect(0, 0, w, h);
-    const laneCount = 4;
-    const gap = 4;
-    const laneW = Math.min((w - 80) / laneCount, 120);
-    const totalW = laneW * laneCount + gap * (laneCount - 1);
-    const startX = (w - totalW) / 2;
-    const receptorY = h - 80;
-    const topY = 0;
     const state = engineRef.current;
     const chart = chartRef.current;
+    const receptorY = h - 80;
+    const topY = 0;
+    const laneW = Math.min((w - 140) / 8, 70);
+    const laneGap = 3;
+    const setGap = 50;
+    const oppSetW = laneW * 4 + laneGap * 3;
+    const playerSetW = oppSetW;
+    const totalW = oppSetW + setGap + playerSetW;
+    const startX = (w - totalW) / 2;
+    const oppStartX = startX;
+    const playerStartX = startX + oppSetW + setGap;
+    const now = performance.now();
 
-    for (let i = 0; i < 4; i++) {
-      const x = startX + i * (laneW + gap);
-      const color = LANE_COLORS[i];
-      const isPressed = pressedLanesRef.current.has(i as Lane);
-      ctx.fillStyle = color + (isPressed ? '25' : '15');
-      ctx.fillRect(x, 0, laneW, h);
-      ctx.strokeStyle = color + '40';
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, 0, laneW, h);
-      const receptorScale = isPressed ? 1.15 : 1;
-      const rw = laneW * receptorScale;
-      const rh = 50 * receptorScale;
-      const rx = x + (laneW - rw) / 2;
-      const ry = receptorY - rh / 2;
-      ctx.fillStyle = isPressed ? color + 'cc' : color + '80';
-      ctx.beginPath();
-      ctx.roundRect(rx, ry, rw, rh, 6);
-      ctx.fill();
-      ctx.strokeStyle = isPressed ? '#ffffff' : color;
-      ctx.lineWidth = isPressed ? 3 : 2;
-      ctx.beginPath();
-      ctx.roundRect(rx, ry, rw, rh, 6);
-      ctx.stroke();
-      drawArrow(ctx, x + laneW / 2, receptorY, i, color, isPressed ? 1 : 0.8);
+    const drawLaneSet = (
+      startXOffset: number,
+      isOpponent: boolean,
+      flashLane: (i: number) => boolean,
+    ) => {
+      for (let i = 0; i < 4; i++) {
+        const x = startXOffset + i * (laneW + laneGap);
+        const color = isOpponent ? OPP_LANE_COLORS[i] : LANE_COLORS[i];
+        const isPressed = isOpponent
+          ? false
+          : pressedLanesRef.current.has(i as Lane);
+        const isFlashing = flashLane(i);
+        const active = isPressed || isFlashing;
+        ctx.fillStyle = color + (active ? '25' : '15');
+        ctx.fillRect(x, 0, laneW, h);
+        ctx.strokeStyle = color + '40';
+        ctx.lineWidth = 1;
+        ctx.lineCap = 'round';
+        ctx.strokeRect(x, 0, laneW, h);
+        const bounceScale = active ? 1 + 0.15 * Math.abs(Math.sin(now * 0.008)) : 1;
+        const receptorScale = bounceScale;
+        const rw = laneW * receptorScale;
+        const rh = 50 * receptorScale;
+        const rx = x + (laneW - rw) / 2;
+        const ry = receptorY - rh / 2;
+        ctx.fillStyle = active ? color + 'cc' : color + '80';
+        ctx.beginPath();
+        ctx.roundRect(rx, ry, rw, rh, 6);
+        ctx.fill();
+        ctx.strokeStyle = active ? '#ffffff' : color;
+        ctx.lineWidth = active ? 3 : 2;
+        ctx.beginPath();
+        ctx.roundRect(rx, ry, rw, rh, 6);
+        ctx.stroke();
+        drawArrow(ctx, x + laneW / 2, receptorY, i, color, active ? 1 : 0.7);
+      }
+    };
+
+    drawLaneSet(oppStartX, true, (i) => now - oppHitLanesRef.current[i] < 150);
+    drawLaneSet(playerStartX, false, () => false);
+
+    const oppHitSet = oppHitSetRef.current;
+    for (let i = 0; i < chart.oppNotes.length; i++) {
+      const note = chart.oppNotes[i];
+      const headY = computeNoteY(note.timeMs, state.songPositionMs, receptorY, topY, leadInMsRef.current);
+      if (headY < -100 || headY > h + 100) continue;
+      const x = oppStartX + note.lane * (laneW + laneGap);
+      const color = OPP_LANE_COLORS[note.lane];
+      // auto-flash when note crosses receptor
+      if (note.timeMs <= state.songPositionMs + 16 && note.timeMs > state.songPositionMs - 80 && !oppHitSet.has(i)) {
+        oppHitSet.add(i);
+        oppHitLanesRef.current[note.lane] = now;
+      }
+      if (note.timeMs <= state.songPositionMs - 80) {
+        oppHitSet.add(i);
+      }
+      drawArrow(ctx, x + laneW / 2, headY, note.lane, color, note.timeMs <= state.songPositionMs ? 0.25 : 0.8);
     }
 
     for (let i = 0; i < chart.notes.length; i++) {
@@ -382,9 +455,10 @@ export default function FNF() {
       const isActive = state.activeHolds.get(note.lane as Lane) === i;
       if (hasResult && !isActive) continue;
       const headY = computeNoteY(note.timeMs, state.songPositionMs, receptorY, topY, leadInMsRef.current);
-      if (headY < -100 && headY > h + 100) continue;
-      const x = startX + note.lane * (laneW + gap);
+      if (headY < -100 || headY > h + 100) continue;
+      const x = playerStartX + note.lane * (laneW + laneGap);
       const color = LANE_COLORS[note.lane];
+      // draw hold/duration bar
       if (note.kind === 'hold') {
         const tailEndY = computeNoteY(
           note.timeMs + note.durationMs,
@@ -397,10 +471,7 @@ export default function FNF() {
         const fullBot = Math.max(headY, tailEndY);
         const tTop = Math.max(0, fullTop);
         const tBot = Math.min(fullBot, receptorY - 20);
-        const holdProgress = Math.min(
-          1,
-          Math.max(0, (state.songPositionMs - note.timeMs) / note.durationMs),
-        );
+        const holdProgress = Math.min(1, Math.max(0, (state.songPositionMs - note.timeMs) / note.durationMs));
         const clippedTop = tTop + (tBot - tTop) * holdProgress;
         if (tBot > clippedTop + 4) {
           const isMissed = state.noteResults.some(
@@ -412,16 +483,16 @@ export default function FNF() {
           const pad = 4;
           const tw = laneW - pad * 2;
           const path = new Path2D();
-          const r = 6;
-          path.moveTo(x + pad + r, clippedTop);
-          path.lineTo(x + pad + tw - r, clippedTop);
-          path.lineTo(x + pad + tw, clippedTop + r);
-          path.lineTo(x + pad + tw, tBot - r);
-          path.quadraticCurveTo(x + pad + tw, tBot, x + pad + tw - r, tBot);
-          path.lineTo(x + pad + r, tBot);
-          path.quadraticCurveTo(x + pad, tBot, x + pad, tBot - r);
-          path.lineTo(x + pad, clippedTop + r);
-          path.quadraticCurveTo(x + pad, clippedTop, x + pad + r, clippedTop);
+          const cr = 6;
+          path.moveTo(x + pad + cr, clippedTop);
+          path.lineTo(x + pad + tw - cr, clippedTop);
+          path.lineTo(x + pad + tw, clippedTop + cr);
+          path.lineTo(x + pad + tw, tBot - cr);
+          path.quadraticCurveTo(x + pad + tw, tBot, x + pad + tw - cr, tBot);
+          path.lineTo(x + pad + cr, tBot);
+          path.quadraticCurveTo(x + pad, tBot, x + pad, tBot - cr);
+          path.lineTo(x + pad, clippedTop + cr);
+          path.quadraticCurveTo(x + pad, clippedTop, x + pad + cr, clippedTop);
           path.closePath();
           ctx.fillStyle = trailColor + '60';
           ctx.fill(path);
@@ -434,10 +505,40 @@ export default function FNF() {
       drawArrow(ctx, x + laneW / 2, headY, note.lane, color, 0.9);
     }
 
+    const splashes = splashRef.current;
+    for (let i = splashes.length - 1; i >= 0; i--) {
+      const s = splashes[i];
+      if (s.life <= 0) { splashes.splice(i, 1); continue; }
+      ctx.save();
+      ctx.globalAlpha = s.life;
+      ctx.fillStyle = s.color;
+      if (s.star) {
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = 2;
+        for (let j = 0; j < 4; j++) {
+          const a = (Math.PI * 2 * j) / 4 + Math.PI / 4;
+          const len = 5 * s.life;
+          ctx.beginPath();
+          ctx.moveTo(s.x - Math.cos(a) * len, s.y - Math.sin(a) * len);
+          ctx.lineTo(s.x + Math.cos(a) * len, s.y + Math.sin(a) * len);
+          ctx.stroke();
+        }
+      } else {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 3 * s.life, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+      s.x += s.vx;
+      s.y += s.vy;
+      s.vy += 0.08;
+      s.life -= 0.025;
+    }
+
     const popups = popupsRef.current;
     for (let i = popups.length - 1; i >= 0; i--) {
       const p = popups[i];
-      if (p.life <= 0) continue;
+      if (p.life <= 0) { popups.splice(i, 1); continue; }
       ctx.save();
       ctx.globalAlpha = p.life;
       ctx.fillStyle = p.color;
@@ -447,10 +548,8 @@ export default function FNF() {
       ctx.restore();
       p.life -= 0.025;
       p.y -= 1.2;
-      if (p.life <= 0) {
-        popups.splice(i, 1);
-      }
     }
+
     const progress = state.songEnded
       ? 1
       : state.songPositionMs / chart.songDurationMs;
@@ -492,11 +591,20 @@ export default function FNF() {
     return () => cancelAnimationFrame(frameRef.current);
   }, [screen, tick, drawCanvas]);
 
+  const countdownStarted = useRef(false);
+
   useEffect(() => {
-    if (screen !== 'countdown') return;
+    if (screen !== 'countdown') {
+      countdownStarted.current = false;
+      return;
+    }
+    // Guard against React 18 Strict Mode double-mount
+    if (countdownStarted.current) return;
+    countdownStarted.current = true;
+
     const audio = audioRef.current;
     audio.resume();
-    audio.countdown();
+    audio.countdown(3);
     const bpm = chartRef.current.bpm;
     const countdownInterval = Math.round((60_000 / bpm) * 2);
     let step = 3;
@@ -504,7 +612,7 @@ export default function FNF() {
       step--;
       if (step > 0) {
         setCountdownValue(step);
-        audio.countdown();
+        audio.countdown(step);
       } else if (step === 0) {
         setCountdownValue('GO');
         audio.go();
@@ -525,6 +633,8 @@ export default function FNF() {
     engineRef.current = createInitialState();
     leadInMsRef.current = computeLeadIn(chart.bpm);
     popupsRef.current = [];
+    splashRef.current = [];
+    oppHitSetRef.current = new Set();
     displayScoreRef.current = 0;
     displayComboRef.current = 0;
     displayHealthRef.current = 100;
@@ -689,6 +799,17 @@ export default function FNF() {
               );
             })}
           </div>
+          <div className="flex flex-col items-center gap-2 mt-4">
+            <span className="text-sm text-gray-400">me teste</span>
+            <iframe 
+              width="110" 
+              height="200" 
+              src="https://www.myinstants.com/instant/botao-do-whatsapp-97196/embed/" 
+              frameBorder="0" 
+              scrolling="no"
+              className="rounded-lg"
+            />
+          </div>
         </div>
       </div>
     );
@@ -792,8 +913,8 @@ export default function FNF() {
             {SONG_NAMES[selectedSong]}
           </span>
           <div className="flex items-center gap-1">
-            <span className="text-gray-500">HP</span>
-            <div className="w-32 bg-gray-700 rounded-full h-3 overflow-hidden">
+            <span className="text-red-400 font-bold w-5 text-center">O</span>
+            <div className="w-28 bg-gray-700 rounded-full h-3 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-100 ${
                   displayHealth > 50
@@ -805,6 +926,7 @@ export default function FNF() {
                 style={{ width: `${displayHealth}%` }}
               />
             </div>
+            <span className="text-green-400 font-bold w-5 text-center">P</span>
           </div>
         </div>
         <div className="flex items-center gap-4 text-sm">
@@ -918,20 +1040,32 @@ function drawArrow(
   color: string,
   alpha: number,
 ): void {
-  const size = 18;
+  const size = 16;
   ctx.save();
   ctx.globalAlpha = alpha;
+  if (alpha > 0.8) {
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 15;
+  }
   ctx.translate(cx, cy);
   ctx.rotate(ARROW_ROTATIONS[dir]);
+  const w = size * 0.65;
+  const h = size;
+  const shaft = w * 0.35;
   ctx.beginPath();
-  ctx.moveTo(0, -size);
-  ctx.lineTo(-size * 0.7, size * 0.4);
-  ctx.lineTo(size * 0.7, size * 0.4);
+  ctx.moveTo(0, -h);
+  ctx.lineTo(-w, 0);
+  ctx.lineTo(-shaft, 0);
+  ctx.lineTo(-shaft, h * 0.55);
+  ctx.lineTo(shaft, h * 0.55);
+  ctx.lineTo(shaft, 0);
+  ctx.lineTo(w, 0);
   ctx.closePath();
   ctx.fillStyle = color;
   ctx.fill();
-  ctx.strokeStyle = '#ffffffaa';
-  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = '#ffffffdd';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
   ctx.stroke();
   ctx.restore();
 }

@@ -11,8 +11,10 @@ interface Note {
 
 interface Chart {
   notes: Note[];
+  oppNotes: Note[];
   songDurationMs: number;
   bpm: number;
+  scrollSpeed: number;
 }
 
 interface EngineState {
@@ -50,8 +52,8 @@ function createRng(seed: number): () => number {
 
 function generateChart(songIndex: number): Chart {
   const rng = createRng(songIndex * 2654435761 + 12345);
-  const bpm = [120, 130, 140, 150, 160][songIndex] || 120;
-  const seconds = [30, 45, 60, 75, 90][songIndex] || 30;
+  const bpm = [120, 130, 140, 150, 160, 170, 100, 145, 180, 110][songIndex] || 120;
+  const seconds = [30, 45, 60, 75, 90, 45, 60, 50, 70, 55][songIndex] || 30;
   const songDurationMs = seconds * 1000;
   const beatMs = (60_000 / bpm);
   const totalBeats = Math.floor((songDurationMs - 1500) / beatMs);
@@ -73,7 +75,71 @@ function generateChart(songIndex: number): Chart {
     });
   }
 
-  return { notes, songDurationMs, bpm };
+  const oppNotes: Note[] = [];
+  for (let beat = 0; beat < totalBeats; beat++) {
+    const timeMs = beat * beatMs + 2000;
+    const noise = rng();
+    const shouldPlace = noise < 0.4 + 0.15 * Math.cos(beat * 0.25);
+    if (!shouldPlace) continue;
+    const lane = Math.floor(rng() * 4) as Lane;
+    oppNotes.push({
+      kind: "tap",
+      lane,
+      timeMs: Math.round(timeMs),
+      durationMs: 0,
+    });
+  }
+
+  return { notes, oppNotes, songDurationMs, bpm, scrollSpeed: 1 };
+}
+
+interface CNENote {
+  id: number;     // lane 0-3
+  time: number;   // ms
+  sLen: number;   // sustain length ms, 0 = tap
+  type: number;   // note type
+}
+
+interface CNEStrumLine {
+  position: string;
+  notes: CNENote[];
+  characters?: string[];
+  type?: number;
+  visible?: boolean;
+}
+
+interface CNEChart {
+  strumLines: CNEStrumLine[];
+  events?: Array<{ name: string; time: number; params?: unknown[] }>;
+  scrollSpeed?: number;
+  stage?: string;
+  bpm?: number;
+  songDurationMs?: number;
+}
+
+function parseCNEChart(json: CNEChart, defaultBpm = 120): Chart {
+  const playerLine = json.strumLines.find(s => s.position === 'boyfriend');
+  const oppLine = json.strumLines.find(s => s.position === 'dad');
+  const bpm = json.bpm ?? defaultBpm;
+  const scrollSpeed = json.scrollSpeed ?? 1;
+
+  const toNote = (n: CNENote): Note => ({
+    kind: n.sLen > 0 ? 'hold' : 'tap',
+    lane: n.id as Lane,
+    timeMs: Math.round(n.time),
+    durationMs: Math.round(n.sLen),
+  });
+
+  const notes = (playerLine?.notes ?? []).map(toNote);
+  const oppNotes = (oppLine?.notes ?? []).map(toNote);
+
+  let songDurationMs = json.songDurationMs ?? 0;
+  if (!songDurationMs && notes.length > 0) {
+    const lastNote = notes[notes.length - 1];
+    songDurationMs = lastNote.timeMs + (lastNote.durationMs || 500) + 2000;
+  }
+
+  return { notes, oppNotes, songDurationMs, bpm, scrollSpeed };
 }
 
 function createInitialState(): EngineState {
@@ -355,9 +421,10 @@ function getRatingLetter(accuracy: number): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
   return 'F';
 }
 
-export type { NoteKind, Lane, Judgment, Note, Chart, EngineState, EngineEvent };
+export type { NoteKind, Lane, Judgment, Note, Chart, EngineState, EngineEvent, CNENote, CNEStrumLine, CNEChart };
 export {
   generateChart,
+  parseCNEChart,
   createInitialState,
   judgeNote,
   calculateScore,

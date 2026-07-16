@@ -17,25 +17,29 @@ import type { Chart, EngineState, Lane } from "./engine";
 function holdChart(lane: Lane, timeMs: number, durationMs: number): Chart {
   return {
     notes: [{ kind: "hold", lane, timeMs, durationMs }],
+    oppNotes: [],
     songDurationMs: 10000,
     bpm: 120,
+    scrollSpeed: 1,
   };
 }
 
 function tapChart(lane: Lane, timeMs: number): Chart {
   return {
     notes: [{ kind: "tap", lane, timeMs, durationMs: 0 }],
+    oppNotes: [],
     songDurationMs: 10000,
     bpm: 120,
+    scrollSpeed: 1,
   };
 }
 
 function emptyChart(): Chart {
-  return { notes: [], songDurationMs: 10000, bpm: 120 };
+  return { notes: [], oppNotes: [], songDurationMs: 10000, bpm: 120, scrollSpeed: 1 };
 }
 
 function chart5000(): Chart {
-  return { notes: [], songDurationMs: 5000, bpm: 120 };
+  return { notes: [], oppNotes: [], songDurationMs: 5000, bpm: 120, scrollSpeed: 1 };
 }
 
 describe("generateChart", () => {
@@ -52,7 +56,7 @@ describe("generateChart", () => {
   });
 
   it("first note at >= 2000ms", () => {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 10; i++) {
       const chart = generateChart(i);
       expect(chart.notes[0].timeMs).toBeGreaterThanOrEqual(2000);
     }
@@ -238,8 +242,10 @@ describe("processKeyPress", () => {
         { kind: "tap", lane: 0, timeMs: 5000, durationMs: 0 },
         { kind: "tap", lane: 0, timeMs: 5300, durationMs: 0 },
       ],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state = createInitialState();
     const { state: newState } = processKeyPress(state, 0, 5100, chart);
@@ -253,8 +259,10 @@ describe("processKeyPress", () => {
         { kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 },
         { kind: "tap", lane: 0, timeMs: 3000, durationMs: 0 },
       ],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const nearDeath: EngineState = { ...createInitialState(), health: 3 };
     const { state: afterDeath } = processNoteHit(nearDeath, 0, 2000, chart);
@@ -342,8 +350,10 @@ describe("processSongTick", () => {
   it("auto-misses expired notes", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 2000, chart);
@@ -381,8 +391,10 @@ describe("processSongTick", () => {
   it("auto-miss increments missCount", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 2000, chart);
@@ -406,8 +418,10 @@ describe("health and death", () => {
   it("health reaches 0 -> death event", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state: EngineState = { ...createInitialState(), health: 3 };
     const { state: newState, events } = processNoteHit(state, 0, 2000, chart);
@@ -422,8 +436,10 @@ describe("health and death", () => {
         { kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 },
         { kind: "tap", lane: 1, timeMs: 2000, durationMs: 0 },
       ],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state: EngineState = { ...createInitialState(), health: 3 };
     const { state: afterDeath } = processNoteHit(state, 0, 2000, chart);
@@ -439,8 +455,10 @@ describe("health and death", () => {
   it("health never goes below 0", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state: EngineState = { ...createInitialState(), health: 1 };
     const { state: newState } = processNoteHit(state, 0, 2000, chart);
@@ -450,8 +468,10 @@ describe("health and death", () => {
   it("health never goes above 100", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 }],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state: EngineState = { ...createInitialState(), health: 99 };
     const { state: newState } = processNoteHit(state, 0, 1000, chart);
@@ -464,8 +484,10 @@ describe("health and death", () => {
         { kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 },
         { kind: "tap", lane: 1, timeMs: 3000, durationMs: 0 },
       ],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     let state = createInitialState();
     const { state: s1 } = processNoteHit(state, 0, 1000, chart);
@@ -491,8 +513,10 @@ describe("edge cases", () => {
         { kind: "tap", lane: 0, timeMs: 500, durationMs: 0 },
         { kind: "tap", lane: 1, timeMs: 800, durationMs: 0 },
       ],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state = createInitialState();
     const { state: newState } = processSongTick(state, 2000, chart);
@@ -515,8 +539,10 @@ describe("edge cases", () => {
         { kind: "hold", lane: 0, timeMs: 1000, durationMs: 2000 },
         { kind: "hold", lane: 1, timeMs: 1100, durationMs: 1000 },
       ],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const state: EngineState = { ...createInitialState(), health: 4 };
     const { state: afterHit } = processNoteHit(state, 0, 1000, chart);
@@ -533,8 +559,10 @@ describe("edge cases", () => {
   it("processKeyPress on dead state is no-op", () => {
     const chart: Chart = {
       notes: [{ kind: "tap", lane: 0, timeMs: 5000, durationMs: 0 }],
+      oppNotes: [],
       songDurationMs: 10000,
       bpm: 120,
+      scrollSpeed: 1,
     };
     const deadState: EngineState = { ...createInitialState(), health: 0 };
     const { state: newState } = processKeyPress(deadState, 0, 5000, chart);
