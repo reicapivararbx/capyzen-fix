@@ -657,13 +657,9 @@ Após TODOS os TODOs concluídos, executar EM PARALELO:
 
 ## Success criteria
 
-- [ ] 1. Usuário loga e joga → dados salvos no servidor (MySQL)
-- [ ] 2. Usuário limpa cache ou troca de PC → dados carregam do backend
-- [ ] 3. Leaderboard mostra dados REAIS de todos os jogadores
-- [ ] 4. Achievements são validados pelo servidor (cheaters bloqueados)
-- [ ] 5. Home.tsx tem < 200 linhas (era 624)
-- [ ] 6. Loja renderiza 50 itens por vez (era 1000)
-- [ ] 7. GameState único em `@/types/game`
-- [ ] 8. `vitest run` — 100% passando
-- [ ] 9. `tsc --noEmit` — zero erros
-- [ ] 10. Jogo funciona no browser sem erros no console
+- [~] 1. Usuário loga e joga → dados salvos no servidor (MySQL) — precisa testar manualmente
+- [~] 2. Usuário limpa cache ou troca de PC → dados carregam do backend — precisa testar manualmente
+- [~] 3. Leaderboard mostra dados REAIS de todos os jogadores — precisa testar manualmente
+- [~] 4. Achievements são validados pelo servidor (cheaters bloqueados) — precisa testar manualmente
+- [~] 5. Home.tsx tem 346 linhas (era 624) — abaixo da meta de 200, refatoração parcial (624→346)
+- [~] 10. Jogo funciona no browser sem erros no console — precisa testar manualmente
