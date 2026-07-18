@@ -1,13 +1,28 @@
 #!/bin/bash
-# Deploy CapyZen to dev.zanona.com.br/matteo
-set -e
+# Deploy CapyZen to game.zanona.com.br (no Docker, Node.js + Caddy)
+# Usage: ./deploy.sh
 
-echo "🚀 Building Docker image..."
-docker compose build --no-cache
+set -euo pipefail
 
-echo "📦 Starting container..."
-docker compose up -d
+SERVER="ubuntu@game.zanona.com.br"
+REMOTE_DIR="/opt/capygame"
+
+echo "🔨 Building locally..."
+pnpm run build
+
+echo "📦 Syncing to server..."
+rsync -avz --delete \
+  --exclude 'node_modules' \
+  --exclude '.git' \
+  --exclude '.omo' \
+  --exclude '.manus-logs' \
+  ./ ${SERVER}:${REMOTE_DIR}/
+
+echo "📦 Installing/updating dependencies on server..."
+ssh ${SERVER} "cd ${REMOTE_DIR} && pnpm install --frozen-lockfile --prod"
+
+echo "🔄 Restarting services..."
+ssh ${SERVER} "sudo systemctl restart capygame"
 
 echo "✅ Deploy complete!"
-echo "🌐 Access: http://localhost:3000"
-echo "🔗 Public: https://dev.zanona.com.br/matteo"
+echo "🔗 Access: https://game.zanona.com.br"

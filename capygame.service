@@ -1,0 +1,26 @@
+[Unit]
+Description=CapyZen Game Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/capygame
+ExecStart=/usr/bin/node dist/index.js
+Restart=on-failure
+RestartSec=5
+Environment=NODE_ENV=production
+EnvironmentFile=/opt/capygame/.env
+
+# Memory limit for 1GB instance
+MemoryMax=512M
+CPUQuota=80%
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/capygame
+
+[Install]
+WantedBy=multi-user.target

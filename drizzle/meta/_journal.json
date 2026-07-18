@@ -1,26 +1,12 @@
 {
   "version": "7",
-  "dialect": "mysql",
+  "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1778275930768,
-      "tag": "0000_icy_magus",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1783866059287,
-      "tag": "0001_tiresome_shiver_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1783867102445,
-      "tag": "0002_mysterious_guardian",
+      "version": "6",
+      "when": 1784413464346,
+      "tag": "0000_hesitant_leopardon",
       "breakpoints": true
     }
   ]

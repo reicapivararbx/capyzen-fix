@@ -1,5 +1,6 @@
 import { desc, eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
+import { drizzle } from "drizzle-orm/better-sqlite3";
+import Database from "better-sqlite3";
 import { achievements, gameSaves, users } from "../drizzle/schema";
 import type { GameSave, InsertAchievement, InsertGameSave, InsertUser } from "../drizzle/schema";
 import type { GameState, LeaderboardEntry } from "../client/src/types/game";
@@ -143,7 +144,8 @@ let _db: ReturnType<typeof drizzle> | null = null;
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      const sqlite = new Database(process.env.DATABASE_URL);
+      _db = drizzle(sqlite);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
       _db = null;
@@ -202,7 +204,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
+    await db.insert(users).values(values).onConflictDoUpdate({
+      target: users.openId,
       set: updateSet,
     });
   } catch (error) {
@@ -234,7 +237,8 @@ export async function saveGame(userId: number, state: GameState): Promise<void> 
   const values = toGameSaveValues(userId, state, lastSaved);
 
   try {
-    await db.insert(gameSaves).values(values).onDuplicateKeyUpdate({
+    await db.insert(gameSaves).values(values).onConflictDoUpdate({
+      target: gameSaves.userId,
       set: {
         coins: state.coins,
         level: state.level,
@@ -306,7 +310,8 @@ export async function unlockAchievement(userId: number, achievementId: string): 
   const values: InsertAchievement = { userId, achievementId };
 
   try {
-    await db.insert(achievements).values(values).onDuplicateKeyUpdate({
+    await db.insert(achievements).values(values).onConflictDoUpdate({
+      target: [achievements.userId, achievements.achievementId],
       set: { achievementId },
     });
   } catch (error) {
