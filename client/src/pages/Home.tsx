@@ -298,13 +298,13 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
           <h1 className="text-2xl sm:text-3xl font-bold shrink-0">🐹 CapyZen</h1>
           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={() => window.location.href = '/matteo/loja'} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px] text-sm sm:text-base">
+            <Button onClick={() => window.location.href = '/loja'} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px] text-sm sm:text-base">
               🛍️ Loja
             </Button>
-            <Button onClick={() => window.location.href = '/matteo/admin'} className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[44px] text-sm sm:text-base">
+            <Button onClick={() => window.location.href = '/admin'} className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[44px] text-sm sm:text-base">
               ⚙️ Admin
             </Button>
-            <Button onClick={() => window.location.href = '/matteo/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[44px] text-sm sm:text-base">
+            <Button onClick={() => window.location.href = '/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[44px] text-sm sm:text-base">
               🎵 FNF
             </Button>
             <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[44px] min-w-[44px] text-sm sm:text-base">
