@@ -145,9 +145,10 @@ class AudioManager {
 }
 
 const JUDGMENT_COLORS: Record<string, string> = {
-  perfect: '#fbbf24',
-  good: '#60a5fa',
-  miss: '#ef4444',
+  sick: '#ff0000',
+  good: '#22c55e',
+  bad: '#dc2626',
+  shit: '#991b1b',
 };
 
 interface Popup {
@@ -157,6 +158,7 @@ interface Popup {
   y: number;
   life: number;
   color: string;
+  style: 'sick' | 'good' | 'bad' | 'shit';
 }
 
 type Screen = 'song_select' | 'countdown' | 'playing' | 'result';
@@ -223,14 +225,37 @@ export default function FNF() {
       const total = laneW * laneCount + (laneCount - 1) * 3;
       const sx = (canvasWidth - total) / 2;
       const x = sx + lane * (laneW + 3) + laneW / 2;
-      const color = JUDGMENT_COLORS[text] ?? '#ffffff';
+      
+      let style: 'sick' | 'good' | 'bad' | 'shit';
+      let displayText: string;
+      let color: string;
+      
+      if (text === 'perfect') {
+        style = 'sick';
+        displayText = 'SICK!!';
+        color = '#ff0000';
+      } else if (text === 'good') {
+        style = 'good';
+        displayText = 'GOOD!';
+        color = JUDGMENT_COLORS.good;
+      } else if (text === 'bad') {
+        style = 'bad';
+        displayText = 'BAD';
+        color = JUDGMENT_COLORS.bad;
+      } else {
+        style = 'shit';
+        displayText = 'SHIT';
+        color = JUDGMENT_COLORS.shit;
+      }
+      
       popupsRef.current.push({
         id: popupIdRef.current++,
-        text: text === 'perfect' ? 'PERFEITO' : text === 'good' ? 'BOM' : text === 'miss' ? 'ERROU' : 'HOLD',
+        text: displayText,
         x,
         y: receptorY - 30,
         life: 1,
         color,
+        style,
       });
     },
     [],
@@ -569,15 +594,66 @@ export default function FNF() {
     for (let i = popups.length - 1; i >= 0; i--) {
       const p = popups[i];
       if (p.life <= 0) { popups.splice(i, 1); continue; }
+      
       ctx.save();
       ctx.globalAlpha = p.life;
-      ctx.fillStyle = p.color;
-      ctx.font = 'bold 22px sans-serif';
+      ctx.font = 'bold 32px "Impact", sans-serif';
       ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      const fontSize = 32;
+      const textWidth = ctx.measureText(p.text).width;
+      
+      // 3D shadow layers
+      ctx.fillStyle = '#000000';
+      for (let s = 6; s >= 1; s--) {
+        ctx.fillText(p.text, p.x + s, p.y + s);
+      }
+      
+      // Main fill with gradient or solid color
+      if (p.style === 'sick') {
+        // Rainbow gradient for SICK!!
+        const gradient = ctx.createLinearGradient(
+          p.x - textWidth / 2, p.y,
+          p.x + textWidth / 2, p.y
+        );
+        gradient.addColorStop(0, '#ff0000');
+        gradient.addColorStop(0.17, '#ff8800');
+        gradient.addColorStop(0.33, '#ffff00');
+        gradient.addColorStop(0.5, '#00ff00');
+        gradient.addColorStop(0.67, '#0088ff');
+        gradient.addColorStop(0.83, '#8800ff');
+        gradient.addColorStop(1, '#ff00ff');
+        ctx.fillStyle = gradient;
+      } else if (p.style === 'shit') {
+        // Dark red gradient for SHIT
+        const gradient = ctx.createLinearGradient(
+          p.x, p.y - fontSize / 2,
+          p.x, p.y + fontSize / 2
+        );
+        gradient.addColorStop(0, '#dc2626');
+        gradient.addColorStop(1, '#7f1d1d');
+        ctx.fillStyle = gradient;
+      } else {
+        ctx.fillStyle = p.color;
+      }
+      
+      // Draw text with outline
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 4;
+      ctx.strokeText(p.text, p.x, p.y);
       ctx.fillText(p.text, p.x, p.y);
+      
+      // Exclamation emphasis for SICK!!
+      if (p.style === 'sick' && p.life > 0.7) {
+        const scale = 1 + (p.life - 0.7) * 0.5;
+        ctx.font = `bold ${Math.floor(fontSize * scale)}px "Impact", sans-serif`;
+        ctx.fillText(p.text, p.x, p.y);
+      }
+      
       ctx.restore();
       p.life -= 0.025;
-      p.y -= 1.2;
+      p.y -= 1.5;
     }
 
     const progress = state.songEnded
