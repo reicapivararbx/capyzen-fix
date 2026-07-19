@@ -905,82 +905,132 @@ export default function FNF() {
   if (screen === 'result' && gameResult) {
     const r = gameResult;
     return (
-      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6">
-        <div className="bg-gray-800 rounded-xl p-8 max-w-sm w-full border border-gray-700 text-center">
-          <div className="text-6xl mb-4">
-            {r.passed ? '🎉' : '💔'}
+      <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">
+        <div className="bg-white rounded-xl max-w-sm w-full shadow-2xl overflow-hidden text-center">
+          {/* Rainbow gradient banner */}
+          <div
+            className="h-24 w-full"
+            style={{
+              background: 'linear-gradient(90deg, #ff6eb4 0%, #ff3de8 15%, #cc33cc 30%, #da1bde 50%, #73fd0b 75%, #5eed2c 90%, #f2ff96 100%)',
+            }}
+          />
+
+          {/* RATING 3D text */}
+          <div className="relative -mt-2 mb-2">
+            <h1
+              className="text-5xl font-black tracking-wider select-none"
+              style={{
+                color: '#ff2222',
+                textShadow: `
+                  1px 1px 0px #b40000,
+                  2px 2px 0px #a00000,
+                  3px 3px 0px #8c0000,
+                  4px 4px 0px #780000,
+                  5px 5px 0px #640000,
+                  6px 6px 8px rgba(0,0,0,0.4)
+                `,
+              }}
+            >
+              RATING
+            </h1>
           </div>
-          <h2
-            className={`text-3xl font-bold mb-2 ${r.passed ? 'text-green-400' : 'text-red-400'}`}
-          >
+
+          {/* Victory / Defeat header */}
+          <h2 className={`text-2xl font-bold mb-1 ${r.passed ? 'text-green-600' : 'text-red-500'}`}>
             {r.passed ? 'VITÓRIA!' : 'DERROTA!'}
           </h2>
-          
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <span className={`px-3 py-1 rounded-full text-sm font-bold ${
-              r.difficulty === 'easy' ? 'bg-green-600'
-              : r.difficulty === 'normal' ? 'bg-blue-600'
-              : r.difficulty === 'hard' ? 'bg-orange-600'
-              : 'bg-red-600'
+
+          {/* Difficulty + Botplay badges */}
+          <div className="flex items-center justify-center gap-2 mb-3">
+            <span className={`px-3 py-1 rounded-full text-xs font-bold text-white ${
+              r.difficulty === 'easy' ? 'bg-green-500'
+              : r.difficulty === 'normal' ? 'bg-blue-500'
+              : r.difficulty === 'hard' ? 'bg-orange-500'
+              : 'bg-red-500'
             }`}>
               {r.difficulty === 'easy' ? '🟢 Fácil' : r.difficulty === 'normal' ? '🔵 Normal' : r.difficulty === 'hard' ? '🟠 Difícil' : '🔴 Insano'}
             </span>
             {r.botplay && (
-              <span className="px-3 py-1 rounded-full text-sm font-bold bg-purple-600">
+              <span className="px-3 py-1 rounded-full text-xs font-bold bg-purple-500 text-white">
                 🤖 BOTPLAY
               </span>
             )}
           </div>
 
-          {r.millionReward && (
-            <div className="bg-yellow-900/50 border border-yellow-500 rounded-lg p-3 mb-4">
-              <div className="text-yellow-400 text-lg font-bold">
-                🎉 1 MILHÃO DE MOEDAS! 🎉
-              </div>
-              <div className="text-yellow-300 text-sm mt-1">
-                Parabéns por completar todas as músicas!
-              </div>
-            </div>
-          )}
-          <div className="space-y-2 mb-6 text-left">
-            <div className="flex justify-between">
-              <span className="text-gray-400">Pontuação</span>
-              <span className="font-bold text-xl">{r.score.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Precisão</span>
-              <span className="font-bold text-xl">{r.accuracy.toFixed(1)}%</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-400">Rating</span>
-              <span className={`text-3xl font-bold ${
+          {/* Rating letter - large prominent display */}
+          <div className="mb-4">
+            <span
+              className={`text-8xl font-black drop-shadow-lg ${
                 r.ratingLetter === 'S' ? 'text-yellow-400' :
                 r.ratingLetter === 'A' ? 'text-green-400' :
                 r.ratingLetter === 'B' ? 'text-blue-400' :
                 r.ratingLetter === 'C' ? 'text-purple-400' :
                 r.ratingLetter === 'D' ? 'text-orange-400' :
                 'text-red-400'
-              }`}>{r.ratingLetter}</span>
+              }`}
+              style={{
+                textShadow: r.ratingLetter === 'S'
+                  ? '2px 2px 0px #b8860b, 4px 4px 6px rgba(0,0,0,0.2)'
+                  : r.ratingLetter === 'A'
+                  ? '2px 2px 0px #15803d, 4px 4px 6px rgba(0,0,0,0.2)'
+                  : r.ratingLetter === 'B'
+                  ? '2px 2px 0px #1d4ed8, 4px 4px 6px rgba(0,0,0,0.2)'
+                  : r.ratingLetter === 'C'
+                  ? '2px 2px 0px #6b21a8, 4px 4px 6px rgba(0,0,0,0.2)'
+                  : r.ratingLetter === 'D'
+                  ? '2px 2px 0px #c2410c, 4px 4px 6px rgba(0,0,0,0.2)'
+                  : '2px 2px 0px #991b1b, 4px 4px 6px rgba(0,0,0,0.2)',
+              }}
+            >
+              {r.ratingLetter}
+            </span>
+          </div>
+
+          {/* Million reward notification */}
+          {r.millionReward && (
+            <div className="mx-4 bg-yellow-50 border border-yellow-400 rounded-lg p-3 mb-4">
+              <div className="text-yellow-600 text-lg font-bold">
+                🎉 1 MILHÃO DE MOEDAS! 🎉
+              </div>
+              <div className="text-yellow-500 text-sm mt-1">
+                Parabéns por completar todas as músicas!
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Máximo Combo</span>
-              <span className="font-bold text-yellow-400">{r.maxCombo}</span>
+          )}
+
+          {/* Stats section */}
+          <div className="px-6 pb-4 space-y-2 mb-4 text-left">
+            <div className="flex justify-between items-center py-1 border-b border-gray-100">
+              <span className="text-gray-500 text-sm">Pontuação</span>
+              <span className="font-bold text-lg text-gray-800">{r.score.toLocaleString()}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-400">Status</span>
-              <span className={r.passed ? 'text-green-400' : 'text-red-400'}>
+            <div className="flex justify-between items-center py-1 border-b border-gray-100">
+              <span className="text-gray-500 text-sm">Precisão</span>
+              <span className="font-bold text-lg text-gray-800">{r.accuracy.toFixed(1)}%</span>
+            </div>
+            <div className="flex justify-between items-center py-1 border-b border-gray-100">
+              <span className="text-gray-500 text-sm">Máximo Combo</span>
+              <span className="font-bold text-lg text-yellow-500">{r.maxCombo}</span>
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-gray-500 text-sm">Status</span>
+              <span className={`font-bold text-lg ${r.passed ? 'text-green-500' : 'text-red-500'}`}>
                 {r.passed ? 'Aprovado' : 'Reprovado'}
               </span>
             </div>
           </div>
+
+          {/* Botplay warning */}
           {r.botplay && (
-            <div className="bg-purple-900/50 border border-purple-500 rounded-lg p-3 mb-4">
-              <div className="text-purple-300 text-sm">
+            <div className="mx-4 bg-purple-50 border border-purple-300 rounded-lg p-3 mb-4">
+              <div className="text-purple-600 text-sm">
                 ⚠️ Pontuações com Botplay não contam para o progresso
               </div>
             </div>
           )}
-          <div className="flex flex-col gap-3">
+
+          {/* Action buttons */}
+          <div className="px-6 pb-6 flex flex-col gap-3">
             <Button
               onClick={() => startSong(selectedSong)}
               className="bg-blue-600 hover:bg-blue-700 text-white w-full"
@@ -993,7 +1043,7 @@ export default function FNF() {
                 setScreen('song_select');
               }}
               variant="outline"
-              className="text-white border-gray-600 hover:bg-gray-700 w-full"
+              className="text-gray-700 border-gray-300 hover:bg-gray-100 w-full"
             >
               ← Voltar às Músicas
             </Button>

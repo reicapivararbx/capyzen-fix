@@ -1,0 +1,42 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e2]:
+    - banner
+    - generic [ref=f2e4]:
+      - link "Unity" [ref=f2e6] [cursor=pointer]:
+        - /url: https://login.unity.com
+      - generic [ref=f2e13]:
+        - generic [ref=f2e14]:
+          - heading "Sign in" [level=1] [ref=f2e15]
+          - paragraph [ref=f2e16]: to continue to Unity
+        - generic [ref=f2e18]:
+          - textbox "Email" [active] [ref=f2e19]
+          - group
+        - button "Continue" [ref=f2e20] [cursor=pointer]
+        - paragraph [ref=f2e22]:
+          - text: New to Unity?
+          - link "Create an account" [ref=f2e23] [cursor=pointer]:
+            - /url: /en/sign-up
+        - generic [ref=f2e24]: or
+        - generic [ref=f2e25]:
+          - button "Google" [ref=f2e26] [cursor=pointer]:
+            - generic [ref=f2e33]: Continue with Google
+          - button "Apple" [ref=f2e34] [cursor=pointer]:
+            - generic [ref=f2e38]: Continue with Apple
+          - button "Facebook" [ref=f2e39] [cursor=pointer]:
+            - generic [ref=f2e44]: Continue with Facebook
+          - button "Enterprise SSO" [ref=f2e45] [cursor=pointer]:
+            - generic [ref=f2e49]: Continue with SSO
+    - contentinfo [ref=f2e50]:
+      - generic [ref=f2e52]:
+        - link "Legal" [ref=f2e53] [cursor=pointer]:
+          - /url: https://unity.com/legal
+        - link "Privacy Policy" [ref=f2e54] [cursor=pointer]:
+          - /url: https://unity.com/legal/privacy-policy
+        - link "Cookies" [ref=f2e55] [cursor=pointer]:
+          - /url: https://unity.com/legal/cookie-policy#cookies
+        - button "Cookie Settings" [ref=f2e56] [cursor=pointer]
+        - link "Do Not Sell or Share My Personal Information" [ref=f2e57] [cursor=pointer]:
+          - /url: https://unity.com/legal/do-not-sell-my-personal-information
+      - button "languageSwitcher.button.label" [ref=f2e59] [cursor=pointer]:
+        - generic [ref=f2e62]: English
+  - alert [ref=f2e65]
