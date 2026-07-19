@@ -1,6 +1,7 @@
 type NoteKind = "tap" | "hold";
-type Lane = 0 | 1 | 2 | 3;
+type Lane = 0 | 1 | 2 | 3 | 4;
 type Judgment = "perfect" | "good" | "bad" | "miss";
+type Difficulty = "easy" | "normal" | "hard" | "insane";
 
 interface Note {
   kind: NoteKind;
@@ -15,6 +16,8 @@ interface Chart {
   songDurationMs: number;
   bpm: number;
   scrollSpeed: number;
+  difficulty: Difficulty;
+  laneCount: number;
 }
 
 interface EngineState {
@@ -50,7 +53,7 @@ function createRng(seed: number): () => number {
   };
 }
 
-function generateChart(songIndex: number): Chart {
+function generateChart(songIndex: number, difficulty: Difficulty = "normal"): Chart {
   const rng = createRng(songIndex * 2654435761 + 12345);
   const bpm = [120, 130, 140, 150, 160, 170, 100, 145, 180, 110][songIndex] || 120;
   const seconds = [30, 45, 60, 75, 90, 45, 60, 50, 70, 55][songIndex] || 30;
@@ -59,13 +62,24 @@ function generateChart(songIndex: number): Chart {
   const totalBeats = Math.floor((songDurationMs - 1500) / beatMs);
   const notes: Note[] = [];
 
+  // Difficulty modifiers
+  const isInsane = difficulty === "insane";
+  const laneCount = isInsane ? 5 : 4;
+  
+  // Note density: easy ~50%, normal 100%, hard ~150%, insane ~130% (more lanes)
+  const densityMultiplier = difficulty === "easy" ? 0.5 : difficulty === "hard" ? 1.5 : difficulty === "insane" ? 1.3 : 1;
+  
+  // Speed modifier: easy slower, hard faster, insane fastest
+  const speedMultiplier = difficulty === "easy" ? 0.8 : difficulty === "hard" ? 1.3 : difficulty === "insane" ? 1.5 : 1;
+
   for (let beat = 0; beat < totalBeats; beat++) {
     const timeMs = beat * beatMs + 2000;
     const noise = rng();
-    const shouldPlace = noise < 0.55 + 0.15 * Math.sin(beat * 0.3);
+    const baseChance = 0.55 + 0.15 * Math.sin(beat * 0.3);
+    const shouldPlace = noise < baseChance * densityMultiplier;
     if (!shouldPlace) continue;
-    const lane = Math.floor(rng() * 4) as Lane;
-    const isHold = rng() < 0.3;
+    const lane = Math.floor(rng() * laneCount) as Lane;
+    const isHold = rng() < (difficulty === "easy" ? 0.2 : 0.3);
     const durationMs = isHold ? Math.round(beatMs * (1 + rng() * 3)) : 0;
     notes.push({
       kind: isHold ? "hold" : "tap",
@@ -76,12 +90,13 @@ function generateChart(songIndex: number): Chart {
   }
 
   const oppNotes: Note[] = [];
+  const oppLaneCount = isInsane ? 5 : 4;
   for (let beat = 0; beat < totalBeats; beat++) {
     const timeMs = beat * beatMs + 2000;
     const noise = rng();
     const shouldPlace = noise < 0.4 + 0.15 * Math.cos(beat * 0.25);
     if (!shouldPlace) continue;
-    const lane = Math.floor(rng() * 4) as Lane;
+    const lane = Math.floor(rng() * oppLaneCount) as Lane;
     oppNotes.push({
       kind: "tap",
       lane,
@@ -90,7 +105,7 @@ function generateChart(songIndex: number): Chart {
     });
   }
 
-  return { notes, oppNotes, songDurationMs, bpm, scrollSpeed: 1 };
+  return { notes, oppNotes, songDurationMs, bpm, scrollSpeed: speedMultiplier, difficulty, laneCount };
 }
 
 interface CNENote {
@@ -139,7 +154,7 @@ function parseCNEChart(json: CNEChart, defaultBpm = 120): Chart {
     songDurationMs = lastNote.timeMs + (lastNote.durationMs || 500) + 2000;
   }
 
-  return { notes, oppNotes, songDurationMs, bpm, scrollSpeed };
+  return { notes, oppNotes, songDurationMs, bpm, scrollSpeed, difficulty: 'normal', laneCount: 4 };
 }
 
 function createInitialState(): EngineState {
@@ -159,11 +174,21 @@ function createInitialState(): EngineState {
   };
 }
 
-function judgeNote(songPositionMs: number, noteTimeMs: number): Judgment {
+function judgeNote(songPositionMs: number, noteTimeMs: number, difficulty: Difficulty = "normal"): Judgment {
   const diff = Math.abs(songPositionMs - noteTimeMs);
-  if (diff <= 45) return "perfect";
-  if (diff <= 90) return "good";
-  if (diff <= 135) return "bad";
+  
+  // Timing windows adjusted by difficulty
+  const windows = difficulty === "easy" 
+    ? { perfect: 60, good: 120, bad: 180 }
+    : difficulty === "hard"
+    ? { perfect: 35, good: 70, bad: 105 }
+    : difficulty === "insane"
+    ? { perfect: 30, good: 60, bad: 90 }
+    : { perfect: 45, good: 90, bad: 135 };
+  
+  if (diff <= windows.perfect) return "perfect";
+  if (diff <= windows.good) return "good";
+  if (diff <= windows.bad) return "bad";
   return "miss";
 }
 
@@ -199,7 +224,7 @@ function processNoteHit(
   const note = chart.notes[noteIndex];
   if (!note) return { state, events: [] };
 
-  const judgment = judgeNote(songPositionMs, note.timeMs);
+  const judgment = judgeNote(songPositionMs, note.timeMs, chart.difficulty);
   const newCombo = judgment === "miss" ? 0 : state.combo + 1;
   const newMaxCombo = judgment === "miss" ? state.maxCombo : Math.max(state.maxCombo, newCombo);
   const scoreIncrease = calculateScore(judgment, newCombo);
@@ -333,11 +358,13 @@ function processSongTick(
     }
   }
 
+  const missWindow = chart.difficulty === "easy" ? 180 : chart.difficulty === "hard" ? 105 : chart.difficulty === "insane" ? 90 : 135;
+  
   for (let i = 0; i < chart.notes.length; i++) {
     if (newState.noteResults.some((r) => r.noteIndex === i)) continue;
     const note = chart.notes[i];
-    if (newPosition > note.timeMs + 135) {
-      const missResult = { noteIndex: i, judgment: "miss" as Judgment, timeMs: note.timeMs + 135 };
+    if (newPosition > note.timeMs + missWindow) {
+      const missResult = { noteIndex: i, judgment: "miss" as Judgment, timeMs: note.timeMs + missWindow };
       newState = {
         ...newState,
         noteResults: [...newState.noteResults, missResult],
@@ -378,15 +405,17 @@ function processKeyPress(
 ): { state: EngineState; events: EngineEvent[] } {
   if (state.health <= 0) return { state, events: [] };
 
+  const maxWindow = chart.difficulty === "easy" ? 180 : chart.difficulty === "hard" ? 105 : chart.difficulty === "insane" ? 90 : 135;
+  
   let nearestIdx = -1;
-  let nearestDiff = 136;
+  let nearestDiff = maxWindow + 1;
 
   for (let i = 0; i < chart.notes.length; i++) {
     if (state.noteResults.some((r) => r.noteIndex === i)) continue;
     const note = chart.notes[i];
     if (note.lane !== lane) continue;
     const diff = Math.abs(songPositionMs - note.timeMs);
-    if (diff <= 135 && diff < nearestDiff) {
+    if (diff <= maxWindow && diff < nearestDiff) {
       nearestDiff = diff;
       nearestIdx = i;
     }
@@ -421,7 +450,7 @@ function getRatingLetter(accuracy: number): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
   return 'F';
 }
 
-export type { NoteKind, Lane, Judgment, Note, Chart, EngineState, EngineEvent, CNENote, CNEStrumLine, CNEChart };
+export type { NoteKind, Lane, Judgment, Difficulty, Note, Chart, EngineState, EngineEvent, CNENote, CNEStrumLine, CNEChart };
 export {
   generateChart,
   parseCNEChart,

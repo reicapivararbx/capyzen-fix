@@ -15,6 +15,7 @@ import type {
   EngineState,
   Lane,
   EngineEvent,
+  Difficulty,
 } from '@/features/fnf/engine';
 import { loadGameState, updateGameState } from '@/lib/game-save';
 
@@ -31,11 +32,11 @@ const SONG_NAMES = [
   'Sunset Groove',
 ];
 
-const LANE_COLORS: [string, string, string, string] = ['#c24bf0', '#00a3ff', '#36c44a', '#ff4a52'];
+const LANE_COLORS: string[] = ['#c24bf0', '#00a3ff', '#36c44a', '#ff4a52', '#ffaa00'];
 
-const LANE_DIRECTIONS: [string, string, string, string] = ['←', '↓', '↑', '→'];
+const LANE_DIRECTIONS: string[] = ['←', '↓', '↑', '→', '★'];
 
-const OPP_LANE_COLORS: [string, string, string, string] = ['#a64bd0', '#0077cc', '#2a9c3e', '#cc404a'];
+const OPP_LANE_COLORS: string[] = ['#a64bd0', '#0077cc', '#2a9c3e', '#cc404a', '#cc8800'];
 
 function computeLeadIn(bpm: number): number {
   return Math.round((60_000 / bpm) * 4);
@@ -163,12 +164,14 @@ type Screen = 'song_select' | 'countdown' | 'playing' | 'result';
 export default function FNF() {
   const [screen, setScreen] = useState<Screen>('song_select');
   const [selectedSong, setSelectedSong] = useState(0);
+  const [difficulty, setDifficulty] = useState<Difficulty>('normal');
+  const [botplay, setBotplay] = useState(false);
   const [songsCleared, setSongsCleared] = useState<boolean[]>(() => {
     try {
       const s = loadGameState();
-      return [0, 1, 2, 3, 4].map((i) => s.fnfSongsCompleted > i);
+      return SONG_NAMES.map((_, i) => s.fnfSongsCompleted > i);
     } catch {
-      return [false, false, false, false, false];
+      return SONG_NAMES.map(() => false);
     }
   });
   const [countdownValue, setCountdownValue] = useState<number | 'GO' | null>(
@@ -185,6 +188,8 @@ export default function FNF() {
     millionReward: boolean;
     accuracy: number;
     ratingLetter: string;
+    difficulty: Difficulty;
+    botplay: boolean;
   } | null>(null);
   const [inputMode, setInputMode] = useState<'keyboard' | 'touch'>('keyboard');
 
@@ -203,7 +208,7 @@ export default function FNF() {
   const pressedKeysRef = useRef<Set<string>>(new Set());
   const pressedLanesRef = useRef<Set<Lane>>(new Set());
   const leadInMsRef = useRef(2000);
-  const oppHitLanesRef = useRef<[number, number, number, number]>([0, 0, 0, 0]);
+  const oppHitLanesRef = useRef<number[]>([0, 0, 0, 0, 0]);
   const oppHitSetRef = useRef<Set<number>>(new Set());
   const splashRef = useRef<{ x: number; y: number; vx: number; vy: number; color: string; life: number; star?: boolean }[]>([]);
 
@@ -213,10 +218,11 @@ export default function FNF() {
 
   const addPopup = useCallback(
     (text: string, lane: Lane, canvasWidth: number, receptorY: number) => {
-      const laneW = Math.min((canvasWidth - 80) / 4, 120);
-      const total = laneW * 4 + 4 * 3;
+      const laneCount = chartRef.current.laneCount;
+      const laneW = Math.min((canvasWidth - 80) / laneCount, 120);
+      const total = laneW * laneCount + (laneCount - 1) * 3;
       const sx = (canvasWidth - total) / 2;
-      const x = sx + lane * (laneW + 4) + laneW / 2;
+      const x = sx + lane * (laneW + 3) + laneW / 2;
       const color = JUDGMENT_COLORS[text] ?? '#ffffff';
       popupsRef.current.push({
         id: popupIdRef.current++,
@@ -232,10 +238,11 @@ export default function FNF() {
 
   const addSplash = useCallback(
     (lane: Lane, canvasWidth: number, receptorY: number) => {
-      const laneW = Math.min((canvasWidth - 140) / 8, 70);
+      const laneCount = chartRef.current.laneCount;
+      const laneW = Math.min((canvasWidth - 140) / (laneCount * 2), 70);
       const laneGap = 3;
       const setGap = 50;
-      const oppSetW = laneW * 4 + laneGap * 3;
+      const oppSetW = laneW * laneCount + laneGap * (laneCount - 1);
       const playerStartX = (canvasWidth - (oppSetW * 2 + setGap)) / 2 + oppSetW + setGap;
       const px = playerStartX + lane * (laneW + laneGap) + laneW / 2;
       const color = LANE_COLORS[lane];
@@ -260,32 +267,37 @@ export default function FNF() {
       const maxCombo = state.maxCombo;
       const accuracy = getAccuracy(state);
       const ratingLetter = getRatingLetter(accuracy);
-      const saved = loadGameState();
-      const completed = !passed
-        ? saved.fnfSongsCompleted
-        : Math.max(saved.fnfSongsCompleted, selectedSong + 1);
-      const bestCombo = Math.max(saved.fnfHighestCombo, maxCombo);
-      const coinsAdd = Math.floor(score / 10);
-      let finalCoins = saved.coins + coinsAdd;
       let millionReward = false;
-      if (completed >= 5 && !saved.millionRewardClaimed) {
-        finalCoins += 1_000_000;
-        millionReward = true;
+      
+      // Don't save botplay scores to game state
+      if (!botplay) {
+        const saved = loadGameState();
+        const completed = !passed
+          ? saved.fnfSongsCompleted
+          : Math.max(saved.fnfSongsCompleted, selectedSong + 1);
+        const bestCombo = Math.max(saved.fnfHighestCombo, maxCombo);
+        const coinsAdd = Math.floor(score / 10);
+        let finalCoins = saved.coins + coinsAdd;
+        if (completed >= 5 && !saved.millionRewardClaimed) {
+          finalCoins += 1_000_000;
+          millionReward = true;
+        }
+        updateGameState({
+          fnfSongsCompleted: completed,
+          fnfHighestCombo: bestCombo,
+          coins: finalCoins,
+          millionRewardClaimed: saved.millionRewardClaimed || millionReward,
+        });
+        setSongsCleared(SONG_NAMES.map((_, i) => completed > i));
       }
-      updateGameState({
-        fnfSongsCompleted: completed,
-        fnfHighestCombo: bestCombo,
-        coins: finalCoins,
-        millionRewardClaimed: saved.millionRewardClaimed || millionReward,
-      });
-      setSongsCleared([0, 1, 2, 3, 4].map((i) => completed > i));
+      
       if (passed) {
         audioRef.current.fanfare();
       }
-      setGameResult({ score, maxCombo, passed, millionReward, accuracy, ratingLetter });
+      setGameResult({ score, maxCombo, passed, millionReward, accuracy, ratingLetter, difficulty, botplay });
       setScreen('result');
     },
-    [selectedSong],
+    [selectedSong, difficulty, botplay],
   );
 
   const handleEngineEvent = useCallback(
@@ -347,13 +359,30 @@ export default function FNF() {
     (chart: Chart, dt: number) => {
       const engine = engineRef.current;
       if (engine.songEnded) return;
-      const result = processSongTick(engine, dt, chart);
+      
+      // Botplay: auto-hit notes at perfect timing
+      if (botplay) {
+        for (let i = 0; i < chart.notes.length; i++) {
+          if (engine.noteResults.some((r) => r.noteIndex === i)) continue;
+          const note = chart.notes[i];
+          const diff = Math.abs(engine.songPositionMs - note.timeMs);
+          if (diff <= 5) {
+            const result = processKeyPress(engine, note.lane, engine.songPositionMs, chart);
+            engineRef.current = result.state;
+            for (const ev of result.events) {
+              handleEngineEvent(ev, chart);
+            }
+          }
+        }
+      }
+      
+      const result = processSongTick(engineRef.current, dt, chart);
       engineRef.current = result.state;
       for (const ev of result.events) {
         handleEngineEvent(ev, chart);
       }
     },
-    [handleEngineEvent],
+    [handleEngineEvent, botplay],
   );
 
   const drawCanvas = useCallback(() => {
@@ -379,10 +408,11 @@ export default function FNF() {
     const chart = chartRef.current;
     const receptorY = h - 80;
     const topY = 0;
-    const laneW = Math.min((w - 140) / 8, 70);
+    const laneCount = chart.laneCount;
+    const laneW = Math.min((w - 140) / (laneCount * 2), 70);
     const laneGap = 3;
     const setGap = 50;
-    const oppSetW = laneW * 4 + laneGap * 3;
+    const oppSetW = laneW * laneCount + laneGap * (laneCount - 1);
     const playerSetW = oppSetW;
     const totalW = oppSetW + setGap + playerSetW;
     const startX = (w - totalW) / 2;
@@ -395,7 +425,7 @@ export default function FNF() {
       isOpponent: boolean,
       flashLane: (i: number) => boolean,
     ) => {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < laneCount; i++) {
         const x = startXOffset + i * (laneW + laneGap);
         const color = isOpponent ? OPP_LANE_COLORS[i] : LANE_COLORS[i];
         const isPressed = isOpponent
@@ -628,7 +658,7 @@ export default function FNF() {
   const startSong = useCallback((idx: number) => {
     audioRef.current.resume();
     setSelectedSong(idx);
-    const chart = generateChart(idx);
+    const chart = generateChart(idx, difficulty);
     chartRef.current = chart;
     engineRef.current = createInitialState();
     leadInMsRef.current = computeLeadIn(chart.bpm);
@@ -645,12 +675,13 @@ export default function FNF() {
     setDying(false);
     setCountdownValue(3);
     setScreen('countdown');
-  }, []);
+  }, [difficulty]);
 
   useEffect(() => {
     if (screen !== 'playing') return;
+    const isInsane = chartRef.current.difficulty === 'insane';
     const down = (e: KeyboardEvent) => {
-      const lane = keyToLane(e.key);
+      const lane = keyToLane(e.key, isInsane);
       if (lane === undefined) return;
       e.preventDefault();
       if (pressedKeysRef.current.has(e.key)) return;
@@ -665,7 +696,7 @@ export default function FNF() {
       }
     };
     const up = (e: KeyboardEvent) => {
-      const lane = keyToLane(e.key);
+      const lane = keyToLane(e.key, isInsane);
       if (lane === undefined) return;
       e.preventDefault();
       pressedKeysRef.current.delete(e.key);
@@ -741,6 +772,7 @@ export default function FNF() {
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4 gap-6">
           <h2 className="text-3xl font-bold">Selecione uma música</h2>
+          
           <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
             <button
               type="button"
@@ -765,6 +797,48 @@ export default function FNF() {
               👆 Mobile (Touch)
             </button>
           </div>
+
+          <div className="flex flex-col items-center gap-3">
+            <span className="text-sm text-gray-400">Dificuldade</span>
+            <div className="flex items-center gap-2 bg-gray-800 rounded-lg p-1">
+              {(['easy', 'normal', 'hard', 'insane'] as Difficulty[]).map((d) => (
+                <button
+                  key={d}
+                  type="button"
+                  onClick={() => setDifficulty(d)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    difficulty === d
+                      ? d === 'easy' ? 'bg-green-600 text-white'
+                        : d === 'normal' ? 'bg-blue-600 text-white'
+                        : d === 'hard' ? 'bg-orange-600 text-white'
+                        : 'bg-red-600 text-white'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {d === 'easy' ? '🟢 Fácil' : d === 'normal' ? '🔵 Normal' : d === 'hard' ? '🟠 Difícil' : '🔴 Insano'}
+                </button>
+              ))}
+            </div>
+            {difficulty === 'insane' && (
+              <span className="text-xs text-yellow-400">⚡ Modo Insano: 5 lanes! Use A, S, Space, D, F</span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-gray-400">Botplay</span>
+            <button
+              type="button"
+              onClick={() => setBotplay(!botplay)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                botplay
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              {botplay ? '🤖 Ativado' : '🤖 Desativado'}
+            </button>
+          </div>
+
           <div className="w-full max-w-md flex flex-col gap-3">
             {SONG_NAMES.map((name, i) => {
               const cleared = songsCleared[i];
@@ -841,6 +915,23 @@ export default function FNF() {
           >
             {r.passed ? 'VITÓRIA!' : 'DERROTA!'}
           </h2>
+          
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+              r.difficulty === 'easy' ? 'bg-green-600'
+              : r.difficulty === 'normal' ? 'bg-blue-600'
+              : r.difficulty === 'hard' ? 'bg-orange-600'
+              : 'bg-red-600'
+            }`}>
+              {r.difficulty === 'easy' ? '🟢 Fácil' : r.difficulty === 'normal' ? '🔵 Normal' : r.difficulty === 'hard' ? '🟠 Difícil' : '🔴 Insano'}
+            </span>
+            {r.botplay && (
+              <span className="px-3 py-1 rounded-full text-sm font-bold bg-purple-600">
+                🤖 BOTPLAY
+              </span>
+            )}
+          </div>
+
           {r.millionReward && (
             <div className="bg-yellow-900/50 border border-yellow-500 rounded-lg p-3 mb-4">
               <div className="text-yellow-400 text-lg font-bold">
@@ -882,6 +973,13 @@ export default function FNF() {
               </span>
             </div>
           </div>
+          {r.botplay && (
+            <div className="bg-purple-900/50 border border-purple-500 rounded-lg p-3 mb-4">
+              <div className="text-purple-300 text-sm">
+                ⚠️ Pontuações com Botplay não contam para o progresso
+              </div>
+            </div>
+          )}
           <div className="flex flex-col gap-3">
             <Button
               onClick={() => startSong(selectedSong)}
@@ -946,6 +1044,11 @@ export default function FNF() {
       </div>
       <div ref={containerRef} className="flex-1 relative">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+        {botplay && (
+          <div className="absolute top-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-lg font-bold animate-pulse">
+            🤖 BOTPLAY
+          </div>
+        )}
         {dying && (
           <div className="absolute inset-0 bg-red-900/70 flex items-center justify-center animate-pulse">
             <div className="text-center">
@@ -957,21 +1060,21 @@ export default function FNF() {
       </div>
       {inputMode === 'touch' ? (
         <div className="flex items-center justify-center gap-3 px-4 py-4 bg-gray-950 border-t border-gray-800">
-          {([0, 1, 2, 3] as const).map((lane) => (
+          {Array.from({ length: chartRef.current.laneCount }, (_, i) => i).map((lane) => (
             <button
               key={lane}
               type="button"
               onPointerDown={(e) => {
                 e.preventDefault();
-                handleTouchPress(lane);
+                handleTouchPress(lane as Lane);
               }}
               onPointerUp={(e) => {
                 e.preventDefault();
-                handleTouchRelease(lane);
+                handleTouchRelease(lane as Lane);
               }}
               onPointerLeave={(e) => {
                 e.preventDefault();
-                handleTouchRelease(lane);
+                handleTouchRelease(lane as Lane);
               }}
               onContextMenu={(e) => e.preventDefault()}
               className={`w-20 h-20 rounded-xl text-2xl font-bold flex items-center justify-center select-none touch-none active:scale-95 transition-transform`}
@@ -988,10 +1091,22 @@ export default function FNF() {
         </div>
       ) : (
         <div className="flex items-center justify-center gap-6 px-4 py-2 bg-gray-950 border-t border-gray-800 text-xs text-gray-400">
-          <span>Pressione <kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">A</kbd> <span className="text-gray-500">←</span></span>
-          <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">S</kbd> <span className="text-gray-500">↓</span></span>
-          <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">D</kbd> <span className="text-gray-500">↑</span></span>
-          <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">F</kbd> <span className="text-gray-500">→</span></span>
+          {chartRef.current.difficulty === 'insane' ? (
+            <>
+              <span>Pressione <kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">A</kbd> <span className="text-gray-500">←</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">S</kbd> <span className="text-gray-500">↓</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">Space</kbd> <span className="text-gray-500">★</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">D</kbd> <span className="text-gray-500">↑</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">F</kbd> <span className="text-gray-500">→</span></span>
+            </>
+          ) : (
+            <>
+              <span>Pressione <kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">A</kbd> <span className="text-gray-500">←</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">S</kbd> <span className="text-gray-500">↓</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">D</kbd> <span className="text-gray-500">↑</span></span>
+              <span><kbd className="mx-1 px-1.5 py-0.5 rounded bg-gray-800 text-gray-200 font-mono text-xs">F</kbd> <span className="text-gray-500">→</span></span>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -1018,18 +1133,35 @@ const MAPPINGS: [string, Lane][] = [
   ['F', 3],
   ['k', 3],
   ['K', 3],
+  [' ', 2], // Space bar maps to lane 2 (middle)
 ];
 for (const [k, l] of MAPPINGS) KEY_MAP[k] = l;
 
-function keyToLane(key: string): Lane | undefined {
+const INSANE_KEY_MAP: Record<string, Lane> = {
+  'ArrowLeft': 0,
+  'a': 0,
+  'A': 0,
+  's': 1,
+  'S': 1,
+  ' ': 2,
+  'd': 3,
+  'D': 3,
+  'ArrowRight': 4,
+  'f': 4,
+  'F': 4,
+};
+
+function keyToLane(key: string, isInsane: boolean): Lane | undefined {
+  if (isInsane) return INSANE_KEY_MAP[key];
   return KEY_MAP[key];
 }
 
-const ARROW_ROTATIONS: [number, number, number, number] = [
+const ARROW_ROTATIONS: number[] = [
   -Math.PI / 2,
   Math.PI,
   0,
   Math.PI / 2,
+  0, // Lane 4 (star) points up
 ];
 
 function drawArrow(
