@@ -63,7 +63,7 @@ class AudioManager {
 
   private static SFX = {
     hit: `${import.meta.env.BASE_URL}sfx/gunshot.mp3`,
-    fah: `${import.meta.env.BASE_URL}sfx/fah.mp3`,
+    fah: `${import.meta.env.BASE_URL}sfx/faaah.mp3`,
     death: `${import.meta.env.BASE_URL}sfx/fnf-lost-sfx.mp3`,
     intro3: `${import.meta.env.BASE_URL}sfx/intro3.mp3`,
     intro2: `${import.meta.env.BASE_URL}sfx/intro2.mp3`,
