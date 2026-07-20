@@ -7,6 +7,7 @@ import { getLoginUrl } from '@/const';
 import GameView from '@/components/GameView';
 import StatsPanel from '@/components/StatsPanel';
 import GameControls from '@/components/GameControls';
+import ShopModal from '@/components/ShopModal';
 import { GameState } from '@/types/game';
 import { loadGameState, saveGameState, DEFAULT_GAME_STATE } from '@/lib/game-save';
 import { tickLifeState, calculateAgeFromGameState, clampStat } from '@/features/game/life';
@@ -31,6 +32,7 @@ export default function Home() {
   const [bugTitle, setBugTitle] = useState('');
   const [bugDescription, setBugDescription] = useState('');
   const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(true);
+  const [showShop, setShowShop] = useState(false);
   const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const latestGameStateRef = useRef<GameState>(gameState);
 
@@ -298,7 +300,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
           <h1 className="text-2xl sm:text-3xl font-bold shrink-0">🐹 CapyZen</h1>
           <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={() => window.location.href = '/loja'} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px] text-sm sm:text-base">
+            <Button onClick={() => setShowShop(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px] text-sm sm:text-base">
               🛍️ Loja
             </Button>
             <Button onClick={() => window.location.href = '/admin'} className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[44px] text-sm sm:text-base">
@@ -396,6 +398,9 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Shop Modal */}
+      <ShopModal isOpen={showShop} onClose={() => setShowShop(false)} />
 
       {/* WhatsApp Popup */}
       {showWhatsAppPopup && (

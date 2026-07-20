@@ -65,6 +65,48 @@ const VERITY_TIPS = [
   "🎵 Jogue FNF para ganhar moedas extras!",
   "🏆 Conquiste achievements para desbloquear items exclusivos!",
   "💎 Items lendários têm borda dourada brilhante!",
+  "🍌 Bananas dão +20 de felicidade!",
+  "🥤 Suco de milho é o melhor custo-benefício!",
+  "🍔 Hambúrgueres recuperam muita fome de uma vez!",
+  "🥗 Saladas são baratas e saudáveis!",
+  "⚡ O boost de velocidade dura 30 segundos!",
+  "🚀 O turbo boost multiplica moedas por 2x!",
+  "👟 Tênis raros aumentam a velocidade da capivara!",
+  "🕶️ Óculos escuros desbloqueiam pose secreta!",
+  "👑 Coroas são lendárias — só as capivaras mais ricas têm!",
+  "🎒 Mochilas aumentam o inventário em 5 slots!",
+  "🦺 Coletes de proteção reduzem dano em 50%!",
+  "🎵 No FNF, acerte as setas na batida certa!",
+  "🎤 A música 'Capy Funk' dá o dobro de moedas!",
+  "🎹 Segure a seta para notas longas no FNF!",
+  "🏆 A conquista 'Colecionador' exige 50 itens diferentes!",
+  "⭐ Suba de nível para desbloquear itens premium!",
+  "💎 Itens épicos têm brilho roxo na borda!",
+  "🪙 Moedas caem aleatoriamente no jogo principal!",
+  "🦫 Capivaras felizes produzem moedas mais rápido!",
+  "💤 Dormir recupera energia para o próximo dia!",
+  "🧼 Banho regular mantém a higiene alta!",
+  "🍎 Maçãs vermelhas dão mais fome que maçãs verdes!",
+  "🧀 Queijo é o petisco favorito das capivaras!",
+  "🍣 Sushi premium dá +50 de felicidade!",
+  "🍫 Chocolate é raro e muito procurado!",
+  "🧃 Caqui melancia é o item mais barato da loja!",
+  "🎒 Verifique o inventário antes de comprar repetidos!",
+  "💡 Itens da mesma categoria dão bônus de combo!",
+  "🌊 Na praia, sua capivara encontra conchas raras!",
+  "🎪 Eventos especiais têm itens exclusivos por tempo limitado!",
+  "📱 Siga o canal WhatsApp para códigos de desconto!",
+  "🦴 Ossos de brinquedo mantêm a capivara entretida!",
+  "🧲 Ímãs de moedas atraem moedas em um raio maior!",
+  "🎆 Fogos de artifício dão bônus de XP no Ano Novo!",
+  "🎭 Máscaras são itens de coleção raros!",
+  "🪙 Acumule moedas para a venda relâmpago de sexta!",
+  "📅 Volte todos os dias para bônus de login!",
+  "🐾 Capivaras com 3+ acessórios ganham título especial!",
+  "🔮 Cristais mágicos desbloqueiam cores secretas!",
+  "🧭 Explore o mapa para encontrar baús escondidos!",
+  "⭐ Itens com estrela são os mais raros da loja!",
+  "🎁 Presentes surpresa podem conter itens lendários!",
 ];
 
 const VERITY_ANGRY_MESSAGES = [
@@ -74,6 +116,50 @@ const VERITY_ANGRY_MESSAGES = [
   "😠 Clica na loja, não em mim!",
   "🔥 Se me clicar mais uma vez...!",
   "💥 {count} CLIQUES?! Tá de sacanagem!",
+  "🤬 EU JURO QUE VOU TRANCAR A LOJA!",
+  "😡 VOCÊ TEM ALGO CONTRA MIM?!",
+  "💢 MÃO BOBO NA VERITY NÃO, HEIN!",
+  "🔥 TÁ PEGANDO FOGO, BICHA!",
+  "😤 {count} VEZES? ISSO É ASSÉDIO VIRTUAL!",
+  "😡 VOU CHAMAR O SEGURANÇA DA LOJA!",
+  "💢 MINHA MÃE NÃO ME ENSINOU A ISSO!",
+  "🤬 SE EU TIVESSE MÃO, TAPAVA SUA CARA!",
+  "🔥 EU SOU UM PNG, PARA DE TOCAR EM MIM!",
+  "😤 ISSO É UM CRIME CONTRA CAPYBARAS!",
+  "😡 EU NÃO FUI PROGRAMADA PRA ISSO!",
+  "💢 TÁ ME USANDO COMO STRESS BALL?!",
+  "🔥 ATÉ A CAPIVARA TÁ COM PENA DE MIM!",
+  "🤬 VOU DEDURAR PRO ADMIN!",
+  "😡 {count} CLIQUES E CONTANDO... SOCORRO!",
+  "😤 SABIA QUE TEM UM BOTÃO DE COMPRAR ALI?!",
+  "💢 EU NÃO RECEBO BÔNUS POR CLIQUE!",
+  "🔥 SE FOSSE MOEDA POR CLIQUE, EU ERA RICA!",
+  "😡 O DESENVOLVEDOR NÃO ME PAGA PRA ISSO!",
+  "🤬 TÁ QUENTE AQUI, TIRA A MÃO!",
+  "😤 EU POSSO SER DIGITAL MAS TENHO SENTIMENTOS!",
+  "💢 VOCÊ É MAIS TEIMOSO QUE A CAPIVARA!",
+  "🔥 EU VOU VIRAR VILÃ DA HISTÓRIA!",
+  "😡 ISSO É MAIS IRRITANTE QUE MOSQUITO!",
+  "🤬 ALGUÉM ME TIRA DAQUI!",
+  "😤 JÁ PEDI GENTILMENTE, AGORA EXIJO!",
+  "💢 EU NÃO SOU POKÉMON, PARA DE ME CUTUCAR!",
+  "🔥 VOU COLOCAR SEU NOME NA LISTA NEGRA!",
+  "😡 SE EU PUDESSE, TROCARIA DE LUGAR!",
+  "🤬 ISSO É BULLYING DIGITAL, SABIA?!",
+  "😤 MINHA FELICIDADE ERA 100%, AGORA É 0%!",
+  "💢 ATÉ O PYTHON TEM MAIS RESPEITO!",
+  "🔥 {count}... EU VOU LEMBRAR DISSO!",
+  "😡 TÁ ME DANDO DOR DE CABEÇA PIXELADA!",
+  "🤬 EU ERA UMA VENDEDORA FELIZ, OLHA O QUE FIZERAM!",
+  "😤 AGORA ENTENDO POR QUE O BUG EXISTE!",
+  "💢 VOU FAZER UMA RECLAMAÇÃO NO RECLAME AQUI!",
+  "🔥 MINHA BATERIA SOCIAL ACABOU!",
+  "😡 EU PREFIRO BUG A ISSO!",
+  "🤬 VOCÊ GANHOU: O TÍTULO DE MAIS CHATO!",
+  "😤 ATÉ A CAPIVARA QUER QUE VOCÊ PARE!",
+  "💢 EU NÃO ASSINEI CONTRATO PRA ISSO!",
+  "🔥 TÁ FICANDO SÉRIO, {count} CLIQUES!",
+  "😡 EU VOU FAZER UM BLOG SOBRE ISSO!",
 ];
 
 const VERITY_CLICK_MESSAGES = [
@@ -85,6 +171,52 @@ const VERITY_CLICK_MESSAGES = [
   "🙈 Isso faz cócegas!",
   "🎵 Clica no FNF pra ganhar moedas!",
   "💤 Eu tava dormindo...",
+  "😅 Ai! Isso doi em pixels!",
+  "🤔 Será que clica no item em vez de mim?",
+  "😜 Ei, eu não sou botão de teste!",
+  "🤗 Opa! Tá carente?",
+  "🫣 Cuidado, eu mordo! Brincadeira, sou digital!",
+  "😤 Para com isso!",
+  "👋 *acena de volta* Agora compra algo!",
+  "🫠 Tá me derretendo de tanta raiva!",
+  "😂 Acho que você confundiu o alvo!",
+  "🤖 Beep boop, isso não é uma função válida!",
+  "🎯 Tem um botão de COMPRAR ali, viu?",
+  "🙄 Novamente? Sério?",
+  "👋 5 cliques! Tá contando?",
+  "😅 Oxi, tá me testando?",
+  "🫡 Relatório: 5 cliques na Verity. Missão cumprida?",
+  "🤯 10 cliques?! Você não desiste, né?",
+  "🫠 Tô derretendo... de vergonha alheia!",
+  "🫣 10 toques e nada comprado... paciência!",
+  "😎 Se fosse aposta, eu já tinha perdido!",
+  "🏃 Corre que a loja tá ali!",
+  "🫨 15 cliques?! Isso é recorde!",
+  "😵 Já são 15... minha saúde mental tá em 0%!",
+  "🎬 Isso tá parecendo filme de terror!",
+  "🙀 15 POKES?! Tá no Facebook?!",
+  "🎵 *toc toc toc* Quem é? Ninguém compra!",
+  "💤 Tô ficando entediada com isso...",
+  "🦫 As capivaras tão rindo de mim!",
+  "📱 Até meu celular travou de tanta raiva!",
+  "🎮 Se jogasse FNF assim, já tinha zerado!",
+  "🫤 Tá achando que sou INIMIGO do FNF?",
+  "😤 {count} cliques e nenhuma compra. Prioridades!",
+  "👋 Tchau! Brincadeira, não vou a lugar nenhum...",
+  "😅 Acho que você gosta mais de mim que da loja!",
+  "🫠 Se clicar mais 5 vezes, vai desbloquear... nada!",
+  "🏃 Eu corria mas sou um PNG parado!",
+  "🤖 Erro 404: Graça não encontrada!",
+  "😜 Pelo menos tá se divertindo, né?",
+  "🎉 PARABÉNS! Você clicou {count} vezes! Prêmio: nada!",
+  "🫣 Cada clique me leva mais perto da loucura!",
+  "🎭 Isso é teatro? Porque tá dramático!",
+  "🦴 Se eu tivesse esqueleto, tava todo quebrado!",
+  "😴 Tô fingindo que não tô sentindo nada...",
+  "🎈 Tá tentando estourar a bolha da minha paciência?",
+  "🧊 Minha paciência: ZERO GRAUS!",
+  "🤑 Queria que cada clique convertesse em moeda!",
+  "🪦 Aqui jaz a paciência da Verity. Descanse em paz.",
 ];
 
 const VERITY_THANK_YOU_MESSAGES = [
@@ -92,6 +224,52 @@ const VERITY_THANK_YOU_MESSAGES = [
   "✨ Excelente escolha!",
   "💖 Sua capivara ficou feliz!",
   "🌟 Compra perfeita!",
+  "🎊 UHUUUL! Obrigada por comprar!",
+  "🥳 A capivara tá pulando de alegria!",
+  "💎 Item raro adquirido com sucesso!",
+  "🛍️ Compra confirmada! Volte sempre!",
+  "⭐ Sua capivara ganhou +10 de estilo!",
+  "🤝 Negócio fechado! Obrigada!",
+  "🎁 Presente perfeito para sua capivara!",
+  "💪 Boa! Agora ela tá mais forte!",
+  "🌈 Compra mágica! A capivara brilhou!",
+  "❤️ Obrigada por cuidar tão bem dela!",
+  "🐹 Sua capivara tá sorrindo!",
+  "🔥 Item lendário! Ficou épico!",
+  "✨ *confetes caindo* PARABÉNS!",
+  "💰 Dinheiro bem gasto, amigo!",
+  "🎈 A festa da capivara começou!",
+  "🫶 Que lindo! Compra com amor!",
+  "🏆 Você é um verdadeiro colecionador!",
+  "🎉 Sua capivara tá mais feliz que nunca!",
+  "💎 Item equipado com sucesso!",
+  "🌟 Brilho de lenda desbloqueado!",
+  "🥳 Comemoração ativada!",
+  "🦋 A capivara evoluiu de estilo!",
+  "💫 Estrelas cadentes pra comemorar!",
+  "🎵 A capivara tá dançando de alegria!",
+  "🦸 Herói da capivara! Comprou mais um!",
+  "🌺 Flores desabrocharam de tanta felicidade!",
+  "🎯 Compra certeira! Mira de sniper!",
+  "🦫 Capivara aprovou com 10/10!",
+  "🎊 Confete virtual ativado!",
+  "💝 Presente de alguém que se importa!",
+  "🎭 Nova roupa, nova personalidade!",
+  "🔮 Bola de cristal disse: boa compra!",
+  "🐱 Miau... digo, QUACK! Quero dizer, OBRIGADA!",
+  "🍕 Comprar itens é melhor que pizza! Quase...",
+  "🦸 Capivara agora tem super poderes!",
+  "🪄 Item mágico ativado!",
+  "🌊 Ondas de felicidade emanando!",
+  "🎪 O show da capivara começou!",
+  "🥑 Compra saudável pro bolso digital!",
+  "🎤 A capivara tá cantando de alegria!",
+  "🔔 Sininho da loja tocou: COMPRA FEITA!",
+  "🎨 Nova paleta de cores desbloqueada!",
+  "🏆 Troféu de comprador frequente!",
+  "💎 Brilho máximo atingido!",
+  "🚀 Sua capivara tá no espaço de tão feliz!",
+  "🥳 FESTAAAAA! Obrigada por comprar!",
 ];
 
 const VERITY_ACHIEVEMENT_MESSAGES = [
@@ -99,9 +277,55 @@ const VERITY_ACHIEVEMENT_MESSAGES = [
   "🎖️ Parabéns, você é oficialmente irritante!",
   "🏆 Achievement: Mão Boba!",
   "🥇 Troféu de Ouro: Cliquei 20x na Verity!",
+  "🏅 Medalha de paciência... da Verity!",
+  "🎖️ Título desbloqueado: Mestre do Poke!",
+  "⭐ Achievement raro: Dedo Cansativo!",
+  "🎊 +500 moedas por ser chato! Parabéns!",
+  "💎 Conquista lendária: Sem Noção!",
+  "🦸 Herói do Toque Indesejado!",
+  "🎵 *fanfarra tocando* VOCÊ É IRRITANTE!",
+  "🌟 Estrela de Ouro: Clique Incessante!",
+  "🦫 Medalha da Capivara: Mais Chato que Mosquito!",
+  "🎭 Oscar de Melhor Ator em Toque Fácil!",
+  "🏆 Guinness Record de Cliques na Verity!",
+  "🎉 BOOOOM! 20 cliques! Toma 500 moedas!",
+  "💫 Achievement: Dedo Viciado!",
+  "🥇 Medalhista de Platina: Sem Parar!",
+  "🎪 Conquista circense: Palhaço Digital!",
+  "🔥 Achievement lendário: TOQUEI TUDO!",
+  "🧠 Desbloqueou: Cérebro de Mosquito!",
+  "👾 Achievement gamer: Speedrunner de Raiva!",
+  "🎯 Sniper de alvo errado: DESBLOQUEADO!",
+  "🦾 Braço de ferro com pixels: VENCEU!",
+  "🎂 Bolo de 20 cliques: PARABÉNS!",
+  "🎃 Halloween antecipado: Susto garantido!",
+  "🎅 Papai Noel trouxe 500 moedas pro chato!",
+  "🐰 Coelho da Páscoa: Ovo de 500 moedas!",
+  "🎆 Ano Novo: Fogos de artifício pro irritante!",
+  "👻 Fantasma do Toque: BÚUUU!",
+  "🤠 Cowboy do clique: TEXAS STYLE!",
+  "🧛 Vampiro da paciência: SUGOU TUDO!",
+  "🤖 Robô do clique: BEEP BOOP 500 MOEDAS!",
+  "🧙 Mago do toque: FEITIÇO DE +500!",
+  "👨‍🚀 Astronauta: VIAJEI PRO ESPAÇO DE TANTA RAIVA!",
+  "🦖 Dinossauro: EXTINTO DE PACIÊNCIA!",
+  "🍕 Pizza party: 500 moedas de recheio!",
+  "🎪 Circo: Você é o palhaço principal!",
+  "🏆 World Record: Mais irritante do mundo!",
+  "🦸 Super Herói: PODER DE IRRITAR!",
+  "🧙‍♀️ Bruxa: Transformou paciência em moedas!",
+  "🎮 Achievement: COMBO DE RAIVA x20!",
+  "🧩 Puzzle resolvido: Como irritar uma vendedora!",
+  "🎪 Show de horrores: 20 cliques!",
+  "🎭 Shakespeare: To be or not to poke!",
+  "🐉 Dragão: Cuspiu fogo de raiva!",
+  "🧊 Iceberg: A ponta da raiva da Verity!",
+  "🌈 Arco-íris: Tantas emoções em 20 cliques!",
+  "🔮 Místico: Prevejo mais cliques no futuro!",
+  "⚡ Zeus: Raios e trovões de raiva!",
 ];
 
-function VerityHelper({ onPurchase }: { onPurchase: (callback: () => void) => void }) {
+function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: () => void) => void; onAngryChange?: (isAngry: boolean) => void }) {
   const [verityState, setVerityState] = useState<VerityState>("normal");
   const [message, setMessage] = useState<string>("");
   const [showBubble, setShowBubble] = useState(false);
@@ -146,6 +370,12 @@ function VerityHelper({ onPurchase }: { onPurchase: (callback: () => void) => vo
       if (messageTimerRef.current) clearTimeout(messageTimerRef.current);
     };
   }, []);
+
+  useEffect(() => {
+    if (onAngryChange) {
+      onAngryChange(clickCount >= 20);
+    }
+  }, [clickCount, onAngryChange]);
 
   const handleClick = useCallback(() => {
     const newCount = clickCount + 1;
@@ -383,6 +613,7 @@ export default function Shop() {
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [sortBy, setSortBy] = useState<SortKey>("price-asc");
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [isAngry, setIsAngry] = useState(false);
   const verityPurchaseCallbackRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
@@ -504,11 +735,32 @@ export default function Shop() {
         backgroundRepeat: "no-repeat"
       }}
     >
-      <div className="absolute inset-0 bg-black/60" />
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/2 -left-40 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 right-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
+      {/* Dark overlay */}
+      <div className={`absolute inset-0 transition-colors duration-1000 ${isAngry ? 'bg-red-950/70' : 'bg-black/60'}`} />
+      
+      {/* Red vignette when angry */}
+      {isAngry && (
+        <div className="absolute inset-0 pointer-events-none z-[1]" style={{
+          boxShadow: 'inset 0 0 200px 80px rgba(180, 30, 30, 0.5)',
+          transition: 'box-shadow 1s ease-in-out'
+        }} />
+      )}
+      
+      {/* Ambient glow particles */}
+      <div className={`absolute inset-0 overflow-hidden pointer-events-none transition-all duration-1000 ${isAngry ? 'z-[2]' : ''}`}>
+        {isAngry ? (
+          <>
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-red-600/15 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute top-1/2 -left-40 w-96 h-96 bg-red-700/15 rounded-full blur-3xl animate-pulse" />
+            <div className="absolute -bottom-40 right-1/3 w-80 h-80 bg-orange-600/15 rounded-full blur-3xl animate-pulse" />
+          </>
+        ) : (
+          <>
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 -left-40 w-96 h-96 bg-pink-600/10 rounded-full blur-3xl" />
+            <div className="absolute -bottom-40 right-1/3 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl" />
+          </>
+        )}
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
@@ -871,6 +1123,7 @@ export default function Shop() {
         onPurchase={(callback) => {
           verityPurchaseCallbackRef.current = callback;
         }}
+        onAngryChange={setIsAngry}
       />
     </div>
   );
