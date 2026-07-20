@@ -8,22 +8,39 @@ import shopItems from "@shared/shop-items.json";
 
 const verityAnimations = `
 @keyframes verity-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-12px) scale(1.05); }
 }
 
 @keyframes verity-shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  10% { transform: translateX(-8px) rotate(-5deg); }
+  20% { transform: translateX(8px) rotate(5deg); }
+  30% { transform: translateX(-6px) rotate(-3deg); }
+  40% { transform: translateX(6px) rotate(3deg); }
+  50% { transform: translateX(-4px) rotate(-2deg); }
+  60% { transform: translateX(4px) rotate(2deg); }
+  70% { transform: translateX(-2px) rotate(-1deg); }
+  80% { transform: translateX(2px) rotate(1deg); }
+  90% { transform: translateX(-1px) rotate(0deg); }
+}
+
+@keyframes verity-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(168, 85, 247, 0.6), 0 0 50px rgba(168, 85, 247, 0.2); }
+}
+
+@keyframes verity-angry-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+  50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.6), 0 0 50px rgba(239, 68, 68, 0.2); }
 }
 
 .animate-verity-bounce {
-  animation: verity-bounce 0.6s ease-in-out infinite;
+  animation: verity-bounce 0.8s ease-in-out infinite, verity-glow 2s ease-in-out infinite;
 }
 
 .animate-verity-shake {
-  animation: verity-shake 0.3s ease-in-out infinite;
+  animation: verity-shake 0.5s ease-in-out infinite, verity-angry-glow 1s ease-in-out infinite;
 }
 `;
 
@@ -228,13 +245,13 @@ function VerityHelper({ onPurchase }: { onPurchase: (callback: () => void) => vo
       </div>
       <div
         onClick={handleClick}
-        className={`w-[150px] h-[150px] rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl transition-all duration-300 cursor-pointer hover:scale-105 hover:border-purple-500/50 ${getAnimationClass()}`}
+        className={`w-[180px] h-[180px] rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-110 ${getAnimationClass()}`}
         title={clickCount < 20 ? "Clique na Verity!" : "Verity está brava!"}
       >
         <img
           src={getImageSrc()}
           alt="Verity Helper"
-          className="w-full h-full object-cover transition-opacity duration-300"
+          className="w-full h-full object-contain transition-opacity duration-300"
           onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
         />
       </div>
