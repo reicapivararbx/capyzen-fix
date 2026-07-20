@@ -126,7 +126,7 @@ const VERITY_ANGRY_MESSAGES = [
   "🤬 SE EU TIVESSE MÃO, TAPAVA SUA CARA!",
   "🔥 EU SOU UM PNG, PARA DE TOCAR EM MIM!",
   "😤 ISSO É UM CRIME CONTRA CAPYBARAS!",
-  "😡 EU NÃO FUI PROGRAMADA PRA ISSO!",
+  "😡 EU NÃO FUI PROGRAMADO PRA ISSO!",
   "💢 TÁ ME USANDO COMO STRESS BALL?!",
   "🔥 ATÉ A CAPIVARA TÁ COM PENA DE MIM!",
   "🤬 VOU DEDURAR PRO ADMIN!",
@@ -196,7 +196,7 @@ const VERITY_CLICK_MESSAGES = [
   "🎬 Isso tá parecendo filme de terror!",
   "🙀 15 POKES?! Tá no Facebook?!",
   "🎵 *toc toc toc* Quem é? Ninguém compra!",
-  "💤 Tô ficando entediada com isso...",
+  "💤 Tô ficando entediado com isso...",
   "🦫 As capivaras tão rindo de mim!",
   "📱 Até meu celular travou de tanta raiva!",
   "🎮 Se jogasse FNF assim, já tinha zerado!",
@@ -224,16 +224,16 @@ const VERITY_THANK_YOU_MESSAGES = [
   "✨ Excelente escolha!",
   "💖 Sua capivara ficou feliz!",
   "🌟 Compra perfeita!",
-  "🎊 UHUUUL! Obrigada por comprar!",
+  "🎊 UHUUUL! Obrigado por comprar!",
   "🥳 A capivara tá pulando de alegria!",
   "💎 Item raro adquirido com sucesso!",
   "🛍️ Compra confirmada! Volte sempre!",
   "⭐ Sua capivara ganhou +10 de estilo!",
-  "🤝 Negócio fechado! Obrigada!",
+  "🤝 Negócio fechado! Obrigado!",
   "🎁 Presente perfeito para sua capivara!",
-  "💪 Boa! Agora ela tá mais forte!",
+  "💪 Boa! Agora ele tá mais forte!",
   "🌈 Compra mágica! A capivara brilhou!",
-  "❤️ Obrigada por cuidar tão bem dela!",
+  "❤️ Obrigado por cuidar tão bem dele!",
   "🐹 Sua capivara tá sorrindo!",
   "🔥 Item lendário! Ficou épico!",
   "✨ *confetes caindo* PARABÉNS!",
@@ -256,7 +256,7 @@ const VERITY_THANK_YOU_MESSAGES = [
   "💝 Presente de alguém que se importa!",
   "🎭 Nova roupa, nova personalidade!",
   "🔮 Bola de cristal disse: boa compra!",
-  "🐱 Miau... digo, QUACK! Quero dizer, OBRIGADA!",
+  "🐱 Miau... digo, QUACK! Quero dizer, OBRIGADO!",
   "🍕 Comprar itens é melhor que pizza! Quase...",
   "🦸 Capivara agora tem super poderes!",
   "🪄 Item mágico ativado!",
@@ -269,7 +269,7 @@ const VERITY_THANK_YOU_MESSAGES = [
   "🏆 Troféu de comprador frequente!",
   "💎 Brilho máximo atingido!",
   "🚀 Sua capivara tá no espaço de tão feliz!",
-  "🥳 FESTAAAAA! Obrigada por comprar!",
+  "🥳 FESTAAAAA! Obrigado por comprar!",
 ];
 
 const VERITY_ACHIEVEMENT_MESSAGES = [
@@ -313,9 +313,9 @@ const VERITY_ACHIEVEMENT_MESSAGES = [
   "🎪 Circo: Você é o palhaço principal!",
   "🏆 World Record: Mais irritante do mundo!",
   "🦸 Super Herói: PODER DE IRRITAR!",
-  "🧙‍♀️ Bruxa: Transformou paciência em moedas!",
+  "🧙‍♀️ Bruxo: Transformou paciência em moedas!",
   "🎮 Achievement: COMBO DE RAIVA x20!",
-  "🧩 Puzzle resolvido: Como irritar uma vendedora!",
+  "🧩 Puzzle resolvido: Como irritar um vendedor!",
   "🎪 Show de horrores: 20 cliques!",
   "🎭 Shakespeare: To be or not to poke!",
   "🐉 Dragão: Cuspiu fogo de raiva!",
@@ -399,6 +399,14 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
           }
         }
       } catch {}
+      // After 20 seconds, Verity forgives and goes back to normal
+      setTimeout(() => {
+        setVerityState("normal");
+        setClickCount(0);
+        setAchievementUnlocked(false);
+        setShowBubble(false);
+        setMessage("");
+      }, 20000);
       messageTimerRef.current = setTimeout(() => {
         setShowBubble(false);
         setTimeout(() => {
@@ -450,11 +458,6 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
 
   return (
     <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
-      {clickCount > 0 && clickCount < 20 && (
-        <div className="text-xs text-white/50 bg-black/30 px-2 py-1 rounded-full backdrop-blur-sm">
-          {clickCount}/20 cliques
-        </div>
-      )}
       {achievementUnlocked && (
         <div className="text-xs text-yellow-400 bg-yellow-500/20 px-2 py-1 rounded-full border border-yellow-500/30 backdrop-blur-sm">
           🏆 +500 moedas!
@@ -476,7 +479,7 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
       <div
         onClick={handleClick}
         className={`w-[180px] h-[180px] rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-110 ${getAnimationClass()}`}
-        title={clickCount < 20 ? "Clique na Verity!" : "Verity está brava!"}
+        title={clickCount < 20 ? "Clique na Verity!" : "Verity está bravo!"}
       >
         <img
           src={getImageSrc()}
@@ -638,16 +641,38 @@ export default function Shop() {
       if (!gameState) return;
 
       if (gameState.coins < item.price) {
-        addToast("Moedas insuficientes!", "error");
+        addToast("❌ Moedas insuficientes!", "error");
         return;
       }
 
-      const updated = updateGameState({
+      const newState: Partial<GameState> = {
         coins: gameState.coins - item.price,
         equippedItems: [...gameState.equippedItems, item.name],
-      });
+      };
+
+      if (item.category === "Boost") {
+        if (item.name.includes("XP")) {
+          const match = item.name.match(/\+(\d+)%/);
+          if (match) newState.xp = (gameState.xp || 0) + parseInt(match[1]);
+        }
+        if (item.name.includes("Moedas") || item.name.includes("moedas")) {
+          const match = item.name.match(/\+(\d+)%/);
+          if (match) newState.coins = (gameState.coins - item.price) + Math.floor(gameState.coins * parseInt(match[1]) / 100);
+        }
+        if (item.name.includes("Velocidade")) {
+          newState.speedBoost = Date.now() + 300000;
+        }
+        if (item.name.includes("Escudo") || item.name.includes("Imunidade")) {
+          newState.shieldActive = true;
+        }
+        if (item.name.includes("Sorte")) {
+          newState.luckBoost = Date.now() + 600000;
+        }
+      }
+
+      const updated = updateGameState(newState);
       setGameState(updated);
-      addToast(`Comprou ${item.name}!`, "success");
+      addToast(`✅ Comprou ${item.name}!`, "success");
       
       if (verityPurchaseCallbackRef.current) {
         verityPurchaseCallbackRef.current();

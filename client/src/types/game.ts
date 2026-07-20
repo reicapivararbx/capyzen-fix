@@ -38,6 +38,9 @@ export interface GameState {
   fnfSongsCompleted: number;
   fnfHighestCombo: number;
   millionRewardClaimed: boolean;
+  speedBoost?: number;
+  shieldActive?: boolean;
+  luckBoost?: number;
 }
 
 export interface Inventory {
