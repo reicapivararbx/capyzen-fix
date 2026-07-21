@@ -397,6 +397,32 @@ function processSongTick(
   return { state: newState, events };
 }
 
+function processBotTick(
+  state: EngineState,
+  chart: Chart,
+): { state: EngineState; events: EngineEvent[] } {
+  if (state.health <= 0 || state.songEnded) return { state, events: [] };
+
+  let currentState = state;
+  const allEvents: EngineEvent[] = [];
+  const lanesProcessed = new Set<Lane>();
+
+  for (let i = 0; i < chart.notes.length; i++) {
+    if (currentState.health <= 0 || currentState.songEnded) break;
+    if (currentState.noteResults.some((r) => r.noteIndex === i)) continue;
+    const note = chart.notes[i];
+    if (lanesProcessed.has(note.lane)) continue;
+    if (currentState.songPositionMs >= note.timeMs) {
+      lanesProcessed.add(note.lane);
+      const result = processKeyPress(currentState, note.lane, note.timeMs, chart);
+      currentState = result.state;
+      allEvents.push(...result.events);
+    }
+  }
+
+  return { state: currentState, events: allEvents };
+}
+
 function processKeyPress(
   state: EngineState,
   lane: Lane,
@@ -463,6 +489,7 @@ export {
   processSongTick,
   processKeyPress,
   processKeyRelease,
+  processBotTick,
   getAccuracy,
   getRatingLetter,
 };

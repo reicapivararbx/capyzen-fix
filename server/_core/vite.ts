@@ -8,7 +8,9 @@ export async function setupVite(app: Express, server: Server) {
   const vite = await import("vite");
   // Load vite config at runtime via file path (not statically analyzable by esbuild)
   const configPath = path.resolve(import.meta.dirname, "../../vite.config.ts");
-  const viteConfig = (await vite.loadConfigFromFile({ command: "serve", mode: "development" }, configPath)).config;
+  const loadedConfig = await vite.loadConfigFromFile({ command: "serve", mode: "development" }, configPath);
+  if (!loadedConfig) { throw new Error(`Failed to load Vite config from ${configPath}`); }
+  const viteConfig = loadedConfig.config;
 
   const serverOptions = {
     middlewareMode: true,

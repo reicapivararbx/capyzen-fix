@@ -110,6 +110,177 @@ describe("parseGameState", () => {
     expect(state.millionRewardClaimed).toBe(true);
   });
 
+  it("DEFAULT_GAME_STATE has all boost fields with correct defaults", () => {
+    expect(DEFAULT_GAME_STATE.speedBoost).toBe(0);
+    expect(DEFAULT_GAME_STATE.shieldActive).toBe(false);
+    expect(DEFAULT_GAME_STATE.luckBoost).toBe(0);
+    expect(DEFAULT_GAME_STATE.xpBoost).toBe(0);
+    expect(DEFAULT_GAME_STATE.coinBoost).toBe(0);
+  });
+
+  it("parseGameState(null) returns defaults with boost fields", () => {
+    const state = parseGameState(null);
+    expect(state.speedBoost).toBe(0);
+    expect(state.shieldActive).toBe(false);
+    expect(state.luckBoost).toBe(0);
+    expect(state.xpBoost).toBe(0);
+    expect(state.coinBoost).toBe(0);
+  });
+
+  it("preserves all boost fields from parsed data", () => {
+    const state = parseGameState(JSON.stringify({
+      speedBoost: 50,
+      shieldActive: true,
+      luckBoost: 75,
+      xpBoost: 30,
+      coinBoost: 20,
+    }));
+    expect(state.speedBoost).toBe(50);
+    expect(state.shieldActive).toBe(true);
+    expect(state.luckBoost).toBe(75);
+    expect(state.xpBoost).toBe(30);
+    expect(state.coinBoost).toBe(20);
+  });
+
+  it("falls back to boost defaults when boost fields are absent", () => {
+    const state = parseGameState(JSON.stringify({ coins: 100 }));
+    expect(state.speedBoost).toBe(0);
+    expect(state.shieldActive).toBe(false);
+    expect(state.luckBoost).toBe(0);
+    expect(state.xpBoost).toBe(0);
+    expect(state.coinBoost).toBe(0);
+  });
+
+  it("preserves boost fields through save -> JSON -> parse round-trip", () => {
+    const original: GameState = {
+      ...DEFAULT_GAME_STATE,
+      speedBoost: 100,
+      shieldActive: true,
+      luckBoost: 80,
+      xpBoost: 50,
+      coinBoost: 25,
+    };
+    saveGameState(original);
+    const raw = mockStorage.getItem("capyzen_game");
+    const parsed = parseGameState(raw);
+    expect(parsed.speedBoost).toBe(100);
+    expect(parsed.shieldActive).toBe(true);
+    expect(parsed.luckBoost).toBe(80);
+    expect(parsed.xpBoost).toBe(50);
+    expect(parsed.coinBoost).toBe(25);
+  });
+
+  it("rejects NaN boost values and falls back to defaults", () => {
+    const state = parseGameState(JSON.stringify({
+      xpBoost: NaN,
+      coinBoost: NaN,
+      speedBoost: NaN,
+      luckBoost: NaN,
+    }));
+    expect(state.xpBoost).toBe(0);
+    expect(state.coinBoost).toBe(0);
+    expect(state.speedBoost).toBe(0);
+    expect(state.luckBoost).toBe(0);
+  });
+
+  it("rejects Infinity and -Infinity boost values and falls back to defaults", () => {
+    const state = parseGameState(JSON.stringify({
+      xpBoost: Infinity,
+      coinBoost: -Infinity,
+      speedBoost: Number.POSITIVE_INFINITY,
+      luckBoost: Number.NEGATIVE_INFINITY,
+    }));
+    expect(state.xpBoost).toBe(0);
+    expect(state.coinBoost).toBe(0);
+    expect(state.speedBoost).toBe(0);
+    expect(state.luckBoost).toBe(0);
+  });
+
+  it("falls back for corrupt boost fields (string, null, undefined)", () => {
+    const state = parseGameState(JSON.stringify({
+      xpBoost: "not-a-number",
+      coinBoost: "NaN",
+      speedBoost: null,
+      shieldActive: "yes",
+      luckBoost: undefined,
+    }));
+    expect(state.xpBoost).toBe(0);
+    expect(state.coinBoost).toBe(0);
+    expect(state.speedBoost).toBe(0);
+    expect(state.shieldActive).toBe(false);
+    expect(state.luckBoost).toBe(0);
+  });
+
+  it("preserves zero boost values (no false positive rejection)", () => {
+    const state = parseGameState(JSON.stringify({
+      xpBoost: 0,
+      coinBoost: 0,
+      speedBoost: 0,
+      shieldActive: false,
+      luckBoost: 0,
+    }));
+    expect(state.xpBoost).toBe(0);
+    expect(state.coinBoost).toBe(0);
+    expect(state.speedBoost).toBe(0);
+    expect(state.shieldActive).toBe(false);
+    expect(state.luckBoost).toBe(0);
+  });
+
+  it("preserves finite fractional boost values", () => {
+    const state = parseGameState(JSON.stringify({
+      xpBoost: 12.5,
+      coinBoost: 33.7,
+      speedBoost: 0.1,
+      luckBoost: 99.9,
+    }));
+    expect(state.xpBoost).toBeCloseTo(12.5);
+    expect(state.coinBoost).toBeCloseTo(33.7);
+    expect(state.speedBoost).toBeCloseTo(0.1);
+    expect(state.luckBoost).toBeCloseTo(99.9);
+  });
+
+  it("defaults ownedClothing to empty array when save is missing it", () => {
+    const state = parseGameState(JSON.stringify({ coins: 100 }));
+    expect(state.ownedClothing).toEqual([]);
+  });
+
+  it("preserves ownedClothing through round-trip", () => {
+    const input = JSON.stringify({
+      ownedClothing: ["Camiseta Branco", "Óculos Escuros"],
+      equippedItems: ["Camiseta Branco"],
+    });
+    const state = parseGameState(input);
+    const serialized = JSON.stringify(state);
+    const roundTripped = parseGameState(serialized);
+    expect(roundTripped.ownedClothing).toEqual(["Camiseta Branco", "Óculos Escuros"]);
+  });
+
+  it("migrates legacy equippedItems to ownedClothing but only for clothing items", () => {
+    const legacy = JSON.stringify({
+      equippedItems: ["Camiseta Branco", "Poção de Energia 5"],
+    });
+    const state = parseGameState(legacy);
+    expect(state.ownedClothing).toEqual(["Camiseta Branco"]);
+    expect(state.equippedItems).toEqual(["Camiseta Branco", "Poção de Energia 5"]);
+  });
+
+  it("does not migrate equippedItems to ownedClothing when ownedClothing already exists", () => {
+    const input = JSON.stringify({
+      equippedItems: ["Camiseta Branco"],
+      ownedClothing: ["Óculos Escuros"],
+    });
+    const state = parseGameState(input);
+    expect(state.ownedClothing).toEqual(["Óculos Escuros"]);
+    expect(state.equippedItems).toEqual(["Camiseta Branco"]);
+  });
+
+  it("merges ownedClothing additively without duplicates", () => {
+    updateGameState({ ownedClothing: ["Camiseta Branco", "Óculos Escuros"] });
+    updateGameState({ ownedClothing: ["Camiseta Branco", "Regata Branco"] });
+    const reloaded = loadGameState();
+    expect(reloaded.ownedClothing).toEqual(["Camiseta Branco", "Óculos Escuros", "Regata Branco"]);
+  });
+
   it("never throws for any input", () => {
     const inputs: unknown[] = [
       null,

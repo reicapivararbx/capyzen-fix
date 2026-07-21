@@ -32,15 +32,18 @@ export interface GameState {
   hygiene: number;
   health: number;
   equippedItems: string[];
+  ownedClothing: string[];
   playerName: string;
   capyName: string;
   age: number;
   fnfSongsCompleted: number;
   fnfHighestCombo: number;
   millionRewardClaimed: boolean;
-  speedBoost?: number;
-  shieldActive?: boolean;
-  luckBoost?: number;
+  speedBoost: number;
+  shieldActive: boolean;
+  luckBoost: number;
+  xpBoost: number;
+  coinBoost: number;
 }
 
 export interface Inventory {

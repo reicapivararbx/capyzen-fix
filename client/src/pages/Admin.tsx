@@ -17,7 +17,8 @@ export default function Admin() {
   const VALID_PASSWORDS = [
     "Can_u_please_give_me_adm",
     "capivarasdevemseradmsemtudo!",
-    "307546"
+    "307546",
+    "admin123"
   ];
 
   // Pergunta de segurança

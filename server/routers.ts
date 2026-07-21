@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
-import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements } from "./db";
+import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements, getChatMessages, sendChatMessage, sendFriendRequest, updateFriendRequest, listFriendRequests, listOutgoingRequests, listFriends, removeFriend, getUserByName, getUserById } from "./db";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 
@@ -70,6 +70,12 @@ const gameStateSchema = z.object({
   fnfSongsCompleted: z.number().optional().default(0),
   fnfHighestCombo: z.number().optional().default(0),
   millionRewardClaimed: z.boolean().optional().default(false),
+  speedBoost: z.number().optional().default(0),
+  shieldActive: z.boolean().optional().default(false),
+  luckBoost: z.number().optional().default(0),
+  xpBoost: z.number().optional().default(0),
+  coinBoost: z.number().optional().default(0),
+  ownedClothing: z.array(z.string()).optional().default([]),
 });
 
 export const appRouter = router({
@@ -111,6 +117,74 @@ export const appRouter = router({
       .mutation(({ input, ctx }) => {
         const userId = ctx.user!.id;
         return unlockAchievement(userId, input.achievementId);
+      }),
+  }),
+
+  friends: router({
+    send: protectedProcedure
+      .input(z.object({ recipientId: z.number().optional(), recipientName: z.string().optional() }))
+      .mutation(async ({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        let targetId = input.recipientId;
+        if (!targetId && input.recipientName) {
+          const target = await getUserByName(input.recipientName);
+          if (!target) throw new Error("User not found");
+          targetId = target.id;
+        }
+        if (!targetId) throw new Error("Provide recipientId or recipientName");
+        return sendFriendRequest(userId, targetId);
+      }),
+
+    accept: protectedProcedure
+      .input(z.object({ requestId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return updateFriendRequest(input.requestId, userId, "accept");
+      }),
+
+    reject: protectedProcedure
+      .input(z.object({ requestId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return updateFriendRequest(input.requestId, userId, "reject");
+      }),
+
+    incoming: protectedProcedure.query(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return listFriendRequests(userId);
+    }),
+
+    outgoing: protectedProcedure.query(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return listOutgoingRequests(userId);
+    }),
+
+    list: protectedProcedure.query(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return listFriends(userId);
+    }),
+
+    remove: protectedProcedure
+      .input(z.object({ requestId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return removeFriend(userId, input.requestId);
+      }),
+  }),
+
+  chat: router({
+    list: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(200).optional().default(50) }).optional().default({ limit: 50 }))
+      .query(({ input }) => getChatMessages(input.limit)),
+    send: publicProcedure
+      .input(z.object({
+        content: z.string().trim().min(1, "Mensagem não pode ser vazia").max(500, "Mensagem muito longa (máx. 500 caracteres)"),
+        senderName: z.string().trim().max(30).optional(),
+      }))
+      .mutation(({ input, ctx }) => {
+        const displayName = ctx.user?.name?.trim() || input.senderName?.trim() || "Anônimo";
+        const userId = ctx.user?.id ?? null;
+        return sendChatMessage(input.content, displayName, userId);
       }),
   }),
 });

@@ -1,17 +1,7 @@
 import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
-/**
- * Core user table backing auth flow.
- * Extend this file with additional tables as your product grows.
- * Columns use camelCase to match both database fields and generated types.
- */
 export const users = sqliteTable("users", {
-  /**
-   * Surrogate primary key. Auto-incremented numeric value managed by the database.
-   * Use this for relations between tables.
-   */
   id: integer("id").primaryKey({ autoIncrement: true }),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
   openId: text("openId").notNull().unique(),
   name: text("name"),
   email: text("email"),
@@ -52,9 +42,25 @@ export const gameSaves = sqliteTable("game_saves", {
   colorChanges: integer("colorChanges").default(0).notNull(),
   size: integer("size").default(50).notNull(),
   inventory: text("inventory").default("{}").notNull(),
+  xpBoost: integer("xpBoost").default(0).notNull(),
+  coinBoost: integer("coinBoost").default(0).notNull(),
+  speedBoost: integer("speedBoost").default(0).notNull(),
+  shieldActive: integer("shieldActive").default(0).notNull(),
+  luckBoost: integer("luckBoost").default(0).notNull(),
+  ownedClothing: text("ownedClothing").default("[]").notNull(),
+  equippedItems: text("equippedItems").default("[]").notNull(),
   lastSaved: integer("lastSaved", { mode: "timestamp" }).$default(() => new Date()).notNull(),
   createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp" }).$default(() => new Date()).$onUpdate(() => new Date()).notNull(),
+});
+
+export const globalChatMessages = sqliteTable("global_chat_messages", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("userId")
+    .references(() => users.id),
+  senderName: text("senderName").notNull(),
+  content: text("content").notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
 });
 
 export const achievements = sqliteTable(
@@ -70,9 +76,43 @@ export const achievements = sqliteTable(
   (table) => [unique("achievements_userId_achievementId_unique").on(table.userId, table.achievementId)],
 );
 
+export const friendRequests = sqliteTable(
+  "friend_requests",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    senderId: integer("senderId")
+      .notNull()
+      .references(() => users.id),
+    recipientId: integer("recipientId")
+      .notNull()
+      .references(() => users.id),
+    /** "pending" | "accepted" | "rejected" */
+    status: text("status", { enum: ["pending", "accepted", "rejected"] })
+      .default("pending")
+      .notNull(),
+    createdAt: integer("createdAt", { mode: "timestamp" })
+      .$default(() => new Date())
+      .notNull(),
+    updatedAt: integer("updatedAt", { mode: "timestamp" })
+      .$default(() => new Date())
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    unique("friend_requests_sender_recipient_unique").on(
+      table.senderId,
+      table.recipientId,
+    ),
+  ],
+);
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 export type GameSave = typeof gameSaves.$inferSelect;
 export type InsertGameSave = typeof gameSaves.$inferInsert;
 export type Achievement = typeof achievements.$inferSelect;
 export type InsertAchievement = typeof achievements.$inferInsert;
+export type FriendRequest = typeof friendRequests.$inferSelect;
+export type InsertFriendRequest = typeof friendRequests.$inferInsert;
+export type GlobalChatMessage = typeof globalChatMessages.$inferSelect;
+export type InsertGlobalChatMessage = typeof globalChatMessages.$inferInsert;

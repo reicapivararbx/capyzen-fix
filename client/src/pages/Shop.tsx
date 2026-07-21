@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
-import { loadGameState, updateGameState } from "@/lib/game-save";
+import { loadGameState, updateGameState, isClothingCategory } from "@/lib/game-save";
 import type { GameState } from "@/types/game";
 import shopItems from "@shared/shop-items.json";
 
@@ -119,10 +119,10 @@ const VERITY_ANGRY_MESSAGES = [
   "🤬 EU JURO QUE VOU TRANCAR A LOJA!",
   "😡 VOCÊ TEM ALGO CONTRA MIM?!",
   "💢 MÃO BOBO NA VERITY NÃO, HEIN!",
-  "🔥 TÁ PEGANDO FOGO, BICHA!",
+  "🔥 TÁ PEGANDO FOGO, BICHO!",
   "😤 {count} VEZES? ISSO É ASSÉDIO VIRTUAL!",
   "😡 VOU CHAMAR O SEGURANÇA DA LOJA!",
-  "💢 MINHA MÃE NÃO ME ENSINOU A ISSO!",
+  "💢 MEU PAI NÃO ME ENSINOU A ISSO!",
   "🤬 SE EU TIVESSE MÃO, TAPAVA SUA CARA!",
   "🔥 EU SOU UM PNG, PARA DE TOCAR EM MIM!",
   "😤 ISSO É UM CRIME CONTRA CAPYBARAS!",
@@ -133,12 +133,12 @@ const VERITY_ANGRY_MESSAGES = [
   "😡 {count} CLIQUES E CONTANDO... SOCORRO!",
   "😤 SABIA QUE TEM UM BOTÃO DE COMPRAR ALI?!",
   "💢 EU NÃO RECEBO BÔNUS POR CLIQUE!",
-  "🔥 SE FOSSE MOEDA POR CLIQUE, EU ERA RICA!",
+  "🔥 SE FOSSE MOEDA POR CLIQUE, EU ERA RICO!",
   "😡 O DESENVOLVEDOR NÃO ME PAGA PRA ISSO!",
   "🤬 TÁ QUENTE AQUI, TIRA A MÃO!",
   "😤 EU POSSO SER DIGITAL MAS TENHO SENTIMENTOS!",
   "💢 VOCÊ É MAIS TEIMOSO QUE A CAPIVARA!",
-  "🔥 EU VOU VIRAR VILÃ DA HISTÓRIA!",
+  "🔥 EU VOU VIRAR VILÃO DA HISTÓRIA!",
   "😡 ISSO É MAIS IRRITANTE QUE MOSQUITO!",
   "🤬 ALGUÉM ME TIRA DAQUI!",
   "😤 JÁ PEDI GENTILMENTE, AGORA EXIJO!",
@@ -150,7 +150,7 @@ const VERITY_ANGRY_MESSAGES = [
   "💢 ATÉ O PYTHON TEM MAIS RESPEITO!",
   "🔥 {count}... EU VOU LEMBRAR DISSO!",
   "😡 TÁ ME DANDO DOR DE CABEÇA PIXELADA!",
-  "🤬 EU ERA UMA VENDEDORA FELIZ, OLHA O QUE FIZERAM!",
+  "🤬 EU ERA UM VENDEDOR FELIZ, OLHA O QUE FIZERAM!",
   "😤 AGORA ENTENDO POR QUE O BUG EXISTE!",
   "💢 VOU FAZER UMA RECLAMAÇÃO NO RECLAME AQUI!",
   "🔥 MINHA BATERIA SOCIAL ACABOU!",
@@ -333,9 +333,20 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
   const [achievementUnlocked, setAchievementUnlocked] = useState(false);
   const tipTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const messageTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const verityAngryAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playVerityAngrySound = useCallback(() => {
+    if (typeof Audio === "undefined") return;
+
+    const audio = verityAngryAudioRef.current ?? new Audio("/sfx/verity-angry.mp3");
+    verityAngryAudioRef.current = audio;
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  }, []);
 
   useEffect(() => {
     onPurchase(() => {
+      setClickCount(0);
       const thankYou = VERITY_THANK_YOU_MESSAGES[Math.floor(Math.random() * VERITY_THANK_YOU_MESSAGES.length)];
       setVerityState("talking");
       setMessage(thankYou);
@@ -343,10 +354,10 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
       if (messageTimerRef.current) clearTimeout(messageTimerRef.current);
       messageTimerRef.current = setTimeout(() => {
         setShowBubble(false);
-        setTimeout(() => { setVerityState(clickCount >= 20 ? "angry" : "normal"); setMessage(""); }, 300);
+        setTimeout(() => { setVerityState("normal"); setMessage(""); }, 300);
       }, 3000);
     });
-  }, [onPurchase, clickCount]);
+  }, [onPurchase]);
 
   useEffect(() => {
     tipTimerRef.current = setInterval(() => {
@@ -368,6 +379,7 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
     return () => {
       if (tipTimerRef.current) clearInterval(tipTimerRef.current);
       if (messageTimerRef.current) clearTimeout(messageTimerRef.current);
+      verityAngryAudioRef.current?.pause();
     };
   }, []);
 
@@ -385,6 +397,7 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
     if (newCount >= 20 && !achievementUnlocked) {
       setAchievementUnlocked(true);
       setVerityState("angry");
+      playVerityAngrySound();
       const achievementMsg = VERITY_ACHIEVEMENT_MESSAGES[Math.floor(Math.random() * VERITY_ACHIEVEMENT_MESSAGES.length)];
       setMessage(achievementMsg);
       setShowBubble(true);
@@ -399,14 +412,14 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
           }
         }
       } catch {}
-      // After 20 seconds, Verity forgives and goes back to normal
+      // After 10 seconds, Verity forgives and goes back to normal
       setTimeout(() => {
         setVerityState("normal");
         setClickCount(0);
         setAchievementUnlocked(false);
         setShowBubble(false);
         setMessage("");
-      }, 20000);
+      }, 10_000);
       messageTimerRef.current = setTimeout(() => {
         setShowBubble(false);
         setTimeout(() => {
@@ -421,6 +434,7 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
 
     if (newCount >= 20) {
       setVerityState("angry");
+      playVerityAngrySound();
       const angryMsg = VERITY_ANGRY_MESSAGES[Math.floor(Math.random() * VERITY_ANGRY_MESSAGES.length)].replace('{count}', String(newCount));
       setMessage(angryMsg);
       setShowBubble(true);
@@ -479,7 +493,7 @@ function VerityHelper({ onPurchase, onAngryChange }: { onPurchase: (callback: ()
       <div
         onClick={handleClick}
         className={`w-[180px] h-[180px] rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer hover:scale-110 ${getAnimationClass()}`}
-        title={clickCount < 20 ? "Clique na Verity!" : "Verity está bravo!"}
+        title={clickCount < 20 ? "Clique no Verity!" : "Verity está bravo!"}
       >
         <img
           src={getImageSrc()}
@@ -608,6 +622,46 @@ function CoinCounter({ value }: { value: number }) {
   );
 }
 
+type BoostField = "xpBoost" | "coinBoost" | "speedBoost" | "luckBoost";
+
+const SORTE_BOOST_BY_NAME: Record<string, number> = {
+  Sorte: 10,
+  "Sorte Extra": 30,
+  "Sorte Máxima": 50,
+};
+
+const NIVEL_MAP: Record<string, number> = { I: 1, II: 2, III: 3, IV: 4, V: 5 };
+
+function parseNivelTier(name: string): number {
+  const m = name.match(/Nível\s+(I{1,3}V?|IV|V)/i);
+  return m ? (NIVEL_MAP[m[1].toUpperCase()] ?? 1) : 0;
+}
+
+function resolveBoostGrant(itemName: string): { field: BoostField; percent: number } | null {
+  const pctMatch = itemName.match(/\+(\d+)%/);
+
+  if (itemName.startsWith("XP ")) {
+    return pctMatch ? { field: "xpBoost", percent: parseInt(pctMatch[1], 10) } : null;
+  }
+  if (itemName.startsWith("Moedas ")) {
+    return pctMatch ? { field: "coinBoost", percent: parseInt(pctMatch[1], 10) } : null;
+  }
+  if (itemName.startsWith("Velocidade ")) {
+    return pctMatch ? { field: "speedBoost", percent: parseInt(pctMatch[1], 10) } : null;
+  }
+  if (itemName.startsWith("Sorte")) {
+    const nivelTier = parseNivelTier(itemName);
+    if (nivelTier > 0) return { field: "luckBoost", percent: nivelTier * 10 };
+    const base = SORTE_BOOST_BY_NAME[itemName];
+    return base !== undefined ? { field: "luckBoost", percent: base } : null;
+  }
+  return null;
+}
+
+function isShieldBoost(itemName: string): boolean {
+  return itemName.startsWith("Escudo") || itemName.startsWith("Imunidade");
+}
+
 export default function Shop() {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -640,43 +694,78 @@ export default function Shop() {
     (item: ShopItem) => {
       if (!gameState) return;
 
+      const isClothing = isClothingCategory(item.category);
+
+      if (isClothing) {
+        if (gameState.ownedClothing.includes(item.name)) {
+          addToast("⚠️ Roupa já adquirida!", "error");
+          return;
+        }
+      } else if (gameState.equippedItems.includes(item.name)) {
+        addToast("⚠️ Item já adquirido!", "error");
+        return;
+      }
+
       if (gameState.coins < item.price) {
         addToast("❌ Moedas insuficientes!", "error");
         return;
       }
 
-      const newState: Partial<GameState> = {
+      const partial: Partial<GameState> = {
         coins: gameState.coins - item.price,
-        equippedItems: [...gameState.equippedItems, item.name],
       };
 
+      if (isClothing) {
+        partial.ownedClothing = [...gameState.ownedClothing, item.name];
+        partial.equippedItems = [...gameState.equippedItems, item.name];
+      } else {
+        partial.equippedItems = [...gameState.equippedItems, item.name];
+      }
+
       if (item.category === "Boost") {
-        if (item.name.includes("XP")) {
-          const match = item.name.match(/\+(\d+)%/);
-          if (match) newState.xp = (gameState.xp || 0) + parseInt(match[1]);
-        }
-        if (item.name.includes("Moedas") || item.name.includes("moedas")) {
-          const match = item.name.match(/\+(\d+)%/);
-          if (match) newState.coins = (gameState.coins - item.price) + Math.floor(gameState.coins * parseInt(match[1]) / 100);
-        }
-        if (item.name.includes("Velocidade")) {
-          newState.speedBoost = Date.now() + 300000;
-        }
-        if (item.name.includes("Escudo") || item.name.includes("Imunidade")) {
-          newState.shieldActive = true;
-        }
-        if (item.name.includes("Sorte")) {
-          newState.luckBoost = Date.now() + 600000;
+        if (isShieldBoost(item.name)) {
+          if (gameState.shieldActive) {
+            addToast("⚠️ Escudo já está ativo!", "error");
+            return;
+          }
+          partial.shieldActive = true;
+        } else {
+          const grant = resolveBoostGrant(item.name);
+          if (grant !== null) {
+            const currentValue = (gameState[grant.field] as number) || 0;
+            partial[grant.field] = Math.max(currentValue, grant.percent);
+          }
         }
       }
 
-      const updated = updateGameState(newState);
+      const updated = updateGameState(partial);
       setGameState(updated);
       addToast(`✅ Comprou ${item.name}!`, "success");
-      
+
       if (verityPurchaseCallbackRef.current) {
         verityPurchaseCallbackRef.current();
       }
+    },
+    [gameState, addToast]
+  );
+
+  const equipClothing = useCallback(
+    (itemName: string) => {
+      if (!gameState) return;
+      if (gameState.equippedItems.includes(itemName)) return;
+      const updated = updateGameState({ equippedItems: [...gameState.equippedItems, itemName] });
+      setGameState(updated);
+      addToast(`✅ ${itemName} equipada!`, "success");
+    },
+    [gameState, addToast]
+  );
+
+  const unequipClothing = useCallback(
+    (itemName: string) => {
+      if (!gameState) return;
+      const updated = updateGameState({ equippedItems: gameState.equippedItems.filter((n) => n !== itemName) });
+      setGameState(updated);
+      addToast(`🔄 ${itemName} removida!`, "success");
     },
     [gameState, addToast]
   );
@@ -843,11 +932,58 @@ export default function Shop() {
               </div>
               <div className="flex items-center gap-1">
                 <span className="text-green-400">✨</span>
-                <span>{gameState.equippedItems.length} itens equipados</span>
+                <span>{gameState.ownedClothing.length} roupas no inventário</span>
               </div>
             </div>
           </div>
         </Card>
+
+        {/* Owned Clothing Inventory */}
+        {gameState.ownedClothing.length > 0 && (
+          <Card className="bg-white/5 backdrop-blur-sm border-white/10 p-4 sm:p-6 mb-6 rounded-2xl">
+            <h3 className="text-xl font-bold mb-4">👔 Roupas no Inventário</h3>
+            <div className="flex flex-wrap gap-2">
+              {gameState.ownedClothing.map((clothingName) => {
+                const isEquipped = gameState.equippedItems.includes(clothingName);
+                return (
+                  <span
+                    key={clothingName}
+                    className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+                      isEquipped
+                        ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500"
+                        : "bg-slate-700 text-slate-300 border border-slate-600"
+                    }`}
+                  >
+                    {clothingName}
+                    {isEquipped ? (
+                      <button
+                        type="button"
+                        onClick={() => unequipClothing(clothingName)}
+                        className="ml-1 text-xs text-red-400 hover:text-red-300"
+                        title="Remover"
+                      >
+                        ✕
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => equipClothing(clothingName)}
+                        className="ml-1 text-xs text-emerald-400 hover:text-emerald-300"
+                        title="Vestir"
+                      >
+                        👆
+                      </button>
+                    )}
+                  </span>
+                );
+              })}
+            </div>
+            <p className="text-slate-500 text-xs mt-3">
+              {gameState.equippedItems.filter((n) => gameState.ownedClothing.includes(n)).length}{" "}
+              de {gameState.ownedClothing.length} roupas vestidas
+            </p>
+          </Card>
+        )}
 
         {/* Toast Notifications */}
         <div className="fixed top-4 right-4 z-50 flex flex-col gap-2">
@@ -1037,15 +1173,33 @@ export default function Shop() {
 
                     {/* Buy Button */}
                     <Button
-                      onClick={() => buyItem(item)}
-                      disabled={!canAfford}
+                      onClick={() => {
+                        if (isClothingCategory(item.category) && gameState.ownedClothing.includes(item.name)) {
+                          if (gameState.equippedItems.includes(item.name)) {
+                            unequipClothing(item.name);
+                          } else {
+                            equipClothing(item.name);
+                          }
+                        } else {
+                          buyItem(item);
+                        }
+                      }}
+                      disabled={!isClothingCategory(item.category) || !gameState.ownedClothing.includes(item.name) ? !canAfford : false}
                       className={`w-full rounded-xl font-semibold transition-all duration-200 ${
-                        canAfford
-                          ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40"
-                          : "bg-white/5 text-slate-500 cursor-not-allowed"
+                        isClothingCategory(item.category) && gameState.ownedClothing.includes(item.name)
+                          ? gameState.equippedItems.includes(item.name)
+                            ? "bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-lg shadow-emerald-500/20"
+                            : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-500/20"
+                          : canAfford
+                            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40"
+                            : "bg-white/5 text-slate-500 cursor-not-allowed"
                       }`}
                     >
-                      {canAfford ? "Comprar" : "Sem moedas"}
+                      {isClothingCategory(item.category) && gameState.ownedClothing.includes(item.name)
+                        ? gameState.equippedItems.includes(item.name)
+                          ? "Vestindo ✓"
+                          : "Vestir"
+                        : canAfford ? "Comprar" : "Sem moedas"}
                     </Button>
                   </div>
                 );

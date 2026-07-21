@@ -9,6 +9,7 @@ import {
   processHoldRelease,
   processSongTick,
   processKeyPress,
+  processBotTick,
   getAccuracy,
   getRatingLetter,
 } from "./engine";
@@ -634,5 +635,110 @@ describe("getRatingLetter", () => {
   it("F for < 30", () => {
     expect(getRatingLetter(0)).toBe("F");
     expect(getRatingLetter(29)).toBe("F");
+  });
+});
+
+describe("processBotTick", () => {
+  it("hits a due note (songPositionMs >= note.timeMs)", () => {
+    const chart = tapChart(0, 5000);
+    const state = { ...createInitialState(), songPositionMs: 5000 };
+    const { state: newState, events } = processBotTick(state, chart);
+    expect(newState.noteResults.length).toBe(1);
+    expect(newState.noteResults[0].judgment).toBe("perfect");
+    expect(events.some((e) => e.type === "note_hit")).toBe(true);
+  });
+
+  it("skips future notes (songPositionMs < note.timeMs)", () => {
+    const chart = tapChart(0, 5000);
+    const state = { ...createInitialState(), songPositionMs: 4000 };
+    const { state: newState, events } = processBotTick(state, chart);
+    expect(newState.noteResults.length).toBe(0);
+    expect(events.length).toBe(0);
+  });
+
+  it("skips already-hit notes", () => {
+    const chart = tapChart(0, 5000);
+    const state = createInitialState();
+    const hit = processKeyPress(state, 0, 5000, chart);
+    const { state: newState, events } = processBotTick(hit.state, chart);
+    expect(newState.noteResults.length).toBe(1);
+    expect(events.length).toBe(0);
+  });
+
+  it("hits notes in different lanes", () => {
+    const chart: Chart = {
+      notes: [
+        { kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 },
+        { kind: "tap", lane: 1, timeMs: 1000, durationMs: 0 },
+        { kind: "tap", lane: 2, timeMs: 1000, durationMs: 0 },
+      ],
+      oppNotes: [],
+      songDurationMs: 10000,
+      bpm: 120,
+      scrollSpeed: 1,
+    };
+    const state = { ...createInitialState(), songPositionMs: 1000 };
+    const { state: newState } = processBotTick(state, chart);
+    expect(newState.noteResults.length).toBe(3);
+  });
+
+  it("one hit per lane per tick (multiple notes same lane)", () => {
+    const chart: Chart = {
+      notes: [
+        { kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 },
+        { kind: "tap", lane: 0, timeMs: 1100, durationMs: 0 },
+      ],
+      oppNotes: [],
+      songDurationMs: 10000,
+      bpm: 120,
+      scrollSpeed: 1,
+    };
+    const state = { ...createInitialState(), songPositionMs: 1100 };
+    const { state: first } = processBotTick(state, chart);
+    expect(first.noteResults.length).toBe(1);
+    const { state: second } = processBotTick(first, chart);
+    expect(second.noteResults.length).toBe(2);
+  });
+
+  it("deterministic multi-tick sweep hits all notes", () => {
+    const chart: Chart = {
+      notes: [
+        { kind: "tap", lane: 0, timeMs: 1000, durationMs: 0 },
+        { kind: "tap", lane: 1, timeMs: 1200, durationMs: 0 },
+        { kind: "tap", lane: 2, timeMs: 1400, durationMs: 0 },
+        { kind: "tap", lane: 3, timeMs: 1600, durationMs: 0 },
+        { kind: "tap", lane: 0, timeMs: 1800, durationMs: 0 },
+      ],
+      oppNotes: [],
+      songDurationMs: 10000,
+      bpm: 120,
+      scrollSpeed: 1,
+    };
+    let state: EngineState = createInitialState();
+    for (let t = 0; t <= 2000; t += 16) {
+      state = { ...state, songPositionMs: t };
+      const tick = processSongTick(state, 16, chart);
+      state = tick.state;
+      const bot = processBotTick(state, chart);
+      state = bot.state;
+    }
+    expect(state.noteResults.length).toBe(5);
+    expect(state.missCount).toBe(0);
+  });
+
+  it("no-op on dead state", () => {
+    const chart = tapChart(0, 5000);
+    const state = { ...createInitialState(), health: 0, songPositionMs: 5000 };
+    const { state: newState, events } = processBotTick(state, chart);
+    expect(newState).toEqual(state);
+    expect(events.length).toBe(0);
+  });
+
+  it("no-op on ended song", () => {
+    const chart = tapChart(0, 5000);
+    const state = { ...createInitialState(), songEnded: true, songPositionMs: 5000 };
+    const { state: newState, events } = processBotTick(state, chart);
+    expect(newState).toEqual(state);
+    expect(events.length).toBe(0);
   });
 });

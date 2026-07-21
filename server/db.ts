@@ -1,8 +1,8 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { achievements, gameSaves, users } from "../drizzle/schema";
-import type { GameSave, InsertAchievement, InsertGameSave, InsertUser } from "../drizzle/schema";
+import { achievements, gameSaves, users, globalChatMessages, friendRequests } from "../drizzle/schema";
+import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest } from "../drizzle/schema";
 import type { GameState, LeaderboardEntry } from "../client/src/types/game";
 import { ENV } from './_core/env';
 
@@ -43,6 +43,16 @@ function isInventoryKey(key: string): key is keyof GameState["inventory"] {
   return key in DEFAULT_INVENTORY;
 }
 
+function parseStringArray(serialized: string): string[] {
+  try {
+    const parsed: unknown = JSON.parse(serialized);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((item): item is string => typeof item === "string");
+  } catch {
+    return [];
+  }
+}
+
 function parseInventory(serializedInventory: string): GameState["inventory"] {
   const inventory: GameState["inventory"] = { ...DEFAULT_INVENTORY };
 
@@ -75,7 +85,7 @@ function toGameState(save: GameSave): GameState {
     x: save.x,
     y: save.y,
     speed: save.speed,
-    alive: save.alive,
+    alive: save.alive === 1,
     capyColor: save.capyColor,
     capySize: save.capySize,
     totalScore: save.totalScore,
@@ -92,13 +102,19 @@ function toGameState(save: GameSave): GameState {
     thirst: 100,
     hygiene: 100,
     health: 100,
-    equippedItems: [],
+    equippedItems: parseStringArray(save.equippedItems),
+    ownedClothing: parseStringArray(save.ownedClothing),
     playerName: '',
     capyName: '',
     age: 0,
     fnfSongsCompleted: 0,
     fnfHighestCombo: 0,
     millionRewardClaimed: false,
+    xpBoost: Number.isFinite(save.xpBoost) ? save.xpBoost : 0,
+    coinBoost: Number.isFinite(save.coinBoost) ? save.coinBoost : 0,
+    speedBoost: Number.isFinite(save.speedBoost) ? save.speedBoost : 0,
+    shieldActive: save.shieldActive === 1,
+    luckBoost: Number.isFinite(save.luckBoost) ? save.luckBoost : 0,
   };
 }
 
@@ -116,7 +132,7 @@ function toGameSaveValues(userId: number, state: GameState, lastSaved: Date): In
     x: state.x,
     y: state.y,
     speed: state.speed,
-    alive: state.alive,
+    alive: state.alive ? 1 : 0,
     capyColor: state.capyColor,
     capySize: state.capySize,
     totalScore: state.totalScore,
@@ -129,6 +145,13 @@ function toGameSaveValues(userId: number, state: GameState, lastSaved: Date): In
     colorChanges: state.colorChanges,
     size: state.size,
     inventory: JSON.stringify(state.inventory),
+    xpBoost: Number.isFinite(state.xpBoost) ? Math.trunc(state.xpBoost) : 0,
+    coinBoost: Number.isFinite(state.coinBoost) ? Math.trunc(state.coinBoost) : 0,
+    speedBoost: Number.isFinite(state.speedBoost) ? Math.trunc(state.speedBoost) : 0,
+    shieldActive: state.shieldActive ? 1 : 0,
+    luckBoost: Number.isFinite(state.luckBoost) ? Math.trunc(state.luckBoost) : 0,
+    ownedClothing: JSON.stringify(state.ownedClothing ?? []),
+    equippedItems: JSON.stringify(state.equippedItems ?? []),
     lastSaved,
   };
 }
@@ -251,7 +274,7 @@ export async function saveGame(userId: number, state: GameState): Promise<void> 
         x: state.x,
         y: state.y,
         speed: state.speed,
-        alive: state.alive,
+        alive: state.alive ? 1 : 0,
         capyColor: state.capyColor,
         capySize: state.capySize,
         totalScore: state.totalScore,
@@ -264,6 +287,13 @@ export async function saveGame(userId: number, state: GameState): Promise<void> 
         colorChanges: state.colorChanges,
         size: state.size,
         inventory: values.inventory,
+        xpBoost: Number.isFinite(state.xpBoost) ? Math.trunc(state.xpBoost) : 0,
+        coinBoost: Number.isFinite(state.coinBoost) ? Math.trunc(state.coinBoost) : 0,
+        speedBoost: Number.isFinite(state.speedBoost) ? Math.trunc(state.speedBoost) : 0,
+        shieldActive: state.shieldActive ? 1 : 0,
+        luckBoost: Number.isFinite(state.luckBoost) ? Math.trunc(state.luckBoost) : 0,
+        ownedClothing: JSON.stringify(state.ownedClothing ?? []),
+        equippedItems: JSON.stringify(state.equippedItems ?? []),
         lastSaved,
       },
     });
@@ -362,4 +392,285 @@ export async function getLeaderboard(limit = 10): Promise<LeaderboardEntry[]> {
     level: entry.level,
     timestamp: entry.lastSaved.getTime(),
   }));
+}
+
+export type ChatMessage = {
+  id: number;
+  senderName: string;
+  content: string;
+  createdAt: Date;
+};
+
+function normalizeChatLimit(limit: number): number {
+  if (!Number.isFinite(limit)) return 50;
+  return Math.max(1, Math.min(200, Math.trunc(limit)));
+}
+
+export async function getChatMessages(limit = 50): Promise<ChatMessage[]> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get chat messages: database not available");
+    return [];
+  }
+
+  const result = await db
+    .select({
+      id: globalChatMessages.id,
+      senderName: globalChatMessages.senderName,
+      content: globalChatMessages.content,
+      createdAt: globalChatMessages.createdAt,
+    })
+    .from(globalChatMessages)
+    .orderBy(desc(globalChatMessages.createdAt))
+    .limit(normalizeChatLimit(limit));
+
+  return result.reverse();
+}
+
+export async function sendChatMessage(
+  content: string,
+  senderName: string,
+  userId: number | null,
+): Promise<ChatMessage> {
+  const trimmed = content.trim();
+  if (!trimmed) {
+    throw new Error("Message content cannot be empty");
+  }
+  if (trimmed.length > 500) {
+    throw new Error("Message content too long (max 500 characters)");
+  }
+
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  const values: InsertGlobalChatMessage = {
+    content: trimmed,
+    senderName: senderName.trim() || "Anônimo",
+    userId,
+  };
+
+  const result = await db
+    .insert(globalChatMessages)
+    .values(values)
+    .returning({
+      id: globalChatMessages.id,
+      senderName: globalChatMessages.senderName,
+      content: globalChatMessages.content,
+      createdAt: globalChatMessages.createdAt,
+    });
+
+  return result[0];
+}
+
+// ── Friends ──────────────────────────────────────────────────────────
+
+export type FriendRequestWithUser = {
+  id: number;
+  senderId: number;
+  recipientId: number;
+  status: string;
+  createdAt: number;
+  senderName: string;
+  recipientName: string;
+};
+
+function resolveUserName(row: { name: string | null; email: string | null; openId: string }): string {
+  return row.name ?? row.email ?? row.openId ?? "Anônimo";
+}
+
+export async function getUserByName(name: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.name, name)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function sendFriendRequest(senderId: number, recipientId: number): Promise<FriendRequest> {
+  if (senderId === recipientId) {
+    throw new Error("Cannot send friend request to yourself");
+  }
+
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await db
+    .select()
+    .from(friendRequests)
+    .where(
+      or(
+        and(eq(friendRequests.senderId, senderId), eq(friendRequests.recipientId, recipientId)),
+        and(eq(friendRequests.senderId, recipientId), eq(friendRequests.recipientId, senderId)),
+      ),
+    )
+    .limit(1);
+
+  if (existing.length > 0) {
+    const status = existing[0].status;
+    if (status === "accepted") throw new Error("Already friends");
+    if (status === "pending") throw new Error("Friend request already pending");
+    if (status === "rejected") {
+      const [updated] = await db
+        .update(friendRequests)
+        .set({ senderId, recipientId, status: "pending", updatedAt: new Date() })
+        .where(eq(friendRequests.id, existing[0].id))
+        .returning();
+      return updated;
+    }
+  }
+
+  const recipient = await db.select().from(users).where(eq(users.id, recipientId)).limit(1);
+  if (recipient.length === 0) throw new Error("User not found");
+
+  const [inserted] = await db
+    .insert(friendRequests)
+    .values({ senderId, recipientId })
+    .returning();
+  return inserted;
+}
+
+export async function updateFriendRequest(requestId: number, userId: number, action: "accept" | "reject"): Promise<FriendRequest> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [existing] = await db
+    .select()
+    .from(friendRequests)
+    .where(eq(friendRequests.id, requestId))
+    .limit(1);
+
+  if (!existing) throw new Error("Friend request not found");
+  if (existing.recipientId !== userId) throw new Error("Only the recipient can respond to this request");
+  if (existing.status !== "pending") throw new Error("Request already resolved");
+
+  const newStatus = action === "accept" ? "accepted" : "rejected";
+  const [updated] = await db
+    .update(friendRequests)
+    .set({ status: newStatus, updatedAt: new Date() })
+    .where(eq(friendRequests.id, requestId))
+    .returning();
+  return updated;
+}
+
+export async function listFriendRequests(userId: number): Promise<FriendRequestWithUser[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      id: friendRequests.id,
+      senderId: friendRequests.senderId,
+      recipientId: friendRequests.recipientId,
+      status: friendRequests.status,
+      createdAt: friendRequests.createdAt,
+      senderName: users.name,
+      senderEmail: users.email,
+      senderOpenId: users.openId,
+    })
+    .from(friendRequests)
+    .innerJoin(users, eq(friendRequests.senderId, users.id))
+    .where(and(eq(friendRequests.recipientId, userId), eq(friendRequests.status, "pending")))
+    .orderBy(desc(friendRequests.createdAt));
+
+  return result.map((row) => ({
+    id: row.id,
+    senderId: row.senderId,
+    recipientId: row.recipientId,
+    status: row.status,
+    createdAt: row.createdAt.getTime(),
+    senderName: resolveUserName({ name: row.senderName, email: row.senderEmail, openId: row.senderOpenId }),
+    recipientName: "",
+  }));
+}
+
+export async function listOutgoingRequests(userId: number): Promise<FriendRequestWithUser[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      id: friendRequests.id,
+      senderId: friendRequests.senderId,
+      recipientId: friendRequests.recipientId,
+      status: friendRequests.status,
+      createdAt: friendRequests.createdAt,
+      recipientName: users.name,
+      recipientEmail: users.email,
+      recipientOpenId: users.openId,
+    })
+    .from(friendRequests)
+    .innerJoin(users, eq(friendRequests.recipientId, users.id))
+    .where(and(eq(friendRequests.senderId, userId), eq(friendRequests.status, "pending")))
+    .orderBy(desc(friendRequests.createdAt));
+
+  return result.map((row) => ({
+    id: row.id,
+    senderId: row.senderId,
+    recipientId: row.recipientId,
+    status: row.status,
+    createdAt: row.createdAt.getTime(),
+    senderName: "",
+    recipientName: resolveUserName({ name: row.recipientName, email: row.recipientEmail, openId: row.recipientOpenId }),
+  }));
+}
+
+export async function listFriends(userId: number): Promise<FriendRequestWithUser[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      id: friendRequests.id,
+      senderId: friendRequests.senderId,
+      recipientId: friendRequests.recipientId,
+      status: friendRequests.status,
+      createdAt: friendRequests.createdAt,
+      senderName: users.name,
+      senderEmail: users.email,
+      senderOpenId: users.openId,
+    })
+    .from(friendRequests)
+    .innerJoin(users, eq(friendRequests.senderId, users.id))
+    .where(and(
+      or(eq(friendRequests.senderId, userId), eq(friendRequests.recipientId, userId)),
+      eq(friendRequests.status, "accepted"),
+    ))
+    .orderBy(desc(friendRequests.createdAt));
+
+  return result.map((row) => ({
+    id: row.id,
+    senderId: row.senderId,
+    recipientId: row.recipientId,
+    status: row.status,
+    createdAt: row.createdAt.getTime(),
+    senderName: resolveUserName({ name: row.senderName, email: row.senderEmail, openId: row.senderOpenId }),
+    recipientName: "",
+  }));
+}
+
+export async function removeFriend(userId: number, friendRequestId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [existing] = await db
+    .select()
+    .from(friendRequests)
+    .where(eq(friendRequests.id, friendRequestId))
+    .limit(1);
+
+  if (!existing) throw new Error("Friendship not found");
+  if (existing.senderId !== userId && existing.recipientId !== userId) {
+    throw new Error("Not part of this friendship");
+  }
+  if (existing.status !== "accepted") throw new Error("Can only remove accepted friends");
+
+  await db.delete(friendRequests).where(eq(friendRequests.id, friendRequestId));
 }

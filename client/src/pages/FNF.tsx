@@ -7,6 +7,7 @@ import {
   processKeyPress,
   processKeyRelease,
   processSongTick,
+  processBotTick,
   getAccuracy,
   getRatingLetter,
 } from '@/features/fnf/engine';
@@ -385,26 +386,18 @@ export default function FNF() {
       const engine = engineRef.current;
       if (engine.songEnded) return;
       
-      // Botplay: auto-hit notes at perfect timing
-      if (botplay) {
-        for (let i = 0; i < chart.notes.length; i++) {
-          if (engine.noteResults.some((r) => r.noteIndex === i)) continue;
-          const note = chart.notes[i];
-          const diff = Math.abs(engine.songPositionMs - note.timeMs);
-          if (diff <= 5) {
-            const result = processKeyPress(engine, note.lane, engine.songPositionMs, chart);
-            engineRef.current = result.state;
-            for (const ev of result.events) {
-              handleEngineEvent(ev, chart);
-            }
-          }
-        }
-      }
-      
       const result = processSongTick(engineRef.current, dt, chart);
       engineRef.current = result.state;
       for (const ev of result.events) {
         handleEngineEvent(ev, chart);
+      }
+      
+      if (botplay) {
+        const botResult = processBotTick(engineRef.current, chart);
+        engineRef.current = botResult.state;
+        for (const ev of botResult.events) {
+          handleEngineEvent(ev, chart);
+        }
       }
     },
     [handleEngineEvent, botplay],

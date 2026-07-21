@@ -1,15 +1,21 @@
-/**
- * Game state persistence module.
- * 
- * Part of MVP stability cycle (2026-07-14).
- * - Safe parsing with migration from legacy nested format
- * - Idempotent save/load/update operations
- * - Never throws on corrupt data
- * 
- * @see {@link GameState} for the canonical shape
- */
-
 import type { GameState, Inventory } from "@/types/game";
+import shopItems from "@shared/shop-items.json";
+
+const CLOTHING_CATEGORIES = new Set(["Roupa", "Acessório"]);
+
+export function isClothingCategory(category: string): boolean {
+  return CLOTHING_CATEGORIES.has(category);
+}
+
+const CLOTHING_ITEM_NAMES = new Set(
+  shopItems
+    .filter((item) => CLOTHING_CATEGORIES.has(item.category))
+    .map((item) => item.name),
+);
+
+function isClothingItemName(name: string): boolean {
+  return CLOTHING_ITEM_NAMES.has(name);
+}
 
 const SAVE_KEY = "capyzen_game";
 
@@ -72,12 +78,18 @@ export const DEFAULT_GAME_STATE: GameState = {
   hygiene: 100,
   health: 100,
   equippedItems: [],
+  ownedClothing: [],
   playerName: "",
   capyName: "",
   age: 0,
   fnfSongsCompleted: 0,
   fnfHighestCombo: 0,
   millionRewardClaimed: false,
+  speedBoost: 0,
+  shieldActive: false,
+  luckBoost: 0,
+  xpBoost: 0,
+  coinBoost: 0,
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -85,7 +97,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function pickNumber(value: unknown, fallback: number): number {
-  return typeof value === "number" && !Number.isNaN(value) ? value : fallback;
+  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
 function pickBoolean(value: unknown, fallback: boolean): boolean {
@@ -154,6 +166,58 @@ function flattenLegacySave(raw: Record<string, unknown>): Record<string, unknown
   return flat;
 }
 
+function buildGameStateFromFlat(flat: Record<string, unknown>): GameState {
+  const equippedItems = pickStringArray(flat.equippedItems);
+  const rawOwnedClothing = pickStringArray(flat.ownedClothing);
+  const ownedClothing = rawOwnedClothing.length > 0
+    ? rawOwnedClothing
+    : equippedItems.filter(isClothingItemName);
+
+  return {
+    coins: pickNumber(flat.coins, DEFAULT_GAME_STATE.coins),
+    level: pickNumber(flat.level, DEFAULT_GAME_STATE.level),
+    xp: pickNumber(flat.xp, DEFAULT_GAME_STATE.xp),
+    food: pickNumber(flat.food, DEFAULT_GAME_STATE.food),
+    poop: pickNumber(flat.poop, DEFAULT_GAME_STATE.poop),
+    hunger: pickNumber(flat.hunger, DEFAULT_GAME_STATE.hunger),
+    happiness: pickNumber(flat.happiness, DEFAULT_GAME_STATE.happiness),
+    sus: pickNumber(flat.sus, DEFAULT_GAME_STATE.sus),
+    x: pickNumber(flat.x, DEFAULT_GAME_STATE.x),
+    y: pickNumber(flat.y, DEFAULT_GAME_STATE.y),
+    speed: pickNumber(flat.speed, DEFAULT_GAME_STATE.speed),
+    alive: pickBoolean(flat.alive, DEFAULT_GAME_STATE.alive),
+    capyColor: pickString(flat.capyColor, DEFAULT_GAME_STATE.capyColor),
+    capySize: pickNumber(flat.capySize, DEFAULT_GAME_STATE.capySize),
+    totalScore: pickNumber(flat.totalScore, DEFAULT_GAME_STATE.totalScore),
+    totalXP: pickNumber(flat.totalXP, DEFAULT_GAME_STATE.totalXP),
+    foodEaten: pickNumber(flat.foodEaten, DEFAULT_GAME_STATE.foodEaten),
+    gamesPlayed: pickNumber(flat.gamesPlayed, DEFAULT_GAME_STATE.gamesPlayed),
+    workCount: pickNumber(flat.workCount, DEFAULT_GAME_STATE.workCount),
+    affectionCount: pickNumber(flat.affectionCount, DEFAULT_GAME_STATE.affectionCount),
+    bathroomCount: pickNumber(flat.bathroomCount, DEFAULT_GAME_STATE.bathroomCount),
+    colorChanges: pickNumber(flat.colorChanges, DEFAULT_GAME_STATE.colorChanges),
+    size: pickNumber(flat.size, DEFAULT_GAME_STATE.size),
+    inventory: pickInventory(flat.inventory),
+    energy: pickNumber(flat.energy, DEFAULT_GAME_STATE.energy),
+    thirst: pickNumber(flat.thirst, DEFAULT_GAME_STATE.thirst),
+    hygiene: pickNumber(flat.hygiene, DEFAULT_GAME_STATE.hygiene),
+    health: pickNumber(flat.health, DEFAULT_GAME_STATE.health),
+    equippedItems,
+    ownedClothing,
+    playerName: pickString(flat.playerName, DEFAULT_GAME_STATE.playerName),
+    capyName: pickString(flat.capyName, DEFAULT_GAME_STATE.capyName),
+    age: pickNumber(flat.age, DEFAULT_GAME_STATE.age),
+    fnfSongsCompleted: pickNumber(flat.fnfSongsCompleted, DEFAULT_GAME_STATE.fnfSongsCompleted),
+    fnfHighestCombo: pickNumber(flat.fnfHighestCombo, DEFAULT_GAME_STATE.fnfHighestCombo),
+    millionRewardClaimed: pickBoolean(flat.millionRewardClaimed, DEFAULT_GAME_STATE.millionRewardClaimed),
+    speedBoost: pickNumber(flat.speedBoost, DEFAULT_GAME_STATE.speedBoost),
+    shieldActive: pickBoolean(flat.shieldActive, DEFAULT_GAME_STATE.shieldActive),
+    luckBoost: pickNumber(flat.luckBoost, DEFAULT_GAME_STATE.luckBoost),
+    xpBoost: pickNumber(flat.xpBoost, DEFAULT_GAME_STATE.xpBoost),
+    coinBoost: pickNumber(flat.coinBoost, DEFAULT_GAME_STATE.coinBoost),
+  };
+}
+
 export function parseGameState(raw: unknown): GameState {
   if (raw === null || raw === undefined) {
     return { ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_INVENTORY } };
@@ -161,46 +225,7 @@ export function parseGameState(raw: unknown): GameState {
 
   if (typeof raw !== "string") {
     if (isRecord(raw)) {
-      const flat = flattenLegacySave(raw as Record<string, unknown>);
-      const inventory = pickInventory(flat.inventory);
-      const equippedItems = pickStringArray(flat.equippedItems);
-      return {
-        coins: pickNumber(flat.coins, DEFAULT_GAME_STATE.coins),
-        level: pickNumber(flat.level, DEFAULT_GAME_STATE.level),
-        xp: pickNumber(flat.xp, DEFAULT_GAME_STATE.xp),
-        food: pickNumber(flat.food, DEFAULT_GAME_STATE.food),
-        poop: pickNumber(flat.poop, DEFAULT_GAME_STATE.poop),
-        hunger: pickNumber(flat.hunger, DEFAULT_GAME_STATE.hunger),
-        happiness: pickNumber(flat.happiness, DEFAULT_GAME_STATE.happiness),
-        sus: pickNumber(flat.sus, DEFAULT_GAME_STATE.sus),
-        x: pickNumber(flat.x, DEFAULT_GAME_STATE.x),
-        y: pickNumber(flat.y, DEFAULT_GAME_STATE.y),
-        speed: pickNumber(flat.speed, DEFAULT_GAME_STATE.speed),
-        alive: pickBoolean(flat.alive, DEFAULT_GAME_STATE.alive),
-        capyColor: pickString(flat.capyColor, DEFAULT_GAME_STATE.capyColor),
-        capySize: pickNumber(flat.capySize, DEFAULT_GAME_STATE.capySize),
-        totalScore: pickNumber(flat.totalScore, DEFAULT_GAME_STATE.totalScore),
-        totalXP: pickNumber(flat.totalXP, DEFAULT_GAME_STATE.totalXP),
-        foodEaten: pickNumber(flat.foodEaten, DEFAULT_GAME_STATE.foodEaten),
-        gamesPlayed: pickNumber(flat.gamesPlayed, DEFAULT_GAME_STATE.gamesPlayed),
-        workCount: pickNumber(flat.workCount, DEFAULT_GAME_STATE.workCount),
-        affectionCount: pickNumber(flat.affectionCount, DEFAULT_GAME_STATE.affectionCount),
-        bathroomCount: pickNumber(flat.bathroomCount, DEFAULT_GAME_STATE.bathroomCount),
-        colorChanges: pickNumber(flat.colorChanges, DEFAULT_GAME_STATE.colorChanges),
-        size: pickNumber(flat.size, DEFAULT_GAME_STATE.size),
-        inventory,
-        energy: pickNumber(flat.energy, DEFAULT_GAME_STATE.energy),
-        thirst: pickNumber(flat.thirst, DEFAULT_GAME_STATE.thirst),
-        hygiene: pickNumber(flat.hygiene, DEFAULT_GAME_STATE.hygiene),
-        health: pickNumber(flat.health, DEFAULT_GAME_STATE.health),
-        equippedItems,
-        playerName: pickString(flat.playerName, DEFAULT_GAME_STATE.playerName),
-        capyName: pickString(flat.capyName, DEFAULT_GAME_STATE.capyName),
-        age: pickNumber(flat.age, DEFAULT_GAME_STATE.age),
-        fnfSongsCompleted: pickNumber(flat.fnfSongsCompleted, DEFAULT_GAME_STATE.fnfSongsCompleted),
-        fnfHighestCombo: pickNumber(flat.fnfHighestCombo, DEFAULT_GAME_STATE.fnfHighestCombo),
-        millionRewardClaimed: pickBoolean(flat.millionRewardClaimed, DEFAULT_GAME_STATE.millionRewardClaimed),
-      };
+      return buildGameStateFromFlat(flattenLegacySave(raw as Record<string, unknown>));
     }
     return { ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_INVENTORY } };
   }
@@ -210,46 +235,7 @@ export function parseGameState(raw: unknown): GameState {
     if (!isRecord(parsed)) {
       return { ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_INVENTORY } };
     }
-    const flat = flattenLegacySave(parsed as Record<string, unknown>);
-    const inventory = pickInventory(flat.inventory);
-    const equippedItems = pickStringArray(flat.equippedItems);
-    return {
-      coins: pickNumber(flat.coins, DEFAULT_GAME_STATE.coins),
-      level: pickNumber(flat.level, DEFAULT_GAME_STATE.level),
-      xp: pickNumber(flat.xp, DEFAULT_GAME_STATE.xp),
-      food: pickNumber(flat.food, DEFAULT_GAME_STATE.food),
-      poop: pickNumber(flat.poop, DEFAULT_GAME_STATE.poop),
-      hunger: pickNumber(flat.hunger, DEFAULT_GAME_STATE.hunger),
-      happiness: pickNumber(flat.happiness, DEFAULT_GAME_STATE.happiness),
-      sus: pickNumber(flat.sus, DEFAULT_GAME_STATE.sus),
-      x: pickNumber(flat.x, DEFAULT_GAME_STATE.x),
-      y: pickNumber(flat.y, DEFAULT_GAME_STATE.y),
-      speed: pickNumber(flat.speed, DEFAULT_GAME_STATE.speed),
-      alive: pickBoolean(flat.alive, DEFAULT_GAME_STATE.alive),
-      capyColor: pickString(flat.capyColor, DEFAULT_GAME_STATE.capyColor),
-      capySize: pickNumber(flat.capySize, DEFAULT_GAME_STATE.capySize),
-      totalScore: pickNumber(flat.totalScore, DEFAULT_GAME_STATE.totalScore),
-      totalXP: pickNumber(flat.totalXP, DEFAULT_GAME_STATE.totalXP),
-      foodEaten: pickNumber(flat.foodEaten, DEFAULT_GAME_STATE.foodEaten),
-      gamesPlayed: pickNumber(flat.gamesPlayed, DEFAULT_GAME_STATE.gamesPlayed),
-      workCount: pickNumber(flat.workCount, DEFAULT_GAME_STATE.workCount),
-      affectionCount: pickNumber(flat.affectionCount, DEFAULT_GAME_STATE.affectionCount),
-      bathroomCount: pickNumber(flat.bathroomCount, DEFAULT_GAME_STATE.bathroomCount),
-      colorChanges: pickNumber(flat.colorChanges, DEFAULT_GAME_STATE.colorChanges),
-      size: pickNumber(flat.size, DEFAULT_GAME_STATE.size),
-      inventory,
-      energy: pickNumber(flat.energy, DEFAULT_GAME_STATE.energy),
-      thirst: pickNumber(flat.thirst, DEFAULT_GAME_STATE.thirst),
-      hygiene: pickNumber(flat.hygiene, DEFAULT_GAME_STATE.hygiene),
-      health: pickNumber(flat.health, DEFAULT_GAME_STATE.health),
-      equippedItems,
-      playerName: pickString(flat.playerName, DEFAULT_GAME_STATE.playerName),
-      capyName: pickString(flat.capyName, DEFAULT_GAME_STATE.capyName),
-      age: pickNumber(flat.age, DEFAULT_GAME_STATE.age),
-      fnfSongsCompleted: pickNumber(flat.fnfSongsCompleted, DEFAULT_GAME_STATE.fnfSongsCompleted),
-      fnfHighestCombo: pickNumber(flat.fnfHighestCombo, DEFAULT_GAME_STATE.fnfHighestCombo),
-      millionRewardClaimed: pickBoolean(flat.millionRewardClaimed, DEFAULT_GAME_STATE.millionRewardClaimed),
-    };
+    return buildGameStateFromFlat(flattenLegacySave(parsed as Record<string, unknown>));
   } catch {
     return { ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_INVENTORY } };
   }
@@ -272,6 +258,11 @@ export function updateGameState(partial: Partial<GameState>): GameState {
   }
   if (partial.equippedItems) {
     merged.equippedItems = [...partial.equippedItems];
+  }
+  if (partial.ownedClothing) {
+    const currentOwned = current.ownedClothing ?? [];
+    const newItems = partial.ownedClothing.filter((item) => !currentOwned.includes(item));
+    merged.ownedClothing = [...currentOwned, ...newItems];
   }
   saveGameState(merged);
   return merged;

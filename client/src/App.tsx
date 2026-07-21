@@ -8,6 +8,8 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Admin from "./pages/Admin";
 import FNF from "./pages/FNF";
+import Chat from "./pages/Chat";
+import Friends from "./pages/Friends";
 
 function AppRouter() {
   return (
@@ -17,6 +19,9 @@ function AppRouter() {
         <Route path={"/loja"} component={Shop} />
         <Route path={"/admin"} component={Admin} />
         <Route path={"/fnf"} component={FNF} />
+        <Route path={"/amigos"} component={Friends} />
+        <Route path={"/friends"} component={Friends} />
+        <Route path={"/chat"} component={Chat} />
         <Route path={"/404"} component={NotFound} />
         {/* Final fallback route */}
         <Route component={NotFound} />

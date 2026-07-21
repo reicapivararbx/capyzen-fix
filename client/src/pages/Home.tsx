@@ -12,6 +12,7 @@ import { GameState } from '@/types/game';
 import { loadGameState, saveGameState, DEFAULT_GAME_STATE } from '@/lib/game-save';
 import { tickLifeState, calculateAgeFromGameState, clampStat } from '@/features/game/life';
 import type { LifeState } from '@/features/game/life';
+import { applyActionBoosts, applySpeedBoost, hasShield, applyShieldAbsorb } from '@/lib/boost-effects';
 
 export default function Home() {
   const { user, loading, isAuthenticated, logout } = useAuth({});
@@ -20,11 +21,12 @@ export default function Home() {
   const [capyName, setCapyName] = useState('');
   const [gameState, setGameState] = useState<GameState>({
     playerName: '', capyName: '', level: 1, xp: 0, coins: 0, age: 0,
-    hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [],
+    hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [], ownedClothing: [],
     food: 0, sus: 0, x: 0, y: 0, speed: 0, alive: true, capyColor: '#8B7355', capySize: 50,
     totalScore: 0, totalXP: 0, foodEaten: 0, gamesPlayed: 0, workCount: 0, affectionCount: 0,
     bathroomCount: 0, colorChanges: 0, size: 50, inventory: {} as any,
     fnfSongsCompleted: 0, fnfHighestCombo: 0, millionRewardClaimed: false,
+    speedBoost: 0, shieldActive: false, luckBoost: 0, xpBoost: 0, coinBoost: 0,
   });
   const [capyX, setCapyX] = useState(300);
   const [capyY, setCapyY] = useState(250);
@@ -76,25 +78,31 @@ export default function Home() {
     const newState = { ...latestGameStateRef.current };
 
     switch (action) {
-      case 'feed':
+      case 'feed': {
         newState.hunger = Math.max(0, newState.hunger - 30);
         newState.happiness = Math.min(100, newState.happiness + 10);
-        newState.coins += 5;
-        newState.xp += 10;
+        const feedRewards = applyActionBoosts(5, 10, newState);
+        newState.coins += feedRewards.coins;
+        newState.xp += feedRewards.xp;
         break;
-      case 'play':
+      }
+      case 'play': {
         newState.happiness = Math.min(100, newState.happiness + 25);
         newState.energy = Math.max(0, newState.energy - 20);
         newState.hunger = Math.min(100, newState.hunger + 15);
-        newState.coins += 8;
-        newState.xp += 15;
+        const playRewards = applyActionBoosts(8, 15, newState);
+        newState.coins += playRewards.coins;
+        newState.xp += playRewards.xp;
         break;
-      case 'work':
-        newState.coins += 20;
-        newState.xp += 20;
+      }
+      case 'work': {
+        const workRewards = applyActionBoosts(20, 20, newState);
+        newState.coins += workRewards.coins;
+        newState.xp += workRewards.xp;
         newState.energy = Math.max(0, newState.energy - 30);
         newState.hunger = Math.min(100, newState.hunger + 20);
         break;
+      }
       case 'sleep':
         newState.energy = Math.min(100, newState.energy + 40);
         newState.hunger = Math.min(100, newState.hunger + 10);
@@ -103,11 +111,13 @@ export default function Home() {
         newState.hygiene = Math.min(100, newState.hygiene + 30);
         newState.energy = Math.max(0, newState.energy - 15);
         break;
-      case 'pet':
+      case 'pet': {
         newState.happiness = Math.min(100, newState.happiness + 15);
         newState.energy = Math.max(0, newState.energy - 5);
-        newState.xp += 5;
+        const petRewards = applyActionBoosts(0, 5, newState);
+        newState.xp += petRewards.xp;
         break;
+      }
     }
 
     // Natural decay
@@ -148,7 +158,7 @@ export default function Home() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!isLoggedIn || !latestGameStateRef.current.alive) return;
-      const step = 15;
+      const step = applySpeedBoost(15, latestGameStateRef.current.speedBoost);
       const canvasWidth = 560;
       const canvasHeight = 400;
 
@@ -219,6 +229,21 @@ export default function Home() {
           health: nextLife.stats.health,
           totalScore: nextLife.totalScore,
         };
+
+        // Shield absorption: prevent fatal death and absorb damage
+        if (hasShield(next) && !nextLife.alive) {
+          // Shield prevents fatal event: absorb damage, keep capy alive, consume shield
+          const deathDamage = Math.abs(prev.health - next.health);
+          const absorbedDamage = applyShieldAbsorb(deathDamage, true, 100);
+          next.health = Math.max(1, prev.health - absorbedDamage);
+          next.alive = true;
+          next.shieldActive = false;
+        } else if (hasShield(next) && next.health < prev.health) {
+          // Shield absorbs ongoing damage proportionally
+          const damage = prev.health - next.health;
+          const absorbedDamage = applyShieldAbsorb(damage, true, 50);
+          next.health = prev.health - absorbedDamage;
+        }
 
         const minutes = deltaMs / 60000;
         next.poop = clampStat(next.poop + 0.3 * minutes);
@@ -308,6 +333,9 @@ export default function Home() {
             </Button>
             <Button onClick={() => window.location.href = '/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[44px] text-sm sm:text-base">
               🎵 FNF
+            </Button>
+            <Button onClick={() => window.location.href = '/chat'} className="bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 min-h-[44px] text-sm sm:text-base">
+              💬 Chat
             </Button>
             <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[44px] min-w-[44px] text-sm sm:text-base">
               🚪 Sair
