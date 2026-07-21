@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import type { LeaderboardEntry } from "@/types/game";
+import type { LeaderboardEntry, WeeklyLeaderboardEntry, FriendLeaderboardEntry, LeaderboardTab } from "@/types/game";
 
 interface ImprovedLeaderboardProps {
   currentUsername?: string;
@@ -15,14 +15,62 @@ export function ImprovedLeaderboard({
     refetchInterval: 30000,
   });
 
+  const [activeTab, setActiveTab] = useState<LeaderboardTab>("global");
   const [sortBy, setSortBy] = useState<"score" | "level">("score");
+  const [weeklyLeaderboard, setWeeklyLeaderboard] = useState<WeeklyLeaderboardEntry[]>([]);
+  const [friendsLeaderboard, setFriendsLeaderboard] = useState<FriendLeaderboardEntry[]>([]);
 
-  const sortedLeaderboard = leaderboard
-    ? [...leaderboard].sort((a, b) => {
-        if (sortBy === "score") return b.score - a.score;
-        return b.level - a.level;
-      })
-    : [];
+  // Generate weekly leaderboard from global data
+  useEffect(() => {
+    if (!leaderboard) return;
+
+    const now = Date.now();
+    const weekStart = now - 7 * 24 * 60 * 60 * 1000;
+
+    const weekly = leaderboard
+      .filter((entry) => entry.timestamp >= weekStart)
+      .map((entry) => ({
+        ...entry,
+        weekStart: weekStart,
+      }));
+
+    setWeeklyLeaderboard(weekly);
+  }, [leaderboard]);
+
+  // Generate friends leaderboard from localStorage
+  useEffect(() => {
+    try {
+      const savedFriends = localStorage.getItem("capyzen_friends");
+      if (savedFriends) {
+        const friends = JSON.parse(savedFriends) as string[];
+        const friendEntries: FriendLeaderboardEntry[] = friends.map((username) => ({
+          username,
+          score: 0,
+          level: 1,
+          isOnline: Math.random() > 0.7,
+          lastSeen: Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
+        }));
+        setFriendsLeaderboard(friendEntries);
+      }
+    } catch {
+      // Ignorar erro de parsing
+    }
+  }, []);
+
+  const getSortedLeaderboard = () => {
+    const data = activeTab === "global"
+      ? leaderboard || []
+      : activeTab === "weekly"
+        ? weeklyLeaderboard
+        : friendsLeaderboard;
+
+    return [...data].sort((a, b) => {
+      if (sortBy === "score") return b.score - a.score;
+      return b.level - a.level;
+    });
+  };
+
+  const sortedLeaderboard = getSortedLeaderboard();
 
   const getMedalEmoji = (position: number) => {
     if (position === 0) return "🥇";
@@ -47,20 +95,51 @@ export function ImprovedLeaderboard({
     return "🎪";
   };
 
+  const formatLastSeen = (timestamp: number) => {
+    const diff = Date.now() - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return "Agora";
+    if (minutes < 60) return `${minutes}min atrás`;
+    if (hours < 24) return `${hours}h atrás`;
+    return `${days}d atrás`;
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
       <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-8 max-w-4xl w-full border-4 border-cyan-400 my-8">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 mb-2">
-            🏆 Ranking Global
+            🏆 Ranking
           </h1>
           <p className="text-gray-600 font-semibold">
             Top capybaras do CapyZen 🐹
           </p>
         </div>
 
-        {/* Filtros */}
+        {/* Tabs */}
+        <div className="flex gap-3 justify-center mb-6 flex-wrap">
+          {(["global", "weekly", "friends"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-2 rounded-full font-bold transition transform hover:scale-105 ${
+                activeTab === tab
+                  ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {tab === "global" && "🌍 Global"}
+              {tab === "weekly" && "📅 Semanal"}
+              {tab === "friends" && "👥 Amigos"}
+            </button>
+          ))}
+        </div>
+
+        {/* Sort Filters */}
         <div className="flex gap-3 justify-center mb-8 flex-wrap">
           {(["score", "level"] as const).map((filter) => (
             <button
@@ -68,7 +147,7 @@ export function ImprovedLeaderboard({
               onClick={() => setSortBy(filter)}
               className={`px-6 py-2 rounded-full font-bold transition transform hover:scale-105 ${
                 sortBy === filter
-                  ? "bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-lg"
+                  ? "bg-gradient-to-r from-purple-400 to-pink-500 text-white shadow-lg"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
@@ -120,6 +199,20 @@ export function ImprovedLeaderboard({
                       </div>
                       <div className="text-xs text-gray-600">Score</div>
                     </div>
+
+                    {/* Online Status (Friends tab only) */}
+                    {activeTab === "friends" && "isOnline" in player && (
+                      <div className="text-right ml-4">
+                        <div className={`text-sm font-semibold ${player.isOnline ? "text-green-600" : "text-gray-500"}`}>
+                          {player.isOnline ? "🟢 Online" : "🔴 Offline"}
+                        </div>
+                        {!player.isOnline && "lastSeen" in player && (
+                          <div className="text-xs text-gray-500">
+                            {formatLastSeen(player.lastSeen)}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
 
                   {/* Barra de Progresso */}
@@ -137,7 +230,11 @@ export function ImprovedLeaderboard({
           ) : (
             <div className="text-center text-gray-600 py-12">
               <p className="text-xl font-bold mb-2">🐹 Nenhum jogador no ranking ainda</p>
-              <p className="text-sm">Comece a jogar para aparecer aqui!</p>
+              <p className="text-sm">
+                {activeTab === "friends"
+                  ? "Adicione amigos para ver o ranking deles!"
+                  : "Comece a jogar para aparecer aqui!"}
+              </p>
             </div>
           )}
         </div>

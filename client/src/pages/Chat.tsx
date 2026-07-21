@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -6,6 +6,8 @@ import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
 
 const MAX_MESSAGE_LENGTH = 500;
+const RATE_LIMIT_INTERVAL_MS = 2000;
+const MAX_MESSAGES_IN_WINDOW = 3;
 
 function formatTimestamp(date: Date): string {
   const now = new Date();
@@ -37,12 +39,20 @@ export default function Chat() {
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messageTimestampsRef = useRef<number[]>([]);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messagesQuery.data]);
+
+  const checkRateLimit = useCallback((): boolean => {
+    const now = Date.now();
+    const windowStart = now - RATE_LIMIT_INTERVAL_MS;
+    messageTimestampsRef.current = messageTimestampsRef.current.filter(t => t > windowStart);
+    return messageTimestampsRef.current.length < MAX_MESSAGES_IN_WINDOW;
+  }, []);
 
   const handleSend = () => {
     const trimmed = content.trim();
@@ -58,7 +68,12 @@ export default function Chat() {
       setError('Digite seu nome para enviar mensagens');
       return;
     }
+    if (!checkRateLimit()) {
+      setError(`Aguarde ${RATE_LIMIT_INTERVAL_MS / 1000}s entre mensagens`);
+      return;
+    }
     setError('');
+    messageTimestampsRef.current.push(Date.now());
     sendMessage.mutate({
       content: trimmed,
       senderName: isAuthenticated ? undefined : displayName.trim(),

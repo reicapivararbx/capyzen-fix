@@ -6,10 +6,14 @@ interface LoginScreenProps {
   onCreateUser: (user: CurrentUser) => void;
 }
 
-/**
- * Componente de tela de login
- * Separado do Home.tsx para melhor manutenção
- */
+async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -20,7 +24,6 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const [createError, setCreateError] = useState('');
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
-  // Validar entrada
   const validateInput = (username: string, password: string): string | null => {
     if (!username || !password) {
       return 'Usuário e senha são obrigatórios!';
@@ -37,8 +40,7 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
     return null;
   };
 
-  // Fazer login
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const error = validateInput(loginUsername, loginPassword);
     if (error) {
       setLoginError(error);
@@ -47,21 +49,22 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
 
     try {
       const users = JSON.parse(localStorage.getItem('capyzen_users') || '{}');
-      if (users[loginUsername] && users[loginUsername] === loginPassword) {
-        onLogin({ username: loginUsername, password: loginPassword });
+      const hashedPassword = await hashPassword(loginPassword);
+
+      if (users[loginUsername] && users[loginUsername] === hashedPassword) {
+        onLogin({ username: loginUsername, password: hashedPassword });
         setLoginError('');
         setLoginUsername('');
         setLoginPassword('');
       } else {
         setLoginError('Usuario ou senha incorretos!');
       }
-    } catch (e) {
+    } catch {
       setLoginError('Erro ao carregar dados de usuário!');
     }
   };
 
-  // Criar usuário
-  const handleCreateUser = () => {
+  const handleCreateUser = async () => {
     const error = validateInput(createUsername, createPassword);
     if (error) {
       setCreateError(error);
@@ -75,19 +78,22 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
         return;
       }
 
-      users[createUsername] = createPassword;
+      const hashedPassword = await hashPassword(createPassword);
+      users[createUsername] = hashedPassword;
+
       try {
         localStorage.setItem('capyzen_users', JSON.stringify(users));
-      } catch (e) {
-        // Ignorar erro de quota
+      } catch {
+        setCreateError('Erro ao salvar dados!');
+        return;
       }
 
-      onCreateUser({ username: createUsername, password: createPassword });
+      onCreateUser({ username: createUsername, password: hashedPassword });
       setCreateError('');
       setCreateUsername('');
       setCreatePassword('');
       setIsCreatingUser(false);
-    } catch (e) {
+    } catch {
       setCreateError('Erro ao criar usuário!');
     }
   };
@@ -193,10 +199,6 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
           >
             🎉 Criar Usuário
           </button>
-
-          <p className="text-center text-sm text-gray-600">
-            👑 Teste: root / root
-          </p>
         </div>
       </div>
     </div>

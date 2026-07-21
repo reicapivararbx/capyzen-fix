@@ -286,12 +286,12 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 flex items-center justify-center p-4">
-        <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl max-w-md w-full border border-purple-400">
+      <div className="min-h-screen bg-gradient-to-br from-green-700 via-emerald-600 to-teal-500 flex items-center justify-center p-4">
+        <div className="bg-gray-900/90 backdrop-blur-sm rounded-3xl p-10 shadow-2xl max-w-md w-full border border-green-500/30">
           <div className="text-center mb-8">
-            <div className="text-6xl mb-4">🐹</div>
-            <h1 className="text-3xl font-bold text-purple-300 mb-2">CapyZen</h1>
-            <p className="text-gray-300">Cuide de sua Capivara</p>
+            <div className="text-7xl mb-4">🐹</div>
+            <h1 className="text-4xl font-extrabold text-green-300 mb-2 tracking-tight">CapyGame</h1>
+            <p className="text-gray-400 text-lg">Cuide de sua Capivara</p>
           </div>
 
           <input
@@ -299,7 +299,7 @@ export default function Home() {
             placeholder="Seu nome"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full px-4 py-3 mb-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-700 min-h-[44px]"
+            className="w-full px-5 py-4 mb-4 bg-gray-800 text-white rounded-xl border border-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg"
           />
 
           <input
@@ -307,10 +307,10 @@ export default function Home() {
             placeholder="Nome da capivara"
             value={capyName}
             onChange={(e) => setCapyName(e.target.value)}
-            className="w-full px-4 py-3 mb-6 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-700 min-h-[44px]"
+            className="w-full px-5 py-4 mb-6 bg-gray-800 text-white rounded-xl border border-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg"
           />
 
-          <Button onClick={startGame} className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-3 rounded-lg min-h-[44px]">
+          <Button onClick={startGame} className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 rounded-xl min-h-[56px] text-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-500/25">
             🎮 Começar Jogo
           </Button>
         </div>
@@ -322,22 +322,22 @@ export default function Home() {
     <div className="min-h-screen bg-gray-900 text-white p-4 flex flex-col overflow-x-hidden">
       <div className="max-w-7xl mx-auto w-full">
         {/* Header + Nav */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
-          <h1 className="text-2xl sm:text-3xl font-bold shrink-0">🐹 CapyZen</h1>
-          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
-            <Button onClick={() => setShowShop(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[44px] text-sm sm:text-base">
-              🛍️ Loja
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+          <h1 className="text-3xl sm:text-4xl font-extrabold shrink-0 text-green-300 tracking-tight">🐹 CapyGame</h1>
+          <div className="flex flex-wrap gap-3 w-full sm:w-auto">
+            <Button onClick={() => window.location.href = '/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-orange-500/20">
+              🐹 FNF
             </Button>
-            <Button onClick={() => window.location.href = '/admin'} className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[44px] text-sm sm:text-base">
+            <Button onClick={() => window.location.href = '/admin'} className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-indigo-500/20">
               ⚙️ Admin
             </Button>
-            <Button onClick={() => window.location.href = '/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[44px] text-sm sm:text-base">
-              🎵 FNF
-            </Button>
-            <Button onClick={() => window.location.href = '/chat'} className="bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 min-h-[44px] text-sm sm:text-base">
+            <Button onClick={() => window.location.href = '/chat'} className="bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-teal-500/20">
               💬 Chat
             </Button>
-            <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[44px] min-w-[44px] text-sm sm:text-base">
+            <Button onClick={() => setShowShop(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-blue-500/20">
+              🛍️ Loja
+            </Button>
+            <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[52px] min-w-[52px] px-6 text-base font-bold rounded-xl border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all duration-200">
               🚪 Sair
             </Button>
           </div>
@@ -347,7 +347,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Canvas + Actions column */}
           <div className="lg:col-span-3 flex flex-col gap-4">
-            <div className="bg-gray-800 rounded-lg p-4 border border-purple-400">
+            <div className="bg-gray-800/80 rounded-xl p-4 border border-green-500/20">
               <div className="aspect-[560/400] max-w-full">
                 <GameView gameState={gameState} capyX={capyX} capyY={capyY} />
               </div>
@@ -358,13 +358,13 @@ export default function Home() {
           {/* Stats + Tools column */}
           <div className="flex flex-col gap-4">
             <StatsPanel gameState={gameState} />
-            <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 min-h-[44px]">
+            <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 min-h-[52px] rounded-xl font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-500/20">
               💾 Salvar
             </Button>
-            <Button onClick={() => setShowBugReport(true)} className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 min-h-[44px]">
+            <Button onClick={() => setShowBugReport(true)} className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 min-h-[52px] rounded-xl font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-red-500/20">
               🐛 Reportar Bug
             </Button>
-            <div className="bg-blue-900/50 border border-blue-400/50 rounded-lg p-3 text-xs leading-relaxed">
+            <div className="bg-blue-900/50 border border-blue-400/30 rounded-xl p-3 text-xs leading-relaxed">
               💡 <strong>Dica:</strong> Use WASD ou Setas para mover a capivara!
             </div>
           </div>
@@ -374,14 +374,14 @@ export default function Home() {
       {/* Game Over Dialog */}
       {!gameState.alive && isLoggedIn && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-label="Game Over">
-          <div className="bg-gray-800 rounded-lg p-8 max-w-md w-full border border-red-400 text-center max-h-[85dvh] overflow-y-auto">
+          <div className="bg-gray-800 rounded-2xl p-8 max-w-md w-full border border-red-400/50 text-center max-h-[85dvh] overflow-y-auto shadow-2xl">
             <div className="text-6xl mb-4">💀</div>
-            <h2 className="text-3xl font-bold mb-2 text-red-400">Game Over</h2>
+            <h2 className="text-3xl font-extrabold mb-2 text-red-400">Game Over</h2>
             <p className="text-gray-300 mb-6">Sua capivara faleceu...</p>
             <div className="space-y-2 text-sm text-gray-400 mb-6">
-              <p>Nível alcançado: <span className="text-purple-300">{gameState.level}</span></p>
+              <p>Nível alcançado: <span className="text-green-300">{gameState.level}</span></p>
               <p>Moedas coletadas: 💰 <span className="text-yellow-300">{gameState.coins}</span></p>
-              <p>Idade: <span className="text-purple-300">{gameState.age} dias</span></p>
+              <p>Idade: <span className="text-green-300">{gameState.age} dias</span></p>
             </div>
             <Button
               onClick={() => {
@@ -389,7 +389,7 @@ export default function Home() {
                 localStorage.removeItem('capyzen_start');
                 setIsLoggedIn(false);
               }}
-              className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold min-h-[44px] min-w-[44px]"
+              className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-bold min-h-[52px] min-w-[52px] rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-red-500/25"
             >
               🔄 Novo Jogo
             </Button>
@@ -400,26 +400,26 @@ export default function Home() {
       {/* Bug Report Modal */}
       {showBugReport && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" role="dialog" aria-modal="true" aria-label="Reportar bug">
-          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-purple-400 max-h-[85dvh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">🐛 Reportar Bug</h2>
+          <div className="bg-gray-800 rounded-2xl p-6 max-w-md w-full border border-purple-400/30 max-h-[85dvh] overflow-y-auto shadow-2xl">
+            <h2 className="text-2xl font-extrabold mb-4">🐛 Reportar Bug</h2>
             <input
               type="text"
               placeholder="Título do bug"
               value={bugTitle}
               onChange={(e) => setBugTitle(e.target.value)}
-              className="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-700 min-h-[44px]"
+              className="w-full px-4 py-3 mb-4 bg-gray-700 text-white rounded-xl border border-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 min-h-[48px]"
             />
             <textarea
               placeholder="Descrição do bug"
               value={bugDescription}
               onChange={(e) => setBugDescription(e.target.value)}
-              className="w-full px-4 py-2 mb-4 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-700 h-24 min-h-[44px]"
+              className="w-full px-4 py-3 mb-4 bg-gray-700 text-white rounded-xl border border-gray-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800 h-24 min-h-[48px]"
             />
-            <div className="flex gap-2">
-              <Button onClick={reportBug} className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 min-h-[44px]">
+            <div className="flex gap-3">
+              <Button onClick={reportBug} className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 min-h-[48px] rounded-xl font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]">
                 Enviar
               </Button>
-              <Button onClick={() => setShowBugReport(false)} variant="outline" className="flex-1 min-h-[44px]">
+              <Button onClick={() => setShowBugReport(false)} variant="outline" className="flex-1 min-h-[48px] rounded-xl font-bold">
                 Cancelar
               </Button>
             </div>

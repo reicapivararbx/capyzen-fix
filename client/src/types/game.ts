@@ -103,6 +103,24 @@ export interface LeaderboardEntry {
   timestamp: number;
 }
 
+export interface WeeklyLeaderboardEntry {
+  username: string;
+  score: number;
+  level: number;
+  weekStart: number;
+  timestamp: number;
+}
+
+export interface FriendLeaderboardEntry {
+  username: string;
+  score: number;
+  level: number;
+  isOnline: boolean;
+  lastSeen: number;
+}
+
+export type LeaderboardTab = 'global' | 'weekly' | 'friends';
+
 export interface CurrentUser {
   username: string;
   password: string;
