@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { CurrentUser } from '@/types/game';
 
 interface LoginScreenProps {
@@ -18,11 +18,25 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [createUsername, setCreateUsername] = useState('');
   const [createPassword, setCreatePassword] = useState('');
   const [createError, setCreateError] = useState('');
   const [isCreatingUser, setIsCreatingUser] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('capyzen_remember_me');
+      if (saved) {
+        const data = JSON.parse(saved) as { username: string; remember: boolean };
+        if (data.remember && data.username) {
+          setLoginUsername(data.username);
+          setRememberMe(true);
+        }
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   const validateInput = (username: string, password: string): string | null => {
     if (!username || !password) {
@@ -52,6 +66,11 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
       const hashedPassword = await hashPassword(loginPassword);
 
       if (users[loginUsername] && users[loginUsername] === hashedPassword) {
+        if (rememberMe) {
+          localStorage.setItem('capyzen_remember_me', JSON.stringify({ username: loginUsername, remember: true }));
+        } else {
+          localStorage.removeItem('capyzen_remember_me');
+        }
         onLogin({ username: loginUsername, password: hashedPassword });
         setLoginError('');
         setLoginUsername('');
@@ -185,6 +204,19 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
               {loginError}
             </div>
           )}
+
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="remember-me"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-4 h-4 rounded border-pink-300 text-pink-500 focus:ring-pink-500"
+            />
+            <label htmlFor="remember-me" className="text-sm text-gray-600 cursor-pointer">
+              ☑ Lembrar de mim
+            </label>
+          </div>
 
           <button
             onClick={handleLogin}

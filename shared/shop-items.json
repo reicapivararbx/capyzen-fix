@@ -7998,5 +7998,149 @@
     "price": 3610,
     "description": "Item raro que poucos capivaras possuem.",
     "category": "Acessório"
+  },
+  {
+    "id": 1001,
+    "name": "Chapéu de Cowboy",
+    "icon": "🤠",
+    "price": 500,
+    "description": "Chapéu clássico de vaqueiro para capivaras aventureiras.",
+    "category": "Chapéu"
+  },
+  {
+    "id": 1002,
+    "name": "Coroa Real",
+    "icon": "👑",
+    "price": 2000,
+    "description": "Coroa dourada para verdadeiros reis da savana.",
+    "category": "Chapéu"
+  },
+  {
+    "id": 1003,
+    "name": "Gorro de Inverno",
+    "icon": "🧢",
+    "price": 300,
+    "description": "Gorro quentinho para noites frias.",
+    "category": "Chapéu"
+  },
+  {
+    "id": 1004,
+    "name": "Chapéu de Mago",
+    "icon": "🧙",
+    "price": 1500,
+    "description": "Chapéu pontudo mágico com estrelas.",
+    "category": "Chapéu"
+  },
+  {
+    "id": 1005,
+    "name": "Capacete de Espaço",
+    "icon": "🚀",
+    "price": 3000,
+    "description": "Capacete para explorar o cosmos.",
+    "category": "Chapéu"
+  },
+  {
+    "id": 1010,
+    "name": "Óculos de Sol",
+    "icon": "🕶️",
+    "price": 400,
+    "description": "Óculos escuros para capivaras estilosas.",
+    "category": "Óculos"
+  },
+  {
+    "id": 1011,
+    "name": "Óculos Redondos",
+    "icon": "👓",
+    "price": 350,
+    "description": "Óculos intelectuais para capivaras estudiosas.",
+    "category": "Óculos"
+  },
+  {
+    "id": 1012,
+    "name": "Óculos de Natação",
+    "icon": "🥽",
+    "price": 500,
+    "description": "Óculos para mergulhar em águas cristalinas.",
+    "category": "Óculos"
+  },
+  {
+    "id": 1013,
+    "name": "Óculos Futuristas",
+    "icon": "🤖",
+    "price": 1200,
+    "description": "Óculos com holograma e tecnologia avançada.",
+    "category": "Óculos"
+  },
+  {
+    "id": 1020,
+    "name": "Colar de Dentes",
+    "icon": "🦷",
+    "price": 600,
+    "description": "Colar com dentes de tubarão para capivaras selvagens.",
+    "category": "Colar"
+  },
+  {
+    "id": 1021,
+    "name": "Colar de Pérolas",
+    "icon": "📿",
+    "price": 1800,
+    "description": "Colar elegante com pérolas brilhantes.",
+    "category": "Colar"
+  },
+  {
+    "id": 1022,
+    "name": "Colar de Crânios",
+    "icon": "💀",
+    "price": 900,
+    "description": "Colar gótico para capivaras misteriosas.",
+    "category": "Colar"
+  },
+  {
+    "id": 1023,
+    "name": "Colar Estelar",
+    "icon": "⭐",
+    "price": 1500,
+    "description": "Colar com pingente de estrela que brilha no escuro.",
+    "category": "Colar"
+  },
+  {
+    "id": 1030,
+    "name": "Skin Astronauta",
+    "icon": "🧑‍🚀",
+    "price": 5000,
+    "description": "Traje completo de astronauta para explorar o espaço.",
+    "category": "Skin"
+  },
+  {
+    "id": 1031,
+    "name": "Skin Pirata",
+    "icon": "🏴‍☠️",
+    "price": 4000,
+    "description": "Fantasia de pirata com chapéu, tapa-olho e espada.",
+    "category": "Skin"
+  },
+  {
+    "id": 1032,
+    "name": "Skin Mago",
+    "icon": "🧙‍♂️",
+    "price": 4500,
+    "description": "Traje de mago com capa e cajado encantado.",
+    "category": "Skin"
+  },
+  {
+    "id": 1033,
+    "name": "Skin Cavaleiro",
+    "icon": "⚔️",
+    "price": 4200,
+    "description": "Armadura completa de cavaleiro medieval.",
+    "category": "Skin"
+  },
+  {
+    "id": 1034,
+    "name": "Skin Ninja",
+    "icon": "🥷",
+    "price": 4800,
+    "description": "Traje sombrio de ninja com máscara.",
+    "category": "Skin"
   }
 ]

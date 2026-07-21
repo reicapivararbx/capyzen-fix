@@ -114,5 +114,29 @@ export type Achievement = typeof achievements.$inferSelect;
 export type InsertAchievement = typeof achievements.$inferInsert;
 export type FriendRequest = typeof friendRequests.$inferSelect;
 export type InsertFriendRequest = typeof friendRequests.$inferInsert;
+export const chatReports = sqliteTable("chat_reports", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  reporterId: integer("reporterId")
+    .references(() => users.id),
+  messageId: integer("messageId")
+    .references(() => globalChatMessages.id),
+  reason: text("reason").notNull(),
+  createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+});
+
+export const bannedUsers = sqliteTable("banned_users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  userId: integer("userId")
+    .references(() => users.id),
+  username: text("username").notNull(),
+  reason: text("reason").notNull(),
+  bannedAt: integer("bannedAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+  expiresAt: integer("expiresAt", { mode: "timestamp" }),
+});
+
 export type GlobalChatMessage = typeof globalChatMessages.$inferSelect;
 export type InsertGlobalChatMessage = typeof globalChatMessages.$inferInsert;
+export type ChatReport = typeof chatReports.$inferSelect;
+export type InsertChatReport = typeof chatReports.$inferInsert;
+export type BannedUser = typeof bannedUsers.$inferSelect;
+export type InsertBannedUser = typeof bannedUsers.$inferInsert;
