@@ -1,15 +1,17 @@
 // CapyZen Admin Panel - JavaScript Vanilla
 
-// ============ CREDENCIAIS ============
-const ADMIN_USER = "Can_u_please_give_me_adm";
-const ADMIN_PASS = "umasenhaquequalquerpessoasabe";
-
 const SECURITY_ANSWERS = {
   color: "turquesa",
   animal: "capivara",
   code: "307546",
   owner: "matteo"
 };
+
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_TIME = 15 * 60 * 1000;
+
+let loginAttempts = 0;
+let lockoutUntil = 0;
 
 // ============ VARIÁVEIS GLOBAIS ============
 let adminLogs = [];
@@ -18,6 +20,13 @@ const MAX_LOGS = 100;
 // ============ FUNÇÕES DE AUTENTICAÇÃO ============
 
 function login() {
+  const now = Date.now();
+  if (lockoutUntil > now) {
+    const remaining = Math.ceil((lockoutUntil - now) / 1000);
+    alert(`❌ Muitas tentativas. Tente novamente em ${remaining}s.`);
+    return;
+  }
+
   const username = document.getElementById("user").value.trim();
   const password = document.getElementById("pass").value.trim();
 
@@ -26,14 +35,33 @@ function login() {
     return;
   }
 
-  if (username === ADMIN_USER && password === ADMIN_PASS) {
-    sessionStorage.setItem("adminLoggedIn", "false");
-    window.location.href = "security.html";
-  } else {
-    alert("❌ Usuário ou senha incorretos!");
-    document.getElementById("user").value = "";
-    document.getElementById("pass").value = "";
-  }
+  fetch("/api/trpc/auth.login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      json: { username, password },
+    }),
+  })
+    .then(r => r.json())
+    .then(data => {
+      if (data.result?.success) {
+        sessionStorage.setItem("adminLoggedIn", "true");
+        window.location.href = "security.html";
+      } else {
+        loginAttempts++;
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+          lockoutUntil = Date.now() + LOCKOUT_TIME;
+          alert("❌ Muitas tentativas. Conta bloqueada por 15 minutos.");
+        } else {
+          alert("❌ Usuário ou senha incorretos!");
+        }
+        document.getElementById("user").value = "";
+        document.getElementById("pass").value = "";
+      }
+    })
+    .catch(() => {
+      alert("❌ Erro ao conectar ao servidor!");
+    });
 }
 
 function verifySecurity() {

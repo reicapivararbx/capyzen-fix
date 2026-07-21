@@ -1,8 +1,8 @@
 import { and, desc, eq, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { achievements, gameSaves, users, globalChatMessages, friendRequests } from "../drizzle/schema";
-import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest } from "../drizzle/schema";
+import { achievements, gameSaves, users, globalChatMessages, friendRequests, loginAttempts } from "../drizzle/schema";
+import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest, InsertLoginAttempt } from "../drizzle/schema";
 import type { GameState, LeaderboardEntry } from "../client/src/types/game";
 import { ENV } from './_core/env';
 
@@ -673,4 +673,95 @@ export async function removeFriend(userId: number, friendRequestId: number): Pro
   if (existing.status !== "accepted") throw new Error("Can only remove accepted friends");
 
   await db.delete(friendRequests).where(eq(friendRequests.id, friendRequestId));
+}
+
+// Auth: username/password account system
+
+export async function getUserByUsername(username: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUserAccount(username: string, passwordHash: string, email?: string | null) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const now = new Date();
+  const values: InsertUser = {
+    openId: `user_${username}`,
+    username,
+    name: username,
+    email: email ?? null,
+    passwordHash,
+    role: "user",
+    createdAt: now,
+    updatedAt: now,
+    lastSignedIn: now,
+  };
+
+  await db.insert(users).values(values);
+  const result = await db.select().from(users).where(eq(users.username, username)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function updatePasswordHash(userId: number, passwordHash: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(users).set({ passwordHash }).where(eq(users.id, userId));
+}
+
+export async function setPasswordResetToken(userId: number, token: string, expires: Date) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(users)
+    .set({ passwordResetToken: token, passwordResetExpires: expires })
+    .where(eq(users.id, userId));
+}
+
+export async function getUserByResetToken(token: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.passwordResetToken, token))
+    .limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function clearPasswordResetToken(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db
+    .update(users)
+    .set({ passwordResetToken: null, passwordResetExpires: null })
+    .where(eq(users.id, userId));
+}
+
+export async function recordLoginAttempt(username: string, ip?: string) {
+  const db = await getDb();
+  if (!db) return;
+  const values: InsertLoginAttempt = { username, ip: ip ?? null };
+  await db.insert(loginAttempts).values(values);
+}
+
+export async function countRecentLoginAttempts(username: string, since: Date) {
+  const db = await getDb();
+  if (!db) return 0;
+  const result = await db.$count(
+    loginAttempts,
+    and(eq(loginAttempts.username, username), eq(loginAttempts.createdAt, since)),
+  );
+  const rows = await db
+    .select()
+    .from(loginAttempts)
+    .where(
+      and(
+        eq(loginAttempts.username, username),
+      ),
+    );
+  return rows.filter(r => r.createdAt >= since).length;
 }

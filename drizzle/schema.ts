@@ -3,9 +3,13 @@ import { integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   openId: text("openId").notNull().unique(),
+  username: text("username").unique(),
   name: text("name"),
   email: text("email"),
   loginMethod: text("loginMethod"),
+  passwordHash: text("passwordHash"),
+  passwordResetToken: text("passwordResetToken"),
+  passwordResetExpires: integer("passwordResetExpires", { mode: "timestamp" }),
   role: text("role", { enum: ["user", "admin"] }).default("user").notNull(),
   createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
   updatedAt: integer("updatedAt", { mode: "timestamp" }).$default(() => new Date()).$onUpdate(() => new Date()).notNull(),
@@ -140,3 +144,12 @@ export type ChatReport = typeof chatReports.$inferSelect;
 export type InsertChatReport = typeof chatReports.$inferInsert;
 export type BannedUser = typeof bannedUsers.$inferSelect;
 export type InsertBannedUser = typeof bannedUsers.$inferInsert;
+export type LoginAttempt = typeof loginAttempts.$inferSelect;
+export type InsertLoginAttempt = typeof loginAttempts.$inferInsert;
+
+export const loginAttempts = sqliteTable("login_attempts", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  username: text("username").notNull(),
+  ip: text("ip"),
+  createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+});

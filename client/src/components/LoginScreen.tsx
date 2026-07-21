@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { trpc } from '@/lib/trpc';
 import type { CurrentUser } from '@/types/game';
 
 interface LoginScreenProps {
@@ -6,24 +7,64 @@ interface LoginScreenProps {
   onCreateUser: (user: CurrentUser) => void;
 }
 
-async function hashPassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
 export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
+  const [forgotUsername, setForgotUsername] = useState('');
+  const [forgotMessage, setForgotMessage] = useState('');
 
   const [createUsername, setCreateUsername] = useState('');
   const [createPassword, setCreatePassword] = useState('');
+  const [createConfirmPassword, setCreateConfirmPassword] = useState('');
+  const [createEmail, setCreateEmail] = useState('');
   const [createError, setCreateError] = useState('');
   const [isCreatingUser, setIsCreatingUser] = useState(false);
+
+  const utils = trpc.useUtils();
+
+  const loginMutation = trpc.auth.login.useMutation({
+    onSuccess: () => {
+      utils.auth.me.invalidate();
+      setLoginError('');
+      setLoginUsername('');
+      setLoginPassword('');
+      onLogin({ username: loginUsername, password: '' });
+    },
+    onError: (error) => {
+      setLoginError(error.message || 'Usuário ou senha incorretos!');
+    },
+  });
+
+  const registerMutation = trpc.auth.register.useMutation({
+    onSuccess: () => {
+      setCreateError('');
+      setCreateUsername('');
+      setCreatePassword('');
+      setCreateConfirmPassword('');
+      setCreateEmail('');
+      setIsCreatingUser(false);
+      onCreateUser({ username: createUsername, password: '' });
+    },
+    onError: (error) => {
+      setCreateError(error.message || 'Erro ao criar usuário!');
+    },
+  });
+
+  const forgotMutation = trpc.auth.forgotPassword.useMutation({
+    onSuccess: (data) => {
+      if (data.resetToken) {
+        setForgotMessage(`Token de recuperação: ${data.resetToken}`);
+      } else {
+        setForgotMessage('Se a conta existir, um token foi gerado.');
+      }
+    },
+    onError: (error) => {
+      setForgotMessage(error.message || 'Erro ao solicitar recuperação!');
+    },
+  });
 
   useEffect(() => {
     try {
@@ -38,15 +79,9 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
     } catch { /* ignore */ }
   }, []);
 
-  const validateInput = (username: string, password: string): string | null => {
-    if (!username || !password) {
-      return 'Usuário e senha são obrigatórios!';
-    }
-    if (username.length < 3 || username.length > 20) {
+  const validateUsername = (username: string): string | null => {
+    if (!username || username.length < 3 || username.length > 20) {
       return 'Usuário deve ter entre 3 e 20 caracteres!';
-    }
-    if (password.length < 3 || password.length > 50) {
-      return 'Senha deve ter entre 3 e 50 caracteres!';
     }
     if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
       return 'Usuário deve conter apenas letras, números, - e _!';
@@ -54,67 +89,47 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
     return null;
   };
 
-  const handleLogin = async () => {
-    const error = validateInput(loginUsername, loginPassword);
+  const validatePassword = (password: string): string | null => {
+    if (!password || password.length < 3 || password.length > 50) {
+      return 'Senha deve ter entre 3 e 50 caracteres!';
+    }
+    return null;
+  };
+
+  const handleLogin = () => {
+    const error = validateUsername(loginUsername) || validatePassword(loginPassword);
     if (error) {
       setLoginError(error);
       return;
     }
-
-    try {
-      const users = JSON.parse(localStorage.getItem('capyzen_users') || '{}');
-      const hashedPassword = await hashPassword(loginPassword);
-
-      if (users[loginUsername] && users[loginUsername] === hashedPassword) {
-        if (rememberMe) {
-          localStorage.setItem('capyzen_remember_me', JSON.stringify({ username: loginUsername, remember: true }));
-        } else {
-          localStorage.removeItem('capyzen_remember_me');
-        }
-        onLogin({ username: loginUsername, password: hashedPassword });
-        setLoginError('');
-        setLoginUsername('');
-        setLoginPassword('');
-      } else {
-        setLoginError('Usuario ou senha incorretos!');
-      }
-    } catch {
-      setLoginError('Erro ao carregar dados de usuário!');
-    }
+    loginMutation.mutate({ username: loginUsername, password: loginPassword });
   };
 
-  const handleCreateUser = async () => {
-    const error = validateInput(createUsername, createPassword);
+  const handleCreateUser = () => {
+    const error = validateUsername(createUsername) || validatePassword(createPassword);
     if (error) {
       setCreateError(error);
       return;
     }
-
-    try {
-      const users = JSON.parse(localStorage.getItem('capyzen_users') || '{}');
-      if (users[createUsername]) {
-        setCreateError('Usuário já existe!');
-        return;
-      }
-
-      const hashedPassword = await hashPassword(createPassword);
-      users[createUsername] = hashedPassword;
-
-      try {
-        localStorage.setItem('capyzen_users', JSON.stringify(users));
-      } catch {
-        setCreateError('Erro ao salvar dados!');
-        return;
-      }
-
-      onCreateUser({ username: createUsername, password: hashedPassword });
-      setCreateError('');
-      setCreateUsername('');
-      setCreatePassword('');
-      setIsCreatingUser(false);
-    } catch {
-      setCreateError('Erro ao criar usuário!');
+    if (createPassword !== createConfirmPassword) {
+      setCreateError('Senhas não coincidem!');
+      return;
     }
+    registerMutation.mutate({
+      username: createUsername,
+      password: createPassword,
+      confirmPassword: createConfirmPassword,
+      email: createEmail || undefined,
+    });
+  };
+
+  const handleForgotPassword = () => {
+    const error = validateUsername(forgotUsername);
+    if (error) {
+      setForgotMessage(error);
+      return;
+    }
+    forgotMutation.mutate({ username: forgotUsername });
   };
 
   if (isCreatingUser) {
@@ -123,25 +138,54 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
         <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border-4 border-pink-400">
           <div className="text-center mb-6">
             <div className="text-6xl mb-2">✨</div>
-            <h1 className="text-4xl font-bold text-pink-600 mb-2">Novo Usuário</h1>
+            <h1 className="text-4xl font-bold text-pink-600 mb-2">Criar Conta</h1>
             <p className="text-gray-700">Bem-vindo ao CapyZen!</p>
           </div>
 
           <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Novo usuário"
-              value={createUsername}
-              onChange={(e) => setCreateUsername(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
-            />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={createPassword}
-              onChange={(e) => setCreatePassword(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
-            />
+            <div>
+              <label className="block text-blue-600 font-bold mb-2">👤 Usuário:</label>
+              <input
+                type="text"
+                placeholder="Digite seu usuário"
+                value={createUsername}
+                onChange={(e) => setCreateUsername(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-yellow-600 font-bold mb-2">🔐 Senha:</label>
+              <input
+                type="password"
+                placeholder="Digite sua senha"
+                value={createPassword}
+                onChange={(e) => setCreatePassword(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-yellow-600 font-bold mb-2">🔐 Confirmar Senha:</label>
+              <input
+                type="password"
+                placeholder="Confirme sua senha"
+                value={createConfirmPassword}
+                onChange={(e) => setCreateConfirmPassword(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-green-600 font-bold mb-2">📧 Email (opcional):</label>
+              <input
+                type="email"
+                placeholder="Digite seu email"
+                value={createEmail}
+                onChange={(e) => setCreateEmail(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+              />
+            </div>
 
             {createError && (
               <div className="bg-red-100 border-2 border-red-400 rounded-xl p-3 text-red-700 text-sm">
@@ -151,12 +195,60 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
 
             <button
               onClick={handleCreateUser}
+              disabled={registerMutation.isPending}
               className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 rounded-xl transition"
             >
-              🎉 Criar
+              {registerMutation.isPending ? 'Criando...' : '🎉 Criar Conta'}
             </button>
             <button
               onClick={() => setIsCreatingUser(false)}
+              className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-xl transition"
+            >
+              ← Voltar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (showForgot) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border-4 border-pink-400">
+          <div className="text-center mb-6">
+            <div className="text-6xl mb-2">🔑</div>
+            <h1 className="text-4xl font-bold text-pink-600 mb-2">Esqueci a Senha</h1>
+            <p className="text-gray-700">Digite seu usuário para recuperar a senha</p>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-blue-600 font-bold mb-2">👤 Usuário:</label>
+              <input
+                type="text"
+                placeholder="Digite seu usuário"
+                value={forgotUsername}
+                onChange={(e) => setForgotUsername(e.target.value)}
+                className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+              />
+            </div>
+
+            {forgotMessage && (
+              <div className="bg-blue-100 border-2 border-blue-400 rounded-xl p-3 text-blue-700 text-sm break-all">
+                {forgotMessage}
+              </div>
+            )}
+
+            <button
+              onClick={handleForgotPassword}
+              disabled={forgotMutation.isPending}
+              className="w-full bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition"
+            >
+              {forgotMutation.isPending ? 'Enviando...' : '📧 Solicitar Recuperação'}
+            </button>
+            <button
+              onClick={() => { setShowForgot(false); setForgotMessage(''); }}
               className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-xl transition"
             >
               ← Voltar
@@ -220,9 +312,17 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
 
           <button
             onClick={handleLogin}
+            disabled={loginMutation.isPending}
             className="w-full bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition"
           >
-            ✨ Entrar
+            {loginMutation.isPending ? 'Entrando...' : '✨ Entrar'}
+          </button>
+
+          <button
+            onClick={() => setShowForgot(true)}
+            className="w-full bg-transparent hover:bg-pink-50 text-pink-600 font-bold py-2 rounded-xl transition text-sm"
+          >
+            ❓ Esqueci a senha
           </button>
 
           <button
