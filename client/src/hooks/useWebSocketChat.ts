@@ -14,6 +14,7 @@ interface UseWebSocketChatOptions {
   onMessage?: (msg: WebSocketMessage) => void;
   onConnectionChange?: (connected: boolean) => void;
   onUserCount?: (count: number) => void;
+  enabled?: boolean;
 }
 
 const RECONNECT_BASE_DELAY_MS = 1000;
@@ -26,6 +27,7 @@ export function useWebSocketChat({
   onMessage,
   onConnectionChange,
   onUserCount,
+  enabled = true,
 }: UseWebSocketChatOptions) {
   const [connected, setConnected] = useState(false);
   const [connectionError, setConnectionError] = useState<string | null>(null);
@@ -186,9 +188,13 @@ export function useWebSocketChat({
   }, [cleanup]);
 
   useEffect(() => {
-    connect();
+    if (enabled) {
+      connect();
+    } else {
+      cleanup();
+    }
     return cleanup;
-  }, [connect, cleanup]);
+  }, [connect, cleanup, enabled]);
 
   return {
     connected,

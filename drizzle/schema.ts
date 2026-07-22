@@ -63,7 +63,10 @@ export const globalChatMessages = sqliteTable("global_chat_messages", {
   userId: integer("userId")
     .references(() => users.id),
   senderName: text("senderName").notNull(),
-  content: text("content").notNull(),
+  content: text("content").default("").notNull(),
+  mediaUrl: text("mediaUrl"),
+  mediaType: text("mediaType"),
+  mediaName: text("mediaName"),
   createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
 });
 
@@ -153,3 +156,21 @@ export const loginAttempts = sqliteTable("login_attempts", {
   ip: text("ip"),
   createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
 });
+
+export const userBlocks = sqliteTable(
+  "user_blocks",
+  {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    blockerId: integer("blockerId")
+      .notNull()
+      .references(() => users.id),
+    blockedId: integer("blockedId")
+      .notNull()
+      .references(() => users.id),
+    createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+  },
+  (table) => [unique("user_blocks_blocker_blocked_unique").on(table.blockerId, table.blockedId)],
+);
+
+export type UserBlock = typeof userBlocks.$inferSelect;
+export type InsertUserBlock = typeof userBlocks.$inferInsert;

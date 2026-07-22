@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useWebSocketChat } from "@/hooks/useWebSocketChat";
+import { startBots, subscribeToBots, type BotMessage } from "@/lib/chatBots";
 
 const MAX_MESSAGE_LENGTH = 500;
 
@@ -69,7 +70,24 @@ export default function Chat() {
     userId,
     onMessage: handleWsMessage,
     onUserCount: setUserCount,
+    enabled: isAuthenticated || displayName.trim().length > 0,
   });
+
+  useEffect(() => {
+    startBots();
+    const unsubscribe = subscribeToBots((msg: BotMessage) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Math.random(),
+          senderName: msg.senderName,
+          content: msg.content,
+          createdAt: msg.createdAt,
+        },
+      ]);
+    });
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -141,27 +159,34 @@ export default function Chat() {
                 </div>
               ) : (
                 <div className="space-y-3">
-                  {messages.map((msg, index) => (
-                    <div key={msg.id ?? index} className="flex flex-col">
-                      <div className="flex items-baseline gap-2">
-                        <span
-                          className={`font-semibold text-sm ${
-                            msg.senderName === "Sistema"
-                              ? "text-yellow-400"
-                              : msg.senderName === "Erro"
-                                ? "text-red-400"
-                                : msg.senderName === "Aviso"
-                                  ? "text-orange-400"
-                                  : "text-purple-300"
-                          }`}
-                        >
-                          {msg.senderName}
-                        </span>
-                        <span className="text-xs text-gray-500">{formatTimestamp(msg.createdAt)}</span>
+                  {messages.map((msg, index) => {
+                    const isBot = msg.senderName.startsWith("[BOT]");
+                    return (
+                      <div key={msg.id ?? index} className="flex flex-col">
+                        <div className="flex items-baseline gap-2">
+                          <span
+                            className={`font-semibold text-sm ${
+                              isBot
+                                ? "text-cyan-400"
+                                : msg.senderName === "Sistema"
+                                  ? "text-yellow-400"
+                                  : msg.senderName === "Erro"
+                                    ? "text-red-400"
+                                    : msg.senderName === "Aviso"
+                                      ? "text-orange-400"
+                                      : "text-purple-300"
+                            }`}
+                          >
+                            {msg.senderName}
+                          </span>
+                          <span className="text-xs text-gray-500">{formatTimestamp(msg.createdAt)}</span>
+                        </div>
+                        <p className={`text-sm break-words whitespace-pre-wrap ${isBot ? "text-gray-400 italic" : "text-gray-200"}`}>
+                          {msg.content}
+                        </p>
                       </div>
-                      <p className="text-gray-200 text-sm break-words whitespace-pre-wrap">{msg.content}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </ScrollArea>

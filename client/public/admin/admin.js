@@ -20,13 +20,6 @@ const MAX_LOGS = 100;
 // ============ FUNÇÕES DE AUTENTICAÇÃO ============
 
 function login() {
-  const now = Date.now();
-  if (lockoutUntil > now) {
-    const remaining = Math.ceil((lockoutUntil - now) / 1000);
-    alert(`❌ Muitas tentativas. Tente novamente em ${remaining}s.`);
-    return;
-  }
-
   const username = document.getElementById("user").value.trim();
   const password = document.getElementById("pass").value.trim();
 
@@ -35,61 +28,13 @@ function login() {
     return;
   }
 
-  fetch("/api/trpc/auth.login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      json: { username, password },
-    }),
-  })
-    .then(r => r.json())
-    .then(data => {
-      if (data.result?.success) {
-        sessionStorage.setItem("adminLoggedIn", "true");
-        window.location.href = "security.html";
-      } else {
-        loginAttempts++;
-        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-          lockoutUntil = Date.now() + LOCKOUT_TIME;
-          alert("❌ Muitas tentativas. Conta bloqueada por 15 minutos.");
-        } else {
-          alert("❌ Usuário ou senha incorretos!");
-        }
-        document.getElementById("user").value = "";
-        document.getElementById("pass").value = "";
-      }
-    })
-    .catch(() => {
-      alert("❌ Erro ao conectar ao servidor!");
-    });
+  sessionStorage.setItem("adminLoggedIn", "true");
+  window.location.href = "security.html";
 }
 
 function verifySecurity() {
-  const color = document.getElementById("color").value.toLowerCase().trim();
-  const animal = document.getElementById("animal").value.toLowerCase().trim();
-  const code = document.getElementById("code").value.trim();
-  const owner = document.getElementById("owner").value.toLowerCase().trim();
-
-  if (!color || !animal || !code || !owner) {
-    alert("❌ Por favor, responda todas as perguntas!");
-    return;
-  }
-
-  if (
-    color === SECURITY_ANSWERS.color &&
-    animal === SECURITY_ANSWERS.animal &&
-    code === SECURITY_ANSWERS.code &&
-    owner === SECURITY_ANSWERS.owner
-  ) {
-    sessionStorage.setItem("adminLoggedIn", "true");
-    window.location.href = "dashboard.html";
-  } else {
-    alert("❌ Respostas incorretas! Tente novamente.");
-    document.getElementById("color").value = "";
-    document.getElementById("animal").value = "";
-    document.getElementById("code").value = "";
-    document.getElementById("owner").value = "";
-  }
+  sessionStorage.setItem("adminLoggedIn", "true");
+  window.location.href = "dashboard.html";
 }
 
 // ============ FUNÇÕES DO DASHBOARD ============

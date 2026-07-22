@@ -1,10 +1,12 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
-import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements, getChatMessages, sendChatMessage, sendFriendRequest, updateFriendRequest, listFriendRequests, listOutgoingRequests, listFriends, removeFriend, getUserByName, getUserById } from "./db";
+import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements, getChatMessages, sendChatMessage, sendFriendRequest, updateFriendRequest, listFriendRequests, listOutgoingRequests, listFriends, removeFriend, getUserByName, getUserById, blockUser, unblockUser, listBlockedUsers } from "./db";
 import { systemRouter } from "./_core/systemRouter";
 import { authRouter } from "./_core/authRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { storagePut } from "./storage";
+import type { GameState } from "../client/src/types/game";
 
 const inventorySchema = z.object({
   grama: z.number(),
@@ -162,6 +164,37 @@ export const appRouter = router({
         const userId = ctx.user!.id;
         return removeFriend(userId, input.requestId);
       }),
+
+    block: protectedProcedure
+      .input(z.object({ targetId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        await blockUser(userId, input.targetId);
+        return { success: true };
+      }),
+
+    unblock: protectedProcedure
+      .input(z.object({ targetId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        await unblockUser(userId, input.targetId);
+        return { success: true };
+      }),
+
+    blocked: protectedProcedure.query(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return listBlockedUsers(userId);
+    }),
+
+    profile: protectedProcedure.query(({ ctx }) => {
+      const user = ctx.user!;
+      return {
+        id: user.id,
+        username: user.username ?? null,
+        name: user.name ?? user.email ?? null,
+        role: user.role,
+      };
+    }),
   }),
 
   chat: router({
@@ -170,13 +203,54 @@ export const appRouter = router({
       .query(({ input }) => getChatMessages(input.limit)),
     send: publicProcedure
       .input(z.object({
-        content: z.string().trim().min(1, "Mensagem não pode ser vazia").max(500, "Mensagem muito longa (máx. 500 caracteres)"),
+        content: z.string().trim().max(500, "Mensagem muito longa (máx. 500 caracteres)").optional().default(""),
         senderName: z.string().trim().max(30).optional(),
       }))
-      .mutation(({ input, ctx }) => {
+      .mutation(async ({ input, ctx }) => {
         const displayName = ctx.user?.name?.trim() || input.senderName?.trim() || "Anônimo";
         const userId = ctx.user?.id ?? null;
+        if (!input.content) {
+          throw new Error("Mensagem não pode ser vazia");
+        }
         return sendChatMessage(input.content, displayName, userId);
+      }),
+
+    uploadMedia: publicProcedure
+      .input(z.object({
+        fileName: z.string().min(1).max(200),
+        contentType: z.string().min(1).max(100),
+        fileData: z.string().min(1),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const allowedTypes = [
+          "image/png", "image/jpeg", "image/gif", "image/webp", "image/bmp", "image/svg+xml",
+          "audio/mpeg", "audio/wav", "audio/ogg", "audio/mp4", "audio/aac", "audio/webm", "audio/x-m4a",
+          "video/mp4", "video/webm", "video/ogg",
+          "application/pdf",
+        ];
+
+        if (!allowedTypes.includes(input.contentType)) {
+          throw new Error(`Tipo de arquivo não suportado: ${input.contentType}`);
+        }
+
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        const buffer = Buffer.from(input.fileData, "base64");
+
+        if (buffer.length > MAX_FILE_SIZE) {
+          throw new Error(`Arquivo muito grande (máx. ${MAX_FILE_SIZE / 1024 / 1024}MB)`);
+        }
+
+        const safeFileName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const ext = safeFileName.split(".").pop() || "bin";
+        const key = `chat-media/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+        const result = await storagePut(key, buffer, input.contentType);
+
+        return {
+          url: result.url,
+          mediaType: input.contentType,
+          mediaName: safeFileName,
+        };
       }),
   }),
 });

@@ -1,8 +1,8 @@
 import { and, desc, eq, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { achievements, gameSaves, users, globalChatMessages, friendRequests, loginAttempts } from "../drizzle/schema";
-import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest, InsertLoginAttempt } from "../drizzle/schema";
+import { achievements, gameSaves, users, globalChatMessages, friendRequests, loginAttempts, userBlocks } from "../drizzle/schema";
+import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest, InsertLoginAttempt, InsertUserBlock } from "../drizzle/schema";
 import type { GameState, LeaderboardEntry } from "../client/src/types/game";
 import { ENV } from './_core/env';
 
@@ -398,6 +398,9 @@ export type ChatMessage = {
   id: number;
   senderName: string;
   content: string;
+  mediaUrl?: string | null;
+  mediaType?: string | null;
+  mediaName?: string | null;
   createdAt: Date;
 };
 
@@ -418,6 +421,9 @@ export async function getChatMessages(limit = 50): Promise<ChatMessage[]> {
       id: globalChatMessages.id,
       senderName: globalChatMessages.senderName,
       content: globalChatMessages.content,
+      mediaUrl: globalChatMessages.mediaUrl,
+      mediaType: globalChatMessages.mediaType,
+      mediaName: globalChatMessages.mediaName,
       createdAt: globalChatMessages.createdAt,
     })
     .from(globalChatMessages)
@@ -431,10 +437,12 @@ export async function sendChatMessage(
   content: string,
   senderName: string,
   userId: number | null,
+  media?: { url: string; type: string; name: string } | null,
 ): Promise<ChatMessage> {
   const trimmed = content.trim();
-  if (!trimmed) {
-    throw new Error("Message content cannot be empty");
+
+  if (!trimmed && !media) {
+    throw new Error("Message content or media is required");
   }
   if (trimmed.length > 500) {
     throw new Error("Message content too long (max 500 characters)");
@@ -449,6 +457,9 @@ export async function sendChatMessage(
     content: trimmed,
     senderName: senderName.trim() || "Anônimo",
     userId,
+    mediaUrl: media?.url ?? null,
+    mediaType: media?.type ?? null,
+    mediaName: media?.name ?? null,
   };
 
   const result = await db
@@ -458,6 +469,9 @@ export async function sendChatMessage(
       id: globalChatMessages.id,
       senderName: globalChatMessages.senderName,
       content: globalChatMessages.content,
+      mediaUrl: globalChatMessages.mediaUrl,
+      mediaType: globalChatMessages.mediaType,
+      mediaName: globalChatMessages.mediaName,
       createdAt: globalChatMessages.createdAt,
     });
 
@@ -764,4 +778,85 @@ export async function countRecentLoginAttempts(username: string, since: Date) {
       ),
     );
   return rows.filter(r => r.createdAt >= since).length;
+}
+
+// ── User Blocks ─────────────────────────────────────────────────────
+
+export async function blockUser(blockerId: number, blockedId: number): Promise<void> {
+  if (blockerId === blockedId) {
+    throw new Error("Cannot block yourself");
+  }
+
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const target = await db.select().from(users).where(eq(users.id, blockedId)).limit(1);
+  if (target.length === 0) throw new Error("User not found");
+
+  const existing = await db
+    .select()
+    .from(userBlocks)
+    .where(and(eq(userBlocks.blockerId, blockerId), eq(userBlocks.blockedId, blockedId)))
+    .limit(1);
+
+  if (existing.length > 0) throw new Error("User already blocked");
+
+  const values: InsertUserBlock = { blockerId, blockedId };
+  await db.insert(userBlocks).values(values);
+
+  const existingFriendship = await db
+    .select()
+    .from(friendRequests)
+    .where(
+      or(
+        and(eq(friendRequests.senderId, blockerId), eq(friendRequests.recipientId, blockedId)),
+        and(eq(friendRequests.senderId, blockedId), eq(friendRequests.recipientId, blockerId)),
+      ),
+    );
+
+  if (existingFriendship.length > 0) {
+    for (const fr of existingFriendship) {
+      await db.delete(friendRequests).where(eq(friendRequests.id, fr.id));
+    }
+  }
+}
+
+export async function unblockUser(blockerId: number, blockedId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db
+    .delete(userBlocks)
+    .where(and(eq(userBlocks.blockerId, blockerId), eq(userBlocks.blockedId, blockedId)));
+}
+
+export async function listBlockedUsers(blockerId: number): Promise<Array<{ blockedId: number; username: string | null; name: string | null }>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      blockedId: userBlocks.blockedId,
+      username: users.username,
+      name: users.name,
+    })
+    .from(userBlocks)
+    .innerJoin(users, eq(userBlocks.blockedId, users.id))
+    .where(eq(userBlocks.blockerId, blockerId))
+    .orderBy(desc(userBlocks.createdAt));
+
+  return result;
+}
+
+export async function isBlocking(blockerId: number, blockedId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  const result = await db
+    .select()
+    .from(userBlocks)
+    .where(and(eq(userBlocks.blockerId, blockerId), eq(userBlocks.blockedId, blockedId)))
+    .limit(1);
+
+  return result.length > 0;
 }
