@@ -174,3 +174,49 @@ export const userBlocks = sqliteTable(
 
 export type UserBlock = typeof userBlocks.$inferSelect;
 export type InsertUserBlock = typeof userBlocks.$inferInsert;
+
+export const clans = sqliteTable("clans", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  tag: text("tag").notNull(),
+  description: text("description"),
+  leaderId: integer("leaderId").notNull().references(() => users.id),
+  coins: integer("coins").notNull().default(0),
+  emblem: text("emblem").notNull().default("🛡️"),
+  isPublic: integer("isPublic", { mode: "boolean" }).notNull().default(true),
+  minLevel: integer("minLevel").notNull().default(1),
+  createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+}, (table) => [
+  unique("clans_name_unique").on(table.name),
+  unique("clans_tag_unique").on(table.tag),
+]);
+
+export type Clan = typeof clans.$inferSelect;
+export type InsertClan = typeof clans.$inferInsert;
+
+export const clanMembers = sqliteTable("clan_members", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  clanId: integer("clanId").notNull().references(() => clans.id, { onDelete: "cascade" }),
+  userId: integer("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+  role: text("role", { enum: ["leader", "officer", "member"] }).notNull().default("member"),
+  joinedAt: integer("joinedAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+}, (table) => [
+  unique("clan_members_user_unique").on(table.userId),
+]);
+
+export type ClanMember = typeof clanMembers.$inferSelect;
+export type InsertClanMember = typeof clanMembers.$inferInsert;
+
+export const clanInvites = sqliteTable("clan_invites", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  clanId: integer("clanId").notNull().references(() => clans.id, { onDelete: "cascade" }),
+  inviterId: integer("inviterId").notNull().references(() => users.id),
+  inviteeId: integer("inviteeId").notNull().references(() => users.id),
+  status: text("status", { enum: ["pending", "accepted", "declined", "cancelled"] }).notNull().default("pending"),
+  createdAt: integer("createdAt", { mode: "timestamp" }).$default(() => new Date()).notNull(),
+}, (table) => [
+  unique("clan_invites_clan_invitee_status_unique").on(table.clanId, table.inviteeId, table.status),
+]);
+
+export type ClanInvite = typeof clanInvites.$inferSelect;
+export type InsertClanInvite = typeof clanInvites.$inferInsert;

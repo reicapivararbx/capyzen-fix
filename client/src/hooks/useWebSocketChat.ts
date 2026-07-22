@@ -1,17 +1,22 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
-interface WebSocketMessage {
+export interface ChatMessage {
   id?: number;
   senderName?: string;
   content?: string;
   createdAt?: string;
   message?: string;
+  mediaUrl?: string;
+  mediaType?: string;
+  mediaName?: string;
+  itemType?: string;
+  itemQuantity?: number;
 }
 
 interface UseWebSocketChatOptions {
   username: string;
   userId?: number;
-  onMessage?: (msg: WebSocketMessage) => void;
+  onMessage?: (msg: ChatMessage) => void;
   onConnectionChange?: (connected: boolean) => void;
   onUserCount?: (count: number) => void;
   enabled?: boolean;
@@ -91,7 +96,7 @@ export function useWebSocketChat({
       try {
         const msg = JSON.parse(event.data as string) as {
           type: string;
-          data: WebSocketMessage;
+          data: ChatMessage;
         };
 
         if (msg.type === "message" && msg.data) {
@@ -119,6 +124,23 @@ export function useWebSocketChat({
           }
 
           onMessageRef.current?.(msg.data);
+        }
+
+        if (msg.type === "message_media" && msg.data) {
+          onMessageRef.current?.({
+            ...msg.data,
+            mediaUrl: msg.data.mediaUrl,
+            mediaType: msg.data.mediaType,
+            mediaName: msg.data.mediaName,
+          });
+        }
+
+        if (msg.type === "message_item" && msg.data) {
+          onMessageRef.current?.({
+            ...msg.data,
+            itemType: msg.data.itemType,
+            itemQuantity: msg.data.itemQuantity,
+          });
         }
 
         if (msg.type === "error" && msg.data) {
@@ -180,6 +202,28 @@ export function useWebSocketChat({
     }
   }, []);
 
+  const sendMedia = useCallback((mediaUrl: string, mediaType: string, mediaName: string, content?: string) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: "message_media",
+          data: { mediaUrl, mediaType, mediaName, content: content ?? "" },
+        }),
+      );
+    }
+  }, []);
+
+  const sendItem = useCallback((itemType: string, itemQuantity: number, content?: string) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(
+        JSON.stringify({
+          type: "message_item",
+          data: { itemType, itemQuantity, content: content ?? "" },
+        }),
+      );
+    }
+  }, []);
+
   const disconnect = useCallback(() => {
     reconnectAttemptsRef.current = RECONNECT_MAX_ATTEMPTS;
     cleanup();
@@ -200,6 +244,8 @@ export function useWebSocketChat({
     connected,
     connectionError,
     sendMessage,
+    sendMedia,
+    sendItem,
     disconnect,
     reconnect: connect,
   };

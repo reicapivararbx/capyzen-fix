@@ -1,22 +1,58 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/_core/hooks/useAuth';
+import { trpc } from '@/lib/trpc';
 import { getLoginUrl } from '@/const';
+import { useLocation } from 'wouter';
 import GameView from '@/components/GameView';
 import StatsPanel from '@/components/StatsPanel';
 import GameControls from '@/components/GameControls';
 import ShopModal from '@/components/ShopModal';
+import { LoginScreen } from '@/components/LoginScreen';
 import { GameState } from '@/types/game';
 import { loadGameState, saveGameState, DEFAULT_GAME_STATE } from '@/lib/game-save';
 import { tickLifeState, calculateAgeFromGameState, clampStat } from '@/features/game/life';
 import type { LifeState } from '@/features/game/life';
 import { applyActionBoosts, applySpeedBoost, hasShield, applyShieldAbsorb } from '@/lib/boost-effects';
 
+const NAV_BUTTONS = [
+  {
+    href: '/fnf',
+    icon: '🐹',
+    label: 'FNF',
+    subtitle: 'Jogar Friday Night Funkin\'',
+    gradient: 'from-orange-500 to-red-500',
+    hoverGradient: 'from-orange-600 to-red-600',
+    shadow: 'shadow-orange-500/25',
+  },
+  {
+    href: '/admin',
+    icon: '⚙️',
+    label: 'ADMIN',
+    subtitle: 'Painel Administrativo',
+    gradient: 'from-indigo-500 to-purple-500',
+    hoverGradient: 'from-indigo-600 to-purple-600',
+    shadow: 'shadow-indigo-500/25',
+  },
+  {
+    href: '/chat',
+    icon: '💬',
+    label: 'CHAT',
+    subtitle: 'Conversar com amigos',
+    gradient: 'from-teal-500 to-green-500',
+    hoverGradient: 'from-teal-600 to-green-600',
+    shadow: 'shadow-teal-500/25',
+  },
+] as const;
+
 export default function Home() {
   const { user, loading, isAuthenticated, logout } = useAuth({});
+  const [, setLocation] = useLocation();
+  const utils = trpc.useUtils();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [playerName, setPlayerName] = useState('');
   const [capyName, setCapyName] = useState('');
   const [gameState, setGameState] = useState<GameState>({
@@ -38,22 +74,41 @@ export default function Home() {
   const gameLoopRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const latestGameStateRef = useRef<GameState>(gameState);
 
+  const { data: dbGameState, isLoading: loadingGameState } = trpc.game.load.useQuery(undefined, {
+    enabled: isAuthenticated,
+    retry: false,
+  });
+
+  const saveToDbMutation = trpc.game.save.useMutation();
+
   useEffect(() => {
     latestGameStateRef.current = gameState;
   }, [gameState]);
 
   // Load game state
   useEffect(() => {
-    const state = loadGameState();
-    if (state.playerName) {
-      setGameState(state);
+    if (isAuthenticated && dbGameState && dbGameState.playerName) {
+      setGameState(dbGameState);
       setIsLoggedIn(true);
+    } else if (!isAuthenticated) {
+      const state = loadGameState();
+      if (state.playerName) {
+        setGameState(state);
+        setIsLoggedIn(true);
+      }
     }
     const popupDismissed = localStorage.getItem('capyzen_popup_dismissed');
     if (popupDismissed) {
       setShowWhatsAppPopup(false);
     }
-  }, []);
+  }, [isAuthenticated, dbGameState]);
+
+  const saveToDb = useCallback((state: GameState) => {
+    saveGameState(state);
+    if (isAuthenticated) {
+      saveToDbMutation.mutate(state);
+    }
+  }, [isAuthenticated, saveToDbMutation]);
 
   // Start game
   const startGame = () => {
@@ -68,7 +123,7 @@ export default function Home() {
       capyName: capyName.trim(),
     };
     localStorage.setItem('capyzen_start', new Date().toISOString());
-    saveGameState(newState);
+    saveToDb(newState);
     setGameState(newState);
     setIsLoggedIn(true);
   };
@@ -134,7 +189,7 @@ export default function Home() {
 
     latestGameStateRef.current = newState;
     setGameState(newState);
-    saveGameState(newState);
+    saveToDb(newState);
   };
 
   useEffect(() => {
@@ -252,7 +307,7 @@ export default function Home() {
           next.happiness = Math.max(0, next.happiness - 5 * minutes);
         }
 
-        saveGameState(next);
+        saveToDb(next);
         return next;
       });
     }, TICK_INTERVAL_MS);
@@ -282,16 +337,56 @@ export default function Home() {
     setShowBugReport(false);
   };
 
-  if (loading) return <div className="flex items-center justify-center h-screen">Carregando...</div>;
+  // Logout handler: calls tRPC auth.logout if authenticated, then clears local game state
+  const handleLogout = useCallback(async () => {
+    setIsLoggingOut(true);
+    try {
+      if (isAuthenticated) {
+        await logout();
+      }
+    } catch {
+      // Silently handle — useAuth already manages errors, just clear local state
+    } finally {
+      setIsLoggedIn(false);
+      setIsLoggingOut(false);
+    }
+  }, [isAuthenticated, logout]);
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-screen bg-gray-950">
+      <div className="flex flex-col items-center gap-4">
+        <div className="text-5xl animate-pulse">🐹</div>
+        <p className="text-gray-400 text-lg font-medium">Carregando...</p>
+      </div>
+    </div>
+  );
+
+  if (!isAuthenticated) {
+    return (
+      <LoginScreen
+        onLogin={() => {
+          utils.auth.me.invalidate();
+        }}
+        onCreateUser={() => {
+          utils.auth.me.invalidate();
+        }}
+      />
+    );
+  }
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-700 via-emerald-600 to-teal-500 flex items-center justify-center p-4">
-        <div className="bg-gray-900/90 backdrop-blur-sm rounded-3xl p-10 shadow-2xl max-w-md w-full border border-green-500/30">
+      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-green-950 to-emerald-950 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="bg-gray-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl max-w-md w-full border border-green-500/20 relative z-10">
           <div className="text-center mb-8">
-            <div className="text-7xl mb-4">🐹</div>
-            <h1 className="text-4xl font-extrabold text-green-300 mb-2 tracking-tight">CapyGame</h1>
-            <p className="text-gray-400 text-lg">Cuide de sua Capivara</p>
+            <div className="text-7xl mb-3 animate-float select-none">🐹</div>
+            <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-green-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent mb-1 tracking-tight leading-tight">
+              CAPYZEN
+            </h1>
+            <p className="text-gray-400 text-lg">Olá, {user?.username || user?.name}! Crie sua capivara</p>
           </div>
 
           <input
@@ -299,7 +394,7 @@ export default function Home() {
             placeholder="Seu nome"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full px-5 py-4 mb-4 bg-gray-800 text-white rounded-xl border border-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg"
+            className="w-full px-5 py-4 mb-4 bg-gray-800/80 text-white rounded-xl border border-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg placeholder:text-gray-500 transition-all duration-200"
           />
 
           <input
@@ -307,11 +402,23 @@ export default function Home() {
             placeholder="Nome da capivara"
             value={capyName}
             onChange={(e) => setCapyName(e.target.value)}
-            className="w-full px-5 py-4 mb-6 bg-gray-800 text-white rounded-xl border border-gray-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg"
+            className="w-full px-5 py-4 mb-6 bg-gray-800/80 text-white rounded-xl border border-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg placeholder:text-gray-500 transition-all duration-200"
           />
 
-          <Button onClick={startGame} className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 rounded-xl min-h-[56px] text-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-500/25">
+          <Button
+            onClick={startGame}
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 rounded-xl min-h-[56px] text-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-500/25"
+          >
             🎮 Começar Jogo
+          </Button>
+
+          <Button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            variant="outline"
+            className="w-full mt-3 min-h-[48px] rounded-xl font-bold border-red-500/50 text-red-400 hover:bg-red-500/10"
+          >
+            🚪 Sair da conta
           </Button>
         </div>
       </div>
@@ -319,31 +426,85 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4 flex flex-col overflow-x-hidden">
-      <div className="max-w-7xl mx-auto w-full">
-        {/* Header + Nav */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
-          <h1 className="text-3xl sm:text-4xl font-extrabold shrink-0 text-green-300 tracking-tight">🐹 CapyGame</h1>
-          <div className="flex flex-wrap gap-3 w-full sm:w-auto">
-            <Button onClick={() => window.location.href = '/fnf'} className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-orange-500/20">
-              🐹 FNF
-            </Button>
-            <Button onClick={() => window.location.href = '/admin'} className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-indigo-500/20">
-              ⚙️ Admin
-            </Button>
-            <Button onClick={() => window.location.href = '/chat'} className="bg-gradient-to-r from-teal-500 to-green-500 hover:from-teal-600 hover:to-green-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-teal-500/20">
-              💬 Chat
-            </Button>
-            <Button onClick={() => setShowShop(true)} className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 min-h-[52px] px-6 text-base font-bold rounded-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-blue-500/20">
-              🛍️ Loja
-            </Button>
-            <Button onClick={() => { setIsLoggedIn(false); }} variant="outline" className="min-h-[52px] min-w-[52px] px-6 text-base font-bold rounded-xl border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all duration-200">
-              🚪 Sair
-            </Button>
+    <div className="min-h-screen bg-gray-950 text-white flex flex-col">
+      {/* === SHELL: Title + Navigation Buttons === */}
+      <header className="border-b border-green-500/10 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+            {/* Title */}
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-3xl sm:text-4xl select-none">🐹</span>
+              <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-green-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent tracking-tight">
+                CAPYZEN
+              </h1>
+            </div>
+
+            {/* Navigation buttons — responsive grid */}
+            <nav className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full sm:w-auto">
+              {NAV_BUTTONS.map((btn) => (
+                <button
+                  key={btn.href}
+                  type="button"
+                  onClick={() => setLocation(btn.href)}
+                  className={`
+                    flex flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5 sm:py-4
+                    min-h-[56px] sm:min-h-[64px]
+                    rounded-2xl font-bold text-sm sm:text-base
+                    bg-gradient-to-r ${btn.gradient}
+                    hover:bg-gradient-to-r ${btn.hoverGradient}
+                    shadow-lg ${btn.shadow}
+                    transition-all duration-200 ease-out
+                    hover:scale-[1.04] hover:shadow-xl
+                    active:scale-[0.96] active:shadow-md
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
+                  `}
+                  aria-label={`Navegar para ${btn.label}`}
+                >
+                  <span className="text-xl sm:text-2xl leading-none">{btn.icon}</span>
+                  <span className="text-white/90 text-xs sm:text-sm font-semibold leading-tight">{btn.label}</span>
+                </button>
+              ))}
+
+              {/* SAIR — separate, destructive variant */}
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className={`
+                  flex flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5 sm:py-4
+                  min-h-[56px] sm:min-h-[64px]
+                  rounded-2xl font-bold text-sm sm:text-base
+                  border-2 border-red-500/40 text-red-300
+                  bg-red-500/5 hover:bg-red-500/15
+                  shadow-lg shadow-red-500/10
+                  transition-all duration-200 ease-out
+                  hover:scale-[1.04] hover:shadow-xl hover:shadow-red-500/20 hover:border-red-400/60
+                  active:scale-[0.96] active:shadow-md
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                `}
+                aria-label="Sair do jogo"
+              >
+                {isLoggingOut ? (
+                  <svg className="animate-spin h-5 w-5 text-red-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : (
+                  <span className="text-xl sm:text-2xl leading-none">🚪</span>
+                )}
+                <span className="text-xs sm:text-sm font-semibold leading-tight">
+                  {isLoggingOut ? 'Saindo...' : 'SAIR'}
+                </span>
+              </button>
+            </nav>
           </div>
         </div>
+      </header>
 
-        {/* Main area: canvas + stats + actions */}
+      {/* === Game Area === */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6">
+        {/* Game canvas + controls */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Canvas + Actions column */}
           <div className="lg:col-span-3 flex flex-col gap-4">
@@ -385,7 +546,8 @@ export default function Home() {
             </div>
             <Button
               onClick={() => {
-                saveGameState({ ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_GAME_STATE.inventory } });
+                const defaultState = { ...DEFAULT_GAME_STATE, inventory: { ...DEFAULT_GAME_STATE.inventory } };
+                saveToDb(defaultState);
                 localStorage.removeItem('capyzen_start');
                 setIsLoggedIn(false);
               }}

@@ -5,11 +5,12 @@ import { Route, Router, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import Shop from "./pages/Shop";
-import Admin from "./pages/Admin";
-import FNF from "./pages/FNF";
-import Chat from "./pages/Chat";
-import Friends from "./pages/Friends";
+import Shop from "@/pages/Shop";
+import Admin from "@/pages/Admin";
+import FNF from "@/pages/FNF";
+import Chat from "@/pages/Chat";
+import Friends from "@/pages/Friends";
+import Clans from "@/pages/Clans";
 
 function AppRouter() {
   return (
@@ -22,6 +23,8 @@ function AppRouter() {
         <Route path={"/amigos"} component={Friends} />
         <Route path={"/friends"} component={Friends} />
         <Route path={"/chat"} component={Chat} />
+        <Route path={"/clans"} component={Clans} />
+        <Route path={"/clan"} component={Clans} />
         <Route path={"/404"} component={NotFound} />
         {/* Final fallback route */}
         <Route component={NotFound} />

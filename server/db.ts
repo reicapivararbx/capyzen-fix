@@ -1,8 +1,8 @@
-import { and, desc, eq, or } from "drizzle-orm";
+import { and, count, desc, eq, ne, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { achievements, gameSaves, users, globalChatMessages, friendRequests, loginAttempts, userBlocks } from "../drizzle/schema";
-import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest, InsertLoginAttempt, InsertUserBlock } from "../drizzle/schema";
+import { achievements, gameSaves, users, globalChatMessages, friendRequests, loginAttempts, userBlocks, clans, clanMembers, clanInvites } from "../drizzle/schema";
+import type { GameSave, InsertAchievement, InsertGameSave, InsertUser, InsertGlobalChatMessage, FriendRequest, InsertLoginAttempt, InsertUserBlock, Clan, InsertClan, ClanInvite } from "../drizzle/schema";
 import type { GameState, LeaderboardEntry } from "../client/src/types/game";
 import { ENV } from './_core/env';
 
@@ -859,4 +859,387 @@ export async function isBlocking(blockerId: number, blockedId: number): Promise<
     .limit(1);
 
   return result.length > 0;
+}
+
+export async function createClan(
+  leaderId: number,
+  name: string,
+  tag: string,
+  description?: string | null,
+  emblem?: string | null,
+  isPublic?: boolean,
+  minLevel?: number,
+): Promise<Clan> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const existing = await db.select().from(clanMembers).where(eq(clanMembers.userId, leaderId)).limit(1);
+  if (existing.length > 0) throw new Error("Você já está em um clan");
+
+  const nameTaken = await db.select().from(clans).where(eq(clans.name, name)).limit(1);
+  if (nameTaken.length > 0) throw new Error("Nome de clan já existe");
+
+  const tagTaken = await db.select().from(clans).where(eq(clans.tag, tag)).limit(1);
+  if (tagTaken.length > 0) throw new Error("Tag de clan já existe");
+
+  const values: InsertClan = {
+    name,
+    tag,
+    description: description ?? null,
+    leaderId,
+    emblem: emblem ?? "🛡️",
+    isPublic: isPublic ?? true,
+    minLevel: minLevel ?? 1,
+  };
+
+  const inserted = await db.insert(clans).values(values).returning();
+  const clan = inserted[0];
+
+  await db.insert(clanMembers).values({
+    clanId: clan.id,
+    userId: leaderId,
+    role: "leader",
+  });
+
+  return clan;
+}
+
+export async function getClanById(clanId: number): Promise<Clan | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(clans).where(eq(clans.id, clanId)).limit(1);
+  return result[0] ?? null;
+}
+
+export async function getClanByMember(
+  userId: number,
+): Promise<{ clan: Clan; role: string; joinedAt: Date } | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db
+    .select({
+      clan: clans,
+      role: clanMembers.role,
+      joinedAt: clanMembers.joinedAt,
+    })
+    .from(clanMembers)
+    .innerJoin(clans, eq(clanMembers.clanId, clans.id))
+    .where(eq(clanMembers.userId, userId))
+    .limit(1);
+
+  return result[0] ?? null;
+}
+
+export async function listClanMembers(
+  clanId: number,
+): Promise<Array<{ userId: number; username: string | null; name: string | null; role: string; joinedAt: Date }>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      userId: clanMembers.userId,
+      username: users.username,
+      name: users.name,
+      role: clanMembers.role,
+      joinedAt: clanMembers.joinedAt,
+    })
+    .from(clanMembers)
+    .innerJoin(users, eq(clanMembers.userId, users.id))
+    .where(eq(clanMembers.clanId, clanId))
+    .orderBy(desc(clanMembers.joinedAt));
+
+  return result;
+}
+
+export async function searchClans(): Promise<Array<Clan & { memberCount: number }>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const allClans = await db.select().from(clans).orderBy(desc(clans.createdAt));
+  const result: Array<Clan & { memberCount: number }> = [];
+
+  for (const clan of allClans) {
+    const c = await db
+      .select({ value: count() })
+      .from(clanMembers)
+      .where(eq(clanMembers.clanId, clan.id));
+    result.push({ ...clan, memberCount: c[0].value });
+  }
+
+  return result;
+}
+
+export async function disbandClan(clanId: number, userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const clan = await db.select().from(clans).where(eq(clans.id, clanId)).limit(1);
+  if (clan.length === 0) throw new Error("Clan não encontrado");
+  if (clan[0].leaderId !== userId) throw new Error("Apenas o líder pode dissolver o clan");
+
+  await db.delete(clanMembers).where(eq(clanMembers.clanId, clanId));
+  await db.delete(clanInvites).where(eq(clanInvites.clanId, clanId));
+  await db.delete(clans).where(eq(clans.id, clanId));
+}
+
+export async function leaveClan(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const membership = await db
+    .select()
+    .from(clanMembers)
+    .where(eq(clanMembers.userId, userId))
+    .limit(1);
+
+  if (membership.length === 0) throw new Error("Você não está em um clan");
+  const member = membership[0];
+  const clanId = member.clanId;
+
+  if (member.role === "leader") {
+    const officers = await db
+      .select()
+      .from(clanMembers)
+      .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.role, "officer")))
+      .orderBy(desc(clanMembers.joinedAt))
+      .limit(1);
+
+    if (officers.length > 0) {
+      await db.update(clanMembers).set({ role: "leader" }).where(eq(clanMembers.id, officers[0].id));
+    } else {
+      const remaining = await db
+        .select({ value: count() })
+        .from(clanMembers)
+        .where(eq(clanMembers.clanId, clanId));
+
+      if (remaining[0].value <= 1) {
+        await db.delete(clanMembers).where(eq(clanMembers.clanId, clanId));
+        await db.delete(clanInvites).where(eq(clanInvites.clanId, clanId));
+        await db.delete(clans).where(eq(clans.id, clanId));
+      } else {
+        const nextMember = await db
+          .select()
+          .from(clanMembers)
+          .where(and(eq(clanMembers.clanId, clanId), ne(clanMembers.userId, userId)))
+          .orderBy(desc(clanMembers.joinedAt))
+          .limit(1);
+
+        if (nextMember.length > 0) {
+          await db.update(clanMembers).set({ role: "leader" }).where(eq(clanMembers.id, nextMember[0].id));
+          await db.update(clans).set({ leaderId: nextMember[0].userId }).where(eq(clans.id, clanId));
+        }
+      }
+    }
+  }
+
+  await db.delete(clanMembers).where(eq(clanMembers.id, member.id));
+}
+
+export async function kickClanMember(clanId: number, targetUserId: number, requesterId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const requester = await db
+    .select()
+    .from(clanMembers)
+    .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, requesterId)))
+    .limit(1);
+
+  if (requester.length === 0) throw new Error("Você não é membro deste clan");
+  if (requester[0].role === "member") throw new Error("Apenas líderes e oficiais podem expulsar membros");
+
+  const target = await db
+    .select()
+    .from(clanMembers)
+    .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, targetUserId)))
+    .limit(1);
+
+  if (target.length === 0) throw new Error("Membro não encontrado");
+  if (target[0].role === "leader") throw new Error("Não pode expulsar o líder");
+  if (target[0].role === "officer" && requester[0].role === "officer") throw new Error("Oficiais não podem expulsar outros oficiais");
+
+  await db.delete(clanMembers).where(eq(clanMembers.id, target[0].id));
+}
+
+export async function updateClanRole(
+  clanId: number,
+  targetUserId: number,
+  requesterId: number,
+  role: "officer" | "member",
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const requester = await db
+    .select()
+    .from(clanMembers)
+    .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, requesterId)))
+    .limit(1);
+
+  if (requester.length === 0) throw new Error("Você não é membro deste clan");
+  if (requester[0].role !== "leader") throw new Error("Apenas o líder pode alterar cargos");
+
+  const target = await db
+    .select()
+    .from(clanMembers)
+    .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, targetUserId)))
+    .limit(1);
+
+  if (target.length === 0) throw new Error("Membro não encontrado");
+  if (target[0].role === "leader") throw new Error("Não pode alterar o cargo do líder");
+
+  await db.update(clanMembers).set({ role }).where(eq(clanMembers.id, target[0].id));
+}
+
+export async function transferClanLeadership(clanId: number, newLeaderId: number, requesterId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.transaction(async (tx) => {
+    const clan = await tx.select().from(clans).where(eq(clans.id, clanId)).limit(1);
+    if (clan.length === 0) throw new Error("Clan não encontrado");
+    if (clan[0].leaderId !== requesterId) throw new Error("Apenas o líder pode transferir liderança");
+
+    const newLeader = await tx
+      .select()
+      .from(clanMembers)
+      .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, newLeaderId)))
+      .limit(1);
+
+    if (newLeader.length === 0) throw new Error("O novo líder deve ser membro do clan");
+
+    await tx.update(clanMembers).set({ role: "leader" }).where(eq(clanMembers.id, newLeader[0].id));
+    await tx
+      .update(clanMembers)
+      .set({ role: "officer" })
+      .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, requesterId)));
+    await tx.update(clans).set({ leaderId: newLeaderId }).where(eq(clans.id, clanId));
+  });
+}
+
+export async function updateClanSettings(
+  clanId: number,
+  userId: number,
+  settings: { description?: string | null; emblem?: string | null; isPublic?: boolean; minLevel?: number },
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const clan = await db.select().from(clans).where(eq(clans.id, clanId)).limit(1);
+  if (clan.length === 0) throw new Error("Clan não encontrado");
+  if (clan[0].leaderId !== userId) throw new Error("Apenas o líder pode alterar configurações");
+
+  const updates: Partial<InsertClan> = {};
+  if (settings.description !== undefined) updates.description = settings.description ?? null;
+  if (settings.emblem !== undefined) updates.emblem = settings.emblem ?? "🛡️";
+  if (settings.isPublic !== undefined) updates.isPublic = settings.isPublic;
+  if (settings.minLevel !== undefined) updates.minLevel = settings.minLevel;
+
+  if (Object.keys(updates).length > 0) {
+    await db.update(clans).set(updates).where(eq(clans.id, clanId));
+  }
+}
+
+export async function createClanInvite(clanId: number, inviterId: number, inviteeId: number): Promise<ClanInvite> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const inviterMembership = await db
+    .select()
+    .from(clanMembers)
+    .where(and(eq(clanMembers.clanId, clanId), eq(clanMembers.userId, inviterId)))
+    .limit(1);
+
+  if (inviterMembership.length === 0) throw new Error("Você não é membro deste clan");
+  if (inviterMembership[0].role === "member") throw new Error("Apenas líderes e oficiais podem convidar");
+
+  const inviteeClan = await db.select().from(clanMembers).where(eq(clanMembers.userId, inviteeId)).limit(1);
+  if (inviteeClan.length > 0) throw new Error("Usuário já está em um clan");
+
+  const existingInvite = await db
+    .select()
+    .from(clanInvites)
+    .where(and(eq(clanInvites.clanId, clanId), eq(clanInvites.inviteeId, inviteeId), eq(clanInvites.status, "pending")))
+    .limit(1);
+
+  if (existingInvite.length > 0) throw new Error("Já existe um convite pendente para este usuário");
+
+  const inserted = await db
+    .insert(clanInvites)
+    .values({ clanId, inviterId, inviteeId, status: "pending" })
+    .returning();
+
+  return inserted[0];
+}
+
+export async function acceptClanInvite(inviteId: number, userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const invite = await db.select().from(clanInvites).where(eq(clanInvites.id, inviteId)).limit(1);
+  if (invite.length === 0) throw new Error("Convite não encontrado");
+  if (invite[0].inviteeId !== userId) throw new Error("Este convite não é para você");
+  if (invite[0].status !== "pending") throw new Error("Convite já processado");
+
+  const existingClan = await db.select().from(clanMembers).where(eq(clanMembers.userId, userId)).limit(1);
+  if (existingClan.length > 0) throw new Error("Você já está em um clan");
+
+  await db.update(clanInvites).set({ status: "accepted" }).where(eq(clanInvites.id, inviteId));
+  await db.insert(clanMembers).values({ clanId: invite[0].clanId, userId, role: "member" });
+}
+
+export async function declineClanInvite(inviteId: number, userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const invite = await db.select().from(clanInvites).where(eq(clanInvites.id, inviteId)).limit(1);
+  if (invite.length === 0) throw new Error("Convite não encontrado");
+  if (invite[0].inviteeId !== userId) throw new Error("Este convite não é para você");
+  if (invite[0].status !== "pending") throw new Error("Convite já processado");
+
+  await db.update(clanInvites).set({ status: "declined" }).where(eq(clanInvites.id, inviteId));
+}
+
+export async function listClanInvites(
+  userId: number,
+): Promise<Array<{ id: number; clanId: number; clanName: string; clanTag: string; clanEmblem: string; inviterId: number; inviterName: string | null; status: string; createdAt: Date }>> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      id: clanInvites.id,
+      clanId: clanInvites.clanId,
+      clanName: clans.name,
+      clanTag: clans.tag,
+      clanEmblem: clans.emblem,
+      inviterId: clanInvites.inviterId,
+      inviterName: users.name,
+      status: clanInvites.status,
+      createdAt: clanInvites.createdAt,
+    })
+    .from(clanInvites)
+    .innerJoin(clans, eq(clanInvites.clanId, clans.id))
+    .innerJoin(users, eq(clanInvites.inviterId, users.id))
+    .where(eq(clanInvites.inviteeId, userId))
+    .orderBy(desc(clanInvites.createdAt));
+
+  return result;
+}
+
+export async function joinClanPublic(clanId: number, userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const clan = await db.select().from(clans).where(eq(clans.id, clanId)).limit(1);
+  if (clan.length === 0) throw new Error("Clan não encontrado");
+  if (!clan[0].isPublic) throw new Error("Este clan é privado");
+
+  const existing = await db.select().from(clanMembers).where(eq(clanMembers.userId, userId)).limit(1);
+  if (existing.length > 0) throw new Error("Você já está em um clan");
+
+  await db.insert(clanMembers).values({ clanId, userId, role: "member" });
 }

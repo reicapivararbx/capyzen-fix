@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
-import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements, getChatMessages, sendChatMessage, sendFriendRequest, updateFriendRequest, listFriendRequests, listOutgoingRequests, listFriends, removeFriend, getUserByName, getUserById, blockUser, unblockUser, listBlockedUsers } from "./db";
+import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements, getChatMessages, sendChatMessage, sendFriendRequest, updateFriendRequest, listFriendRequests, listOutgoingRequests, listFriends, removeFriend, getUserByName, getUserById, blockUser, unblockUser, listBlockedUsers, createClan, getClanById, getClanByMember, listClanMembers, searchClans, disbandClan, leaveClan, kickClanMember, updateClanRole, transferClanLeadership, updateClanSettings, createClanInvite, acceptClanInvite, declineClanInvite, listClanInvites, joinClanPublic } from "./db";
 import { systemRouter } from "./_core/systemRouter";
 import { authRouter } from "./_core/authRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -251,6 +251,161 @@ export const appRouter = router({
           mediaType: input.contentType,
           mediaName: safeFileName,
         };
+      }),
+
+    claimItem: protectedProcedure
+      .input(z.object({
+        itemType: z.string().min(1),
+        quantity: z.number().int().min(1).max(99),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const VALID_ITEMS = [
+          "grama", "batata", "hamburger", "refri", "feijao", "hotdog", "pizza",
+          "sushi", "tacos", "sorvete", "bolo", "chocolate", "maçã", "banana",
+          "melancia", "morango", "uva", "cenoura", "brócolis", "espinafre",
+          "tomate", "queijo", "iogurte", "leite", "pão", "arroz",
+        ] as const;
+
+        if (!VALID_ITEMS.includes(input.itemType as typeof VALID_ITEMS[number])) {
+          throw new Error(`Item inválido: ${input.itemType}`);
+        }
+
+        const userId = ctx.user!.id;
+        const state = await loadGame(userId);
+        if (!state) throw new Error("Save não encontrado");
+
+        if (!state.inventory) {
+          state.inventory = {} as GameState["inventory"];
+        }
+
+        const key = input.itemType as keyof GameState["inventory"];
+        const currentQty = (state.inventory[key] as number) || 0;
+        state.inventory[key] = (currentQty + input.quantity) as GameState["inventory"][typeof key];
+
+        await saveGame(userId, state);
+        return { success: true, itemType: key, newQuantity: state.inventory[key] };
+      }),
+  }),
+
+  clans: router({
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string().trim().min(3, "Nome deve ter 3-20 caracteres").max(20),
+        tag: z.string().trim().min(2, "Tag deve ter 2-5 caracteres").max(5),
+        description: z.string().trim().max(200).optional(),
+        emblem: z.string().max(10).optional(),
+        isPublic: z.boolean().optional(),
+        minLevel: z.number().int().min(1).max(100).optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return createClan(userId, input.name, input.tag, input.description, input.emblem, input.isPublic, input.minLevel);
+      }),
+
+    mine: protectedProcedure.query(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return getClanByMember(userId);
+    }),
+
+    get: protectedProcedure
+      .input(z.object({ clanId: z.number() }))
+      .query(({ input }) => getClanById(input.clanId)),
+
+    members: protectedProcedure
+      .input(z.object({ clanId: z.number() }))
+      .query(({ input }) => listClanMembers(input.clanId)),
+
+    search: protectedProcedure.query(() => searchClans()),
+
+    disband: protectedProcedure
+      .input(z.object({ clanId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return disbandClan(input.clanId, userId);
+      }),
+
+    leave: protectedProcedure.mutation(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return leaveClan(userId);
+    }),
+
+    kick: protectedProcedure
+      .input(z.object({ clanId: z.number(), targetUserId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return kickClanMember(input.clanId, input.targetUserId, userId);
+      }),
+
+    setRole: protectedProcedure
+      .input(z.object({
+        clanId: z.number(),
+        targetUserId: z.number(),
+        role: z.enum(["officer", "member"]),
+      }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return updateClanRole(input.clanId, input.targetUserId, userId, input.role);
+      }),
+
+    transferLeadership: protectedProcedure
+      .input(z.object({ clanId: z.number(), newLeaderId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return transferClanLeadership(input.clanId, input.newLeaderId, userId);
+      }),
+
+    updateSettings: protectedProcedure
+      .input(z.object({
+        clanId: z.number(),
+        description: z.string().trim().max(200).optional(),
+        emblem: z.string().max(10).optional(),
+        isPublic: z.boolean().optional(),
+        minLevel: z.number().int().min(1).max(100).optional(),
+      }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return updateClanSettings(input.clanId, userId, {
+          description: input.description,
+          emblem: input.emblem,
+          isPublic: input.isPublic,
+          minLevel: input.minLevel,
+        });
+      }),
+
+    invite: protectedProcedure
+      .input(z.object({ clanId: z.number(), targetName: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        const target = await getUserByName(input.targetName);
+        if (!target) throw new Error("Usuário não encontrado");
+        if (target.id === userId) throw new Error("Não pode convidar a si mesmo");
+        return createClanInvite(input.clanId, userId, target.id);
+      }),
+
+    invites: protectedProcedure.query(({ ctx }) => {
+      const userId = ctx.user!.id;
+      return listClanInvites(userId);
+    }),
+
+    acceptInvite: protectedProcedure
+      .input(z.object({ inviteId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return acceptClanInvite(input.inviteId, userId);
+      }),
+
+    declineInvite: protectedProcedure
+      .input(z.object({ inviteId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return declineClanInvite(input.inviteId, userId);
+      }),
+
+    join: protectedProcedure
+      .input(z.object({ clanId: z.number() }))
+      .mutation(({ input, ctx }) => {
+        const userId = ctx.user!.id;
+        return joinClanPublic(input.clanId, userId);
       }),
   }),
 });
