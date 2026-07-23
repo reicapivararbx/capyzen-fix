@@ -123,5 +123,5 @@ export type LeaderboardTab = 'global' | 'weekly' | 'friends';
 
 export interface CurrentUser {
   username: string;
-  password: string;
+  role?: string;
 }

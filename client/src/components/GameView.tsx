@@ -746,6 +746,40 @@ function drawCapybara(ctx: CanvasRenderingContext2D, x: number, y: number, equip
       ctx.arc(x, drawY - 85, 17, 0, Math.PI * 2);
       ctx.fill();
     }
+
+    // Fallback: generic cosmetic items get a colored badge
+    const catColor: Record<string, string> = {
+      clothing_shirt: '#3B82F6',
+      clothing_pants: '#22C55E',
+      clothing_shoes: '#92400E',
+      clothing_generic: '#6B7280',
+      accessory_watch: '#F59E0B',
+      accessory_bag: '#F97316',
+      accessory_bracelet: '#A855F7',
+      accessory_ring: '#EAB308',
+      accessory_generic: '#FBBF24',
+      hat_generic: '#8B5CF6',
+      glasses_generic: '#06B6D4',
+      necklace_generic: '#FCD34D',
+    };
+    const catLabel: Record<string, string> = {
+      clothing_shirt: '👕', clothing_pants: '👖', clothing_shoes: '👟',
+      clothing_generic: '👕', accessory_watch: '⌚', accessory_bag: '👜',
+      accessory_bracelet: '📿', accessory_ring: '💍', accessory_generic: '✨',
+      hat_generic: '🎩', glasses_generic: '👓', necklace_generic: '📿',
+    };
+    for (const [prefix, color] of Object.entries(catColor)) {
+      if (item.startsWith(prefix)) {
+        ctx.fillStyle = color + 'CC';
+        ctx.beginPath();
+        ctx.arc(x + 40, drawY - 60, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff88';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        break;
+      }
+    }
   }
 }
 

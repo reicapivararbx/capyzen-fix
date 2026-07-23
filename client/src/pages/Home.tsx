@@ -55,6 +55,8 @@ export default function Home() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [playerName, setPlayerName] = useState('');
   const [capyName, setCapyName] = useState('');
+  const [isNight, setIsNight] = useState(false);
+  const [isRaining, setIsRaining] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
     playerName: '', capyName: '', level: 1, xp: 0, coins: 0, age: 0,
     hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [], ownedClothing: [],
@@ -191,6 +193,39 @@ export default function Home() {
     setGameState(newState);
     saveToDb(newState);
   };
+
+  useEffect(() => {
+    const cycleDuration = 30000;
+    let nightTimeout: ReturnType<typeof setTimeout>;
+    let dayTimeout: ReturnType<typeof setTimeout>;
+    let rainTimeout: ReturnType<typeof setTimeout>;
+
+    const scheduleCycle = () => {
+      nightTimeout = setTimeout(() => {
+        setIsNight(true);
+        dayTimeout = setTimeout(() => {
+          setIsNight(false);
+          scheduleCycle();
+        }, cycleDuration / 2);
+      }, cycleDuration / 2);
+    };
+
+    const scheduleWeather = () => {
+      rainTimeout = setTimeout(() => {
+        setIsRaining((prev) => !prev);
+        scheduleWeather();
+      }, 45000 + Math.random() * 30000);
+    };
+
+    scheduleCycle();
+    scheduleWeather();
+
+    return () => {
+      clearTimeout(nightTimeout);
+      clearTimeout(dayTimeout);
+      clearTimeout(rainTimeout);
+    };
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -353,10 +388,36 @@ export default function Home() {
   }, [isAuthenticated, logout]);
 
   if (loading) return (
-    <div className="flex items-center justify-center h-screen bg-gray-950">
-      <div className="flex flex-col items-center gap-4">
-        <div className="text-5xl animate-pulse">🐹</div>
-        <p className="text-gray-400 text-lg font-medium">Carregando...</p>
+    <div className="flex items-center justify-center h-screen bg-gray-950 relative overflow-hidden">
+      <div className="habitat-sky" />
+      <div className="habitat-ground" />
+      <div className="habitat-water" />
+      <div className="habitat-vegetation">
+        <div className="habitat-tree habitat-tree-left-1" />
+        <div className="habitat-tree habitat-tree-left-2" />
+        <div className="habitat-tree habitat-tree-right-1" />
+        <div className="habitat-cloud habitat-cloud-1" />
+        <div className="habitat-cloud habitat-cloud-2" />
+        <div className="habitat-cloud habitat-cloud-3" />
+        <div className="habitat-cloud habitat-cloud-4" />
+      </div>
+      <div className="habitat-lighting" />
+      <div className="habitat-sunrays" />
+      <div className={`habitat-rain${isRaining ? ' active' : ''}`} />
+      <div className="habitat-mist" />
+      {/* Background meshes */}
+      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute top-0 left-1/4 w-[32rem] h-[32rem] bg-green-500/[0.06] rounded-full blur-[5rem] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[40rem] h-[40rem] bg-emerald-500/[0.06] rounded-full blur-[6rem] animate-pulse [animation-delay:1s]" />
+      </div>
+      <div className="flex flex-col items-center gap-5">
+        <div className="text-7xl animate-bounce" aria-hidden="true">🐹</div>
+        <p className="text-gray-400 text-lg font-medium tracking-wide">Carregando...</p>
+        <div className="flex gap-2">
+          <span className="w-2.5 h-2.5 bg-green-400 rounded-full animate-bounce [animation-delay:0ms]" />
+          <span className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-bounce [animation-delay:150ms]" />
+          <span className="w-2.5 h-2.5 bg-teal-400 rounded-full animate-bounce [animation-delay:300ms]" />
+        </div>
       </div>
     </div>
   );
@@ -377,16 +438,41 @@ export default function Home() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-950 via-green-950 to-emerald-950 flex items-center justify-center p-4 relative overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-        
+        {/* Habitat background */}
+        <div className="habitat-sky" />
+        <div className="habitat-ground" />
+        <div className="habitat-water" />
+        <div className="habitat-vegetation">
+          <div className="habitat-tree habitat-tree-left-1" />
+          <div className="habitat-tree habitat-tree-left-2" />
+          <div className="habitat-tree habitat-tree-right-1" />
+          <div className="habitat-cloud habitat-cloud-1" />
+          <div className="habitat-cloud habitat-cloud-2" />
+          <div className="habitat-cloud habitat-cloud-3" />
+          <div className="habitat-cloud habitat-cloud-4" />
+        </div>
+        <div className="habitat-lighting" />
+        <div className="habitat-sunrays" />
+        <div className={`habitat-rain${isRaining ? ' active' : ''}`} />
+        <div className="habitat-mist" />
+        {/* Background meshes */}
+        <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-green-500/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse [animation-delay:1.5s]" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-500/[0.05] rounded-full blur-3xl animate-pulse [animation-delay:0.8s]" />
+        </div>
+
         <div className="bg-gray-900/80 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl max-w-md w-full border border-green-500/20 relative z-10">
           <div className="text-center mb-8">
-            <div className="text-7xl mb-3 animate-float select-none">🐹</div>
-            <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-green-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent mb-1 tracking-tight leading-tight">
-              CAPYZEN
+            <div className="text-8xl mb-4 animate-bounce" aria-hidden="true">🐹</div>
+            <h1 className="text-5xl sm:text-6xl font-black tracking-tighter mb-2">
+              <span className="bg-gradient-to-r from-green-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">
+                CAPYZEN
+              </span>
             </h1>
-            <p className="text-gray-400 text-lg">Olá, {user?.username || user?.name}! Crie sua capivara</p>
+            <p className="text-gray-400 text-base sm:text-lg">
+              Olá, {user?.username || user?.name}! Crie sua capivara
+            </p>
           </div>
 
           <input
@@ -394,7 +480,7 @@ export default function Home() {
             placeholder="Seu nome"
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
-            className="w-full px-5 py-4 mb-4 bg-gray-800/80 text-white rounded-xl border border-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg placeholder:text-gray-500 transition-all duration-200"
+            className="w-full px-5 py-4 mb-4 bg-gray-800/80 text-white rounded-2xl border border-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[56px] text-lg placeholder:text-gray-500 transition-all duration-200"
           />
 
           <input
@@ -402,23 +488,24 @@ export default function Home() {
             placeholder="Nome da capivara"
             value={capyName}
             onChange={(e) => setCapyName(e.target.value)}
-            className="w-full px-5 py-4 mb-6 bg-gray-800/80 text-white rounded-xl border border-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[52px] text-lg placeholder:text-gray-500 transition-all duration-200"
+            className="w-full px-5 py-4 mb-6 bg-gray-800/80 text-white rounded-2xl border border-gray-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 min-h-[56px] text-lg placeholder:text-gray-500 transition-all duration-200"
           />
 
           <Button
             onClick={startGame}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold py-4 rounded-xl min-h-[56px] text-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-green-500/25"
+            className="w-full bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-extrabold py-4 rounded-2xl min-h-[60px] text-lg transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-green-500/25"
           >
-            🎮 Começar Jogo
+            <span className="text-xl mr-2" aria-hidden="true">🎮</span>
+            Começar Jogo
           </Button>
 
           <Button
             onClick={handleLogout}
             disabled={isLoggingOut}
             variant="outline"
-            className="w-full mt-3 min-h-[48px] rounded-xl font-bold border-red-500/50 text-red-400 hover:bg-red-500/10"
+            className="w-full mt-3 min-h-[52px] rounded-2xl font-bold border-red-500/30 text-red-300 hover:bg-red-500/10 hover:border-red-400/60 transition-all duration-200"
           >
-            🚪 Sair da conta
+            {isLoggingOut ? 'Saindo...' : '🚪 Sair da conta'}
           </Button>
         </div>
       </div>
@@ -427,75 +514,123 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-950 text-white flex flex-col">
+      {/* === T3: Natural Habitat Background === */}
+      <div className="habitat-sky" />
+      <div className="habitat-ground" />
+      <div className="habitat-water" />
+      <div className="habitat-vegetation">
+        <div className="habitat-tree habitat-tree-left-1" />
+        <div className="habitat-tree habitat-tree-left-2" />
+        <div className="habitat-tree habitat-tree-left-3" />
+        <div className="habitat-tree habitat-tree-right-1" />
+        <div className="habitat-tree habitat-tree-right-2" />
+        <div className="habitat-tree habitat-tree-right-3" />
+        <div className="habitat-grass" />
+        <div className="habitat-cloud habitat-cloud-1" />
+        <div className="habitat-cloud habitat-cloud-2" />
+        <div className="habitat-cloud habitat-cloud-3" />
+        <div className="habitat-cloud habitat-cloud-4" />
+      </div>
+      <div className={`habitat-lighting ${isNight ? 'habitat-lighting-night' : 'habitat-lighting-day'}`} />
+      <div className="habitat-sunrays" />
+      <div className={`habitat-rain${isRaining ? ' active' : ''}`} />
+      <div className="habitat-mist" />
+
+      {/* === SHELL: Animated background meshes === */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute top-0 left-1/4 w-[32rem] h-[32rem] bg-green-500/[0.06] rounded-full blur-[5rem] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[40rem] h-[40rem] bg-emerald-500/[0.06] rounded-full blur-[6rem] animate-pulse [animation-delay:1s]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[24rem] h-[24rem] bg-teal-500/[0.04] rounded-full blur-[4rem] animate-pulse [animation-delay:2s]" />
+      </div>
+
       {/* === SHELL: Title + Navigation Buttons === */}
-      <header className="border-b border-green-500/10 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-30">
+      <header className="border-b border-green-500/10 bg-gray-900/60 backdrop-blur-xl sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
             {/* Title */}
             <div className="flex items-center gap-3 shrink-0">
-              <span className="text-3xl sm:text-4xl select-none">🐹</span>
-              <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-green-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent tracking-tight">
-                CAPYZEN
+              <span className="text-4xl sm:text-5xl select-none drop-shadow-lg" aria-hidden="true">🐹</span>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tighter leading-none">
+                <span className="bg-gradient-to-r from-green-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">
+                  CAPYZEN
+                </span>
               </h1>
             </div>
 
-            {/* Navigation buttons — responsive grid */}
-            <nav className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full sm:w-auto">
+            {/* Navigation buttons — LARGE, responsive grid */}
+            <nav
+              className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full sm:w-auto"
+              role="navigation"
+              aria-label="Menu principal"
+            >
               {NAV_BUTTONS.map((btn) => (
                 <button
                   key={btn.href}
                   type="button"
                   onClick={() => setLocation(btn.href)}
                   className={`
-                    flex flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5 sm:py-4
-                    min-h-[56px] sm:min-h-[64px]
-                    rounded-2xl font-bold text-sm sm:text-base
-                    bg-gradient-to-r ${btn.gradient}
-                    hover:bg-gradient-to-r ${btn.hoverGradient}
+                    group relative flex flex-col items-center justify-center gap-1
+                    px-4 py-4 sm:px-6 sm:py-5
+                    min-h-[72px] sm:min-h-[80px]
+                    rounded-2xl font-bold
+                    bg-gradient-to-br ${btn.gradient}
                     shadow-lg ${btn.shadow}
                     transition-all duration-200 ease-out
-                    hover:scale-[1.04] hover:shadow-xl
-                    active:scale-[0.96] active:shadow-md
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
+                    hover:scale-[1.06] hover:shadow-xl hover:${btn.hoverGradient}
+                    active:scale-[0.95] active:shadow-md
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
+                    overflow-hidden
                   `}
                   aria-label={`Navegar para ${btn.label}`}
                 >
-                  <span className="text-xl sm:text-2xl leading-none">{btn.icon}</span>
-                  <span className="text-white/90 text-xs sm:text-sm font-semibold leading-tight">{btn.label}</span>
+                  {/* Shine sweep on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-out" aria-hidden="true" />
+                  <span className="text-2xl sm:text-3xl leading-none drop-shadow-md" aria-hidden="true">{btn.icon}</span>
+                  <span className="text-white/95 text-sm sm:text-base font-extrabold tracking-wide leading-tight drop-shadow-sm">
+                    {btn.label}
+                  </span>
                 </button>
               ))}
 
-              {/* SAIR — separate, destructive variant */}
+              {/* SAIR — destructive variant with loading state */}
               <button
                 type="button"
                 onClick={handleLogout}
                 disabled={isLoggingOut}
                 className={`
-                  flex flex-col items-center justify-center gap-1 px-3 py-3 sm:px-5 sm:py-4
-                  min-h-[56px] sm:min-h-[64px]
-                  rounded-2xl font-bold text-sm sm:text-base
-                  border-2 border-red-500/40 text-red-300
-                  bg-red-500/5 hover:bg-red-500/15
+                  group relative flex flex-col items-center justify-center gap-1
+                  px-4 py-4 sm:px-6 sm:py-5
+                  min-h-[72px] sm:min-h-[80px]
+                  rounded-2xl font-bold
+                  border-2 border-red-500/30 text-red-300
+                  bg-red-500/5 hover:bg-red-500/15 hover:border-red-400/60
                   shadow-lg shadow-red-500/10
                   transition-all duration-200 ease-out
-                  hover:scale-[1.04] hover:shadow-xl hover:shadow-red-500/20 hover:border-red-400/60
-                  active:scale-[0.96] active:shadow-md
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
-                  disabled:opacity-50 disabled:cursor-not-allowed
+                  hover:scale-[1.06] hover:shadow-xl hover:shadow-red-500/25
+                  active:scale-[0.95] active:shadow-md
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900
+                  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                  overflow-hidden
                 `}
                 aria-label="Sair do jogo"
+                aria-busy={isLoggingOut}
               >
+                {/* Shine sweep on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-out" aria-hidden="true" />
                 {isLoggingOut ? (
-                  <svg className="animate-spin h-5 w-5 text-red-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-red-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    <span className="text-xs sm:text-sm font-extrabold tracking-wide leading-tight">Saindo...</span>
+                  </>
                 ) : (
-                  <span className="text-xl sm:text-2xl leading-none">🚪</span>
+                  <>
+                    <span className="text-2xl sm:text-3xl leading-none drop-shadow-md" aria-hidden="true">🚪</span>
+                    <span className="text-white/95 text-sm sm:text-base font-extrabold tracking-wide leading-tight drop-shadow-sm">SAIR</span>
+                  </>
                 )}
-                <span className="text-xs sm:text-sm font-semibold leading-tight">
-                  {isLoggingOut ? 'Saindo...' : 'SAIR'}
-                </span>
               </button>
             </nav>
           </div>

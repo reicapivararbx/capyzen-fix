@@ -16,6 +16,7 @@ import {
 } from "../db";
 import { TRPCError } from "@trpc/server";
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { sendPasswordResetEmail } from "./emailService";
 
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_WINDOW_MS = 15 * 60 * 1000;
@@ -134,6 +135,10 @@ export const authRouter = router({
       const token = generateResetToken();
       const expires = new Date(Date.now() + 60 * 60 * 1000);
       await setPasswordResetToken(user.id, token, expires);
+
+      if (user.email) {
+        await sendPasswordResetEmail(user.email, user.username!, token);
+      }
 
       console.log(`[AUTH] Password reset token for ${input.username}: ${token}`);
       return { success: true, resetToken: token };

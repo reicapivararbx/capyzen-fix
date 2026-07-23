@@ -56,6 +56,11 @@ if (typeof document !== 'undefined') {
 
 type VerityState = "normal" | "talking" | "angry";
 
+// slug → display name lookup for inventory rendering
+const slugToName: Record<string, string> = Object.fromEntries(
+  shopItems.map(item => [item.slug, item.name])
+);
+
 const VERITY_TIPS = [
   "🍎 Comidas aumentam a felicidade da capivara!",
   "⚡ Boosts te dão poderes especiais!",
@@ -521,6 +526,7 @@ interface Toast {
 interface ShopItem {
   id: number;
   name: string;
+  slug: string;
   icon: string;
   price: number;
   description: string;
@@ -697,11 +703,11 @@ export default function Shop() {
       const isClothing = isClothingCategory(item.category);
 
       if (isClothing) {
-        if (gameState.ownedClothing.includes(item.name)) {
+        if (gameState.ownedClothing.includes(item.slug)) {
           addToast("⚠️ Roupa já adquirida!", "error");
           return;
         }
-      } else if (gameState.equippedItems.includes(item.name)) {
+      } else if (gameState.equippedItems.includes(item.slug)) {
         addToast("⚠️ Item já adquirido!", "error");
         return;
       }
@@ -716,10 +722,10 @@ export default function Shop() {
       };
 
       if (isClothing) {
-        partial.ownedClothing = [...gameState.ownedClothing, item.name];
-        partial.equippedItems = [...gameState.equippedItems, item.name];
+        partial.ownedClothing = [...gameState.ownedClothing, item.slug];
+        partial.equippedItems = [...gameState.equippedItems, item.slug];
       } else {
-        partial.equippedItems = [...gameState.equippedItems, item.name];
+        partial.equippedItems = [...gameState.equippedItems, item.slug];
       }
 
       if (item.category === "Boost") {
@@ -943,22 +949,23 @@ export default function Shop() {
           <Card className="bg-white/5 backdrop-blur-sm border-white/10 p-4 sm:p-6 mb-6 rounded-2xl">
             <h3 className="text-xl font-bold mb-4">👔 Roupas no Inventário</h3>
             <div className="flex flex-wrap gap-2">
-              {gameState.ownedClothing.map((clothingName) => {
-                const isEquipped = gameState.equippedItems.includes(clothingName);
+              {gameState.ownedClothing.map((clothingSlug) => {
+                const displayName = slugToName[clothingSlug] ?? clothingSlug;
+                const isEquipped = gameState.equippedItems.includes(clothingSlug);
                 return (
                   <span
-                    key={clothingName}
+                    key={clothingSlug}
                     className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
                       isEquipped
                         ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500"
                         : "bg-slate-700 text-slate-300 border border-slate-600"
                     }`}
                   >
-                    {clothingName}
+                    {displayName}
                     {isEquipped ? (
                       <button
                         type="button"
-                        onClick={() => unequipClothing(clothingName)}
+                        onClick={() => unequipClothing(clothingSlug)}
                         className="ml-1 text-xs text-red-400 hover:text-red-300"
                         title="Remover"
                       >
@@ -967,7 +974,7 @@ export default function Shop() {
                     ) : (
                       <button
                         type="button"
-                        onClick={() => equipClothing(clothingName)}
+                        onClick={() => equipClothing(clothingSlug)}
                         className="ml-1 text-xs text-emerald-400 hover:text-emerald-300"
                         title="Vestir"
                       >
@@ -1174,20 +1181,20 @@ export default function Shop() {
                     {/* Buy Button */}
                     <Button
                       onClick={() => {
-                        if (isClothingCategory(item.category) && gameState.ownedClothing.includes(item.name)) {
-                          if (gameState.equippedItems.includes(item.name)) {
-                            unequipClothing(item.name);
+                        if (isClothingCategory(item.category) && gameState.ownedClothing.includes(item.slug)) {
+                          if (gameState.equippedItems.includes(item.slug)) {
+                            unequipClothing(item.slug);
                           } else {
-                            equipClothing(item.name);
+                            equipClothing(item.slug);
                           }
                         } else {
                           buyItem(item);
                         }
                       }}
-                      disabled={!isClothingCategory(item.category) || !gameState.ownedClothing.includes(item.name) ? !canAfford : false}
+                      disabled={!isClothingCategory(item.category) || !gameState.ownedClothing.includes(item.slug) ? !canAfford : false}
                       className={`w-full rounded-xl font-semibold transition-all duration-200 ${
-                        isClothingCategory(item.category) && gameState.ownedClothing.includes(item.name)
-                          ? gameState.equippedItems.includes(item.name)
+                        isClothingCategory(item.category) && gameState.ownedClothing.includes(item.slug)
+                          ? gameState.equippedItems.includes(item.slug)
                             ? "bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-lg shadow-emerald-500/20"
                             : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-500/20"
                           : canAfford
@@ -1195,8 +1202,8 @@ export default function Shop() {
                             : "bg-white/5 text-slate-500 cursor-not-allowed"
                       }`}
                     >
-                      {isClothingCategory(item.category) && gameState.ownedClothing.includes(item.name)
-                        ? gameState.equippedItems.includes(item.name)
+                      {isClothingCategory(item.category) && gameState.ownedClothing.includes(item.slug)
+                        ? gameState.equippedItems.includes(item.slug)
                           ? "Vestindo ✓"
                           : "Vestir"
                         : canAfford ? "Comprar" : "Sem moedas"}

@@ -78,6 +78,7 @@ export function useAuth(options?: UseAuthOptions) {
 
   return {
     ...state,
+    role: meQuery.data?.role ?? null,
     refresh: () => meQuery.refetch(),
     logout,
   };

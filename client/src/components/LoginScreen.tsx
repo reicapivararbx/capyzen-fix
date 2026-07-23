@@ -31,7 +31,7 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
       setLoginError('');
       setLoginUsername('');
       setLoginPassword('');
-      onLogin({ username: loginUsername, password: '' });
+      onLogin({ username: loginUsername });
     },
     onError: (error) => {
       setLoginError(error.message || 'Usuário ou senha incorretos!');
@@ -46,7 +46,7 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
       setCreateConfirmPassword('');
       setCreateEmail('');
       setIsCreatingUser(false);
-      onCreateUser({ username: createUsername, password: '' });
+      onCreateUser({ username: createUsername });
     },
     onError: (error) => {
       setCreateError(error.message || 'Erro ao criar usuário!');
