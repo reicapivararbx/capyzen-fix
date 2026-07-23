@@ -707,7 +707,7 @@ export default function Shop() {
           addToast("⚠️ Roupa já adquirida!", "error");
           return;
         }
-      } else if (gameState.equippedItems.includes(item.slug)) {
+      } else if (item.category !== 'Comida' && item.category !== 'Boost' && gameState.equippedItems.includes(item.slug)) {
         addToast("⚠️ Item já adquirido!", "error");
         return;
       }
@@ -724,7 +724,7 @@ export default function Shop() {
       if (isClothing) {
         partial.ownedClothing = [...gameState.ownedClothing, item.slug];
         partial.equippedItems = [...gameState.equippedItems, item.slug];
-      } else {
+      } else if (item.category !== 'Comida' && item.category !== 'Boost') {
         partial.equippedItems = [...gameState.equippedItems, item.slug];
       }
 
@@ -1178,36 +1178,37 @@ export default function Shop() {
                       </div>
                     </div>
 
-                    {/* Buy Button */}
-                    <Button
-                      onClick={() => {
-                        if (isClothingCategory(item.category) && gameState.ownedClothing.includes(item.slug)) {
-                          if (gameState.equippedItems.includes(item.slug)) {
-                            unequipClothing(item.slug);
-                          } else {
-                            equipClothing(item.slug);
-                          }
-                        } else {
-                          buyItem(item);
-                        }
-                      }}
-                      disabled={!isClothingCategory(item.category) || !gameState.ownedClothing.includes(item.slug) ? !canAfford : false}
-                      className={`w-full rounded-xl font-semibold transition-all duration-200 ${
-                        isClothingCategory(item.category) && gameState.ownedClothing.includes(item.slug)
-                          ? gameState.equippedItems.includes(item.slug)
-                            ? "bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-lg shadow-emerald-500/20"
-                            : "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-500/20"
-                          : canAfford
-                            ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40"
-                            : "bg-white/5 text-slate-500 cursor-not-allowed"
-                      }`}
-                    >
-                      {isClothingCategory(item.category) && gameState.ownedClothing.includes(item.slug)
-                        ? gameState.equippedItems.includes(item.slug)
-                          ? "Vestindo ✓"
-                          : "Vestir"
-                        : canAfford ? "Comprar" : "Sem moedas"}
-                    </Button>
+                    {(() => {
+                      const isEquipped = gameState.equippedItems.includes(item.slug);
+                      const isOwned = isClothingCategory(item.category)
+                        ? gameState.ownedClothing.includes(item.slug)
+                        : isEquipped;
+                      return (
+                        <Button
+                          onClick={() => {
+                            if (isEquipped) {
+                              unequipClothing(item.slug);
+                            } else if (isOwned) {
+                              equipClothing(item.slug);
+                            } else {
+                              buyItem(item);
+                            }
+                          }}
+                          disabled={!canAfford && !isEquipped && !isOwned}
+                          className={`w-full rounded-xl font-semibold transition-all duration-200 ${
+                            isEquipped
+                              ? "bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white shadow-lg shadow-emerald-500/20"
+                              : isOwned
+                                ? "bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white shadow-lg shadow-blue-500/20"
+                                : canAfford
+                                  ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/40"
+                                  : "bg-white/5 text-slate-500 cursor-not-allowed"
+                          }`}
+                        >
+                          {isEquipped ? "Equipado ✓" : isOwned ? "Equipar" : canAfford ? "Comprar" : "Sem moedas"}
+                        </Button>
+                      );
+                    })()}
                   </div>
                 );
               })}

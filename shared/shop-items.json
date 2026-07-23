@@ -5,7 +5,8 @@
     "icon": "🍎",
     "price": 215,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "icon": "🍌",
     "price": 265,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "icon": "🍑",
     "price": 260,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "icon": "🍓",
     "price": 50,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 5,
@@ -37,7 +41,8 @@
     "icon": "🍇",
     "price": 30,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 6,
@@ -45,7 +50,8 @@
     "icon": "🍊",
     "price": 385,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 7,
@@ -53,7 +59,8 @@
     "icon": "🍍",
     "price": 320,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 8,
@@ -61,7 +68,8 @@
     "icon": "🥭",
     "price": 25,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 9,
@@ -69,7 +77,8 @@
     "icon": "🍐",
     "price": 125,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 10,
@@ -77,7 +86,8 @@
     "icon": "🍉",
     "price": 310,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 11,
@@ -85,7 +95,8 @@
     "icon": "🥝",
     "price": 400,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 12,
@@ -93,7 +104,8 @@
     "icon": "🍋",
     "price": 305,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 13,
@@ -101,7 +113,8 @@
     "icon": "🥥",
     "price": 400,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 14,
@@ -109,7 +122,8 @@
     "icon": "🫐",
     "price": 250,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 15,
@@ -117,7 +131,8 @@
     "icon": "🍹",
     "price": 345,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 16,
@@ -125,7 +140,8 @@
     "icon": "🌮",
     "price": 150,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 17,
@@ -133,7 +149,8 @@
     "icon": "🍊",
     "price": 235,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 18,
@@ -141,7 +158,8 @@
     "icon": "🥜",
     "price": 250,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 19,
@@ -149,7 +167,8 @@
     "icon": "🍪",
     "price": 180,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 20,
@@ -157,7 +176,8 @@
     "icon": "🥔",
     "price": 65,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 21,
@@ -165,7 +185,8 @@
     "icon": "🍈",
     "price": 220,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 22,
@@ -173,7 +194,8 @@
     "icon": "🧃",
     "price": 155,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 23,
@@ -181,7 +203,8 @@
     "icon": "🍑",
     "price": 400,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 24,
@@ -189,7 +212,8 @@
     "icon": "🧅",
     "price": 240,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 25,
@@ -197,7 +221,8 @@
     "icon": "🥭",
     "price": 140,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 26,
@@ -205,7 +230,8 @@
     "icon": "🍺",
     "price": 405,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 27,
@@ -213,7 +239,8 @@
     "icon": "🍪",
     "price": 275,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 28,
@@ -221,7 +248,8 @@
     "icon": "🧀",
     "price": 455,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 29,
@@ -229,7 +257,8 @@
     "icon": "🫐",
     "price": 220,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 30,
@@ -237,7 +266,8 @@
     "icon": "🥗",
     "price": 275,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 31,
@@ -245,7 +275,8 @@
     "icon": "🥕",
     "price": 395,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 32,
@@ -253,7 +284,8 @@
     "icon": "🥦",
     "price": 330,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 33,
@@ -261,7 +293,8 @@
     "icon": "🥬",
     "price": 400,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 34,
@@ -269,7 +302,8 @@
     "icon": "🍅",
     "price": 115,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 35,
@@ -277,7 +311,8 @@
     "icon": "🥔",
     "price": 290,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 36,
@@ -285,7 +320,8 @@
     "icon": "🧅",
     "price": 485,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 37,
@@ -293,7 +329,8 @@
     "icon": "🥭",
     "price": 235,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 38,
@@ -301,7 +338,8 @@
     "icon": "🌶️",
     "price": 25,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 39,
@@ -309,7 +347,8 @@
     "icon": "🧁",
     "price": 420,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 40,
@@ -317,7 +356,8 @@
     "icon": "🍆",
     "price": 90,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 41,
@@ -325,7 +365,8 @@
     "icon": "🥬",
     "price": 290,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 42,
@@ -333,7 +374,8 @@
     "icon": "🥬",
     "price": 290,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 43,
@@ -341,7 +383,8 @@
     "icon": "🥬",
     "price": 55,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 44,
@@ -349,7 +392,8 @@
     "icon": "🫒",
     "price": 440,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 45,
@@ -357,7 +401,8 @@
     "icon": "🫒",
     "price": 245,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 46,
@@ -365,7 +410,8 @@
     "icon": "🥒",
     "price": 340,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 47,
@@ -373,7 +419,8 @@
     "icon": "🌽",
     "price": 265,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 48,
@@ -381,7 +428,8 @@
     "icon": "🟢",
     "price": 270,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 49,
@@ -389,7 +437,8 @@
     "icon": "🫛",
     "price": 220,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 50,
@@ -397,7 +446,8 @@
     "icon": "🍄",
     "price": 250,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 51,
@@ -405,7 +455,8 @@
     "icon": "🌿",
     "price": 245,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 52,
@@ -413,7 +464,8 @@
     "icon": "🫐",
     "price": 85,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 53,
@@ -421,7 +473,8 @@
     "icon": "🥩",
     "price": 480,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 54,
@@ -429,7 +482,8 @@
     "icon": "🥔",
     "price": 390,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 55,
@@ -437,7 +491,8 @@
     "icon": "🥔",
     "price": 450,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 56,
@@ -445,7 +500,8 @@
     "icon": "🥔",
     "price": 150,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 57,
@@ -453,7 +509,8 @@
     "icon": "🫚",
     "price": 185,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 58,
@@ -461,7 +518,8 @@
     "icon": "🌽",
     "price": 145,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 59,
@@ -469,7 +527,8 @@
     "icon": "🥛",
     "price": 380,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 60,
@@ -477,7 +536,8 @@
     "icon": "🍪",
     "price": 310,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 61,
@@ -485,7 +545,8 @@
     "icon": "🍗",
     "price": 260,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 62,
@@ -493,7 +554,8 @@
     "icon": "🥩",
     "price": 240,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 63,
@@ -501,7 +563,8 @@
     "icon": "🐟",
     "price": 255,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 64,
@@ -509,7 +572,8 @@
     "icon": "🥓",
     "price": 180,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 65,
@@ -517,7 +581,8 @@
     "icon": "🥩",
     "price": 400,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 66,
@@ -525,7 +590,8 @@
     "icon": "🦃",
     "price": 205,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 67,
@@ -533,7 +599,8 @@
     "icon": "🦆",
     "price": 485,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 68,
@@ -541,7 +608,8 @@
     "icon": "🐇",
     "price": 455,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 69,
@@ -549,7 +617,8 @@
     "icon": "🍕",
     "price": 365,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 70,
@@ -557,7 +626,8 @@
     "icon": "🍶",
     "price": 205,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 71,
@@ -565,7 +635,8 @@
     "icon": "🐟",
     "price": 405,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 72,
@@ -573,7 +644,8 @@
     "icon": "🐟",
     "price": 30,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 73,
@@ -581,7 +653,8 @@
     "icon": "🦐",
     "price": 390,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 74,
@@ -589,7 +662,8 @@
     "icon": "🦞",
     "price": 370,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 75,
@@ -597,7 +671,8 @@
     "icon": "🦀",
     "price": 205,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 76,
@@ -605,7 +680,8 @@
     "icon": "🍐",
     "price": 265,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 77,
@@ -613,7 +689,8 @@
     "icon": "🥔",
     "price": 265,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 78,
@@ -621,7 +698,8 @@
     "icon": "🍺",
     "price": 455,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 79,
@@ -629,7 +707,8 @@
     "icon": "🐙",
     "price": 440,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 80,
@@ -637,7 +716,8 @@
     "icon": "🍹",
     "price": 60,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 81,
@@ -645,7 +725,8 @@
     "icon": "🍫",
     "price": 245,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 82,
@@ -653,7 +734,8 @@
     "icon": "🍺",
     "price": 85,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 83,
@@ -661,7 +743,8 @@
     "icon": "🍇",
     "price": 345,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 84,
@@ -669,7 +752,8 @@
     "icon": "🥔",
     "price": 250,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 85,
@@ -677,7 +761,8 @@
     "icon": "🥛",
     "price": 330,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 86,
@@ -685,7 +770,8 @@
     "icon": "🧀",
     "price": 340,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 87,
@@ -693,7 +779,8 @@
     "icon": "🥛",
     "price": 445,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 88,
@@ -701,7 +788,8 @@
     "icon": "🧈",
     "price": 445,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 89,
@@ -709,7 +797,8 @@
     "icon": "🥛",
     "price": 205,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 90,
@@ -717,7 +806,8 @@
     "icon": "🧀",
     "price": 330,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 91,
@@ -725,7 +815,8 @@
     "icon": "🧀",
     "price": 455,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 92,
@@ -733,7 +824,8 @@
     "icon": "🧀",
     "price": 30,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 93,
@@ -741,7 +833,8 @@
     "icon": "🧀",
     "price": 45,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 94,
@@ -749,7 +842,8 @@
     "icon": "🍉",
     "price": 335,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 95,
@@ -757,7 +851,8 @@
     "icon": "🍞",
     "price": 390,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 96,
@@ -765,7 +860,8 @@
     "icon": "🥐",
     "price": 60,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 97,
@@ -773,7 +869,8 @@
     "icon": "🥂",
     "price": 95,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 98,
@@ -781,7 +878,8 @@
     "icon": "🧅",
     "price": 25,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 99,
@@ -789,7 +887,8 @@
     "icon": "🌽",
     "price": 415,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 100,
@@ -797,7 +896,8 @@
     "icon": "🍚",
     "price": 195,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 101,
@@ -805,7 +905,8 @@
     "icon": "🫘",
     "price": 230,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 102,
@@ -813,7 +914,8 @@
     "icon": "🥜",
     "price": 135,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 103,
@@ -821,7 +923,8 @@
     "icon": "🍋",
     "price": 300,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 104,
@@ -829,7 +932,8 @@
     "icon": "🟢",
     "price": 100,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 105,
@@ -837,7 +941,8 @@
     "icon": "🌾",
     "price": 320,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 106,
@@ -845,7 +950,8 @@
     "icon": "🥣",
     "price": 325,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 107,
@@ -853,7 +959,8 @@
     "icon": "🥝",
     "price": 265,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 108,
@@ -861,7 +968,8 @@
     "icon": "🍿",
     "price": 130,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 109,
@@ -869,7 +977,8 @@
     "icon": "🌽",
     "price": 140,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 110,
@@ -877,7 +986,8 @@
     "icon": "🥂",
     "price": 140,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 111,
@@ -885,7 +995,8 @@
     "icon": "🥂",
     "price": 420,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 112,
@@ -893,7 +1004,8 @@
     "icon": "🍋",
     "price": 155,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 113,
@@ -901,7 +1013,8 @@
     "icon": "🥬",
     "price": 45,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 114,
@@ -909,7 +1022,8 @@
     "icon": "🍿",
     "price": 310,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 115,
@@ -917,7 +1031,8 @@
     "icon": "🍿",
     "price": 225,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 116,
@@ -925,7 +1040,8 @@
     "icon": "🥔",
     "price": 245,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 117,
@@ -933,7 +1049,8 @@
     "icon": "🥨",
     "price": 110,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 118,
@@ -941,7 +1058,8 @@
     "icon": "🌮",
     "price": 445,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 119,
@@ -949,7 +1067,8 @@
     "icon": "🥔",
     "price": 65,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 120,
@@ -957,7 +1076,8 @@
     "icon": "🥜",
     "price": 205,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 121,
@@ -965,7 +1085,8 @@
     "icon": "🌰",
     "price": 195,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 122,
@@ -973,7 +1094,8 @@
     "icon": "🌰",
     "price": 160,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 123,
@@ -981,7 +1103,8 @@
     "icon": "🥜",
     "price": 20,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 124,
@@ -989,7 +1112,8 @@
     "icon": "🥜",
     "price": 150,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 125,
@@ -997,7 +1121,8 @@
     "icon": "🍹",
     "price": 300,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 126,
@@ -1005,7 +1130,8 @@
     "icon": "🥛",
     "price": 320,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 127,
@@ -1013,7 +1139,8 @@
     "icon": "🍪",
     "price": 470,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 128,
@@ -1021,7 +1148,8 @@
     "icon": "🍪",
     "price": 405,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 129,
@@ -1029,7 +1157,8 @@
     "icon": "🍉",
     "price": 320,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 130,
@@ -1037,7 +1166,8 @@
     "icon": "🧀",
     "price": 335,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 131,
@@ -1045,7 +1175,8 @@
     "icon": "🥟",
     "price": 325,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 132,
@@ -1053,7 +1184,8 @@
     "icon": "🥟",
     "price": 355,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 133,
@@ -1061,7 +1193,8 @@
     "icon": "🥂",
     "price": 330,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 134,
@@ -1069,7 +1202,8 @@
     "icon": "🥙",
     "price": 330,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 135,
@@ -1077,7 +1211,8 @@
     "icon": "🎂",
     "price": 170,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 136,
@@ -1085,7 +1220,8 @@
     "icon": "🥧",
     "price": 25,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 137,
@@ -1093,7 +1229,8 @@
     "icon": "🍦",
     "price": 195,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 138,
@@ -1101,7 +1238,8 @@
     "icon": "🍮",
     "price": 55,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 139,
@@ -1109,7 +1247,8 @@
     "icon": "🍫",
     "price": 175,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 140,
@@ -1117,7 +1256,8 @@
     "icon": "🍫",
     "price": 100,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 141,
@@ -1125,7 +1265,8 @@
     "icon": "🍬",
     "price": 75,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 142,
@@ -1133,7 +1274,8 @@
     "icon": "🍬",
     "price": 460,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 143,
@@ -1141,7 +1283,8 @@
     "icon": "🍹",
     "price": 280,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 144,
@@ -1149,7 +1292,8 @@
     "icon": "🥦",
     "price": 150,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 145,
@@ -1157,7 +1301,8 @@
     "icon": "🍩",
     "price": 475,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 146,
@@ -1165,7 +1310,8 @@
     "icon": "🧇",
     "price": 420,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 147,
@@ -1173,7 +1319,8 @@
     "icon": "🥞",
     "price": 390,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 148,
@@ -1181,7 +1328,8 @@
     "icon": "🥞",
     "price": 420,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 149,
@@ -1189,7 +1337,8 @@
     "icon": "🍮",
     "price": 250,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 150,
@@ -1197,7 +1346,8 @@
     "icon": "🍫",
     "price": 80,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 151,
@@ -1205,7 +1355,8 @@
     "icon": "🎂",
     "price": 450,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 152,
@@ -1213,7 +1364,8 @@
     "icon": "🍰",
     "price": 445,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 153,
@@ -1221,7 +1373,8 @@
     "icon": "🍵",
     "price": 195,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 154,
@@ -1229,7 +1382,8 @@
     "icon": "🥐",
     "price": 210,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 155,
@@ -1237,7 +1391,8 @@
     "icon": "🍊",
     "price": 145,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 156,
@@ -1245,7 +1400,8 @@
     "icon": "🍎",
     "price": 75,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 157,
@@ -1253,7 +1409,8 @@
     "icon": "🍇",
     "price": 200,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 158,
@@ -1261,7 +1418,8 @@
     "icon": "🧃",
     "price": 310,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 159,
@@ -1269,7 +1427,8 @@
     "icon": "🍋",
     "price": 430,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 160,
@@ -1277,7 +1436,8 @@
     "icon": "🥥",
     "price": 65,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 161,
@@ -1285,7 +1445,8 @@
     "icon": "🍵",
     "price": 250,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 162,
@@ -1293,7 +1454,8 @@
     "icon": "🍵",
     "price": 325,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 163,
@@ -1301,7 +1463,8 @@
     "icon": "🍵",
     "price": 175,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 164,
@@ -1309,7 +1472,8 @@
     "icon": "☕",
     "price": 125,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 165,
@@ -1317,7 +1481,8 @@
     "icon": "☕",
     "price": 335,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 166,
@@ -1325,7 +1490,8 @@
     "icon": "🍫",
     "price": 475,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 167,
@@ -1333,7 +1499,8 @@
     "icon": "🥭",
     "price": 340,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 168,
@@ -1341,7 +1508,8 @@
     "icon": "🥤",
     "price": 80,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 169,
@@ -1349,7 +1517,8 @@
     "icon": "🥤",
     "price": 495,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 170,
@@ -1357,7 +1526,8 @@
     "icon": "💧",
     "price": 165,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 171,
@@ -1365,7 +1535,8 @@
     "icon": "⚡",
     "price": 70,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 172,
@@ -1373,7 +1544,8 @@
     "icon": "💧",
     "price": 130,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 173,
@@ -1381,7 +1553,8 @@
     "icon": "🍷",
     "price": 80,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 174,
@@ -1389,7 +1562,8 @@
     "icon": "🍺",
     "price": 240,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 175,
@@ -1397,7 +1571,8 @@
     "icon": "🍎",
     "price": 355,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 176,
@@ -1405,7 +1580,8 @@
     "icon": "🥭",
     "price": 225,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 177,
@@ -1413,7 +1589,8 @@
     "icon": "🍇",
     "price": 390,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 178,
@@ -1421,7 +1598,8 @@
     "icon": "🍩",
     "price": 465,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 179,
@@ -1429,7 +1607,8 @@
     "icon": "🥗",
     "price": 60,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 180,
@@ -1437,7 +1616,8 @@
     "icon": "🍌",
     "price": 220,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 181,
@@ -1445,7 +1625,8 @@
     "icon": "🍑",
     "price": 25,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 182,
@@ -1453,7 +1634,8 @@
     "icon": "🥭",
     "price": 120,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 183,
@@ -1461,7 +1643,8 @@
     "icon": "🍶",
     "price": 235,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 184,
@@ -1469,7 +1652,8 @@
     "icon": "🎂",
     "price": 195,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 185,
@@ -1477,7 +1661,8 @@
     "icon": "🥭",
     "price": 200,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 186,
@@ -1485,7 +1670,8 @@
     "icon": "🍓",
     "price": 470,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 187,
@@ -1493,7 +1679,8 @@
     "icon": "🍎",
     "price": 215,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 188,
@@ -1501,7 +1688,8 @@
     "icon": "🫐",
     "price": 105,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 189,
@@ -1509,7 +1697,8 @@
     "icon": "🍐",
     "price": 495,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 190,
@@ -1517,7 +1706,8 @@
     "icon": "🍍",
     "price": 55,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 191,
@@ -1525,7 +1715,8 @@
     "icon": "🍓",
     "price": 340,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 192,
@@ -1533,7 +1724,8 @@
     "icon": "🥥",
     "price": 20,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 193,
@@ -1541,7 +1733,8 @@
     "icon": "🍋",
     "price": 410,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 194,
@@ -1549,7 +1742,8 @@
     "icon": "🍵",
     "price": 135,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 195,
@@ -1557,7 +1751,8 @@
     "icon": "🍌",
     "price": 300,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 196,
@@ -1565,7 +1760,8 @@
     "icon": "🍈",
     "price": 45,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 197,
@@ -1573,7 +1769,8 @@
     "icon": "🥥",
     "price": 310,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 198,
@@ -1581,7 +1778,8 @@
     "icon": "🥔",
     "price": 425,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 199,
@@ -1589,7 +1787,8 @@
     "icon": "🍵",
     "price": 405,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 200,
@@ -1597,7 +1796,8 @@
     "icon": "🍎",
     "price": 470,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 201,
@@ -1605,7 +1805,8 @@
     "icon": "🍑",
     "price": 150,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 202,
@@ -1613,7 +1814,8 @@
     "icon": "🥭",
     "price": 75,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 203,
@@ -1621,7 +1823,8 @@
     "icon": "🍑",
     "price": 140,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 204,
@@ -1629,7 +1832,8 @@
     "icon": "🍓",
     "price": 65,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 205,
@@ -1637,7 +1841,8 @@
     "icon": "🍐",
     "price": 75,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 206,
@@ -1645,7 +1850,8 @@
     "icon": "🍋",
     "price": 195,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 207,
@@ -1653,7 +1859,8 @@
     "icon": "🍋",
     "price": 310,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 208,
@@ -1661,7 +1868,8 @@
     "icon": "🍍",
     "price": 20,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 209,
@@ -1669,7 +1877,8 @@
     "icon": "🍑",
     "price": 145,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 210,
@@ -1677,7 +1886,8 @@
     "icon": "🥓",
     "price": 75,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 211,
@@ -1685,7 +1895,8 @@
     "icon": "🍊",
     "price": 70,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 212,
@@ -1693,7 +1904,8 @@
     "icon": "🥥",
     "price": 255,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 213,
@@ -1701,7 +1913,8 @@
     "icon": "🥩",
     "price": 410,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 214,
@@ -1709,7 +1922,8 @@
     "icon": "🥝",
     "price": 315,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 215,
@@ -1717,7 +1931,8 @@
     "icon": "🥭",
     "price": 240,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 216,
@@ -1725,7 +1940,8 @@
     "icon": "🥝",
     "price": 125,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 217,
@@ -1733,7 +1949,8 @@
     "icon": "🍐",
     "price": 30,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 218,
@@ -1741,7 +1958,8 @@
     "icon": "🍍",
     "price": 165,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 219,
@@ -1749,7 +1967,8 @@
     "icon": "🍍",
     "price": 340,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 220,
@@ -1757,7 +1976,8 @@
     "icon": "🥥",
     "price": 40,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 221,
@@ -1765,7 +1985,8 @@
     "icon": "🍇",
     "price": 445,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 222,
@@ -1773,7 +1994,8 @@
     "icon": "🍇",
     "price": 230,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 223,
@@ -1781,7 +2003,8 @@
     "icon": "🍇",
     "price": 260,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 224,
@@ -1789,7 +2012,8 @@
     "icon": "🧅",
     "price": 470,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 225,
@@ -1797,7 +2021,8 @@
     "icon": "🍇",
     "price": 320,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 226,
@@ -1805,7 +2030,8 @@
     "icon": "🍋",
     "price": 75,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 227,
@@ -1813,7 +2039,8 @@
     "icon": "🍇",
     "price": 330,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 228,
@@ -1821,7 +2048,8 @@
     "icon": "🍑",
     "price": 290,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 229,
@@ -1829,7 +2057,8 @@
     "icon": "🍓",
     "price": 205,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 230,
@@ -1837,7 +2066,8 @@
     "icon": "🍊",
     "price": 280,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 231,
@@ -1845,7 +2075,8 @@
     "icon": "🌯",
     "price": 240,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 232,
@@ -1853,7 +2084,8 @@
     "icon": "🥥",
     "price": 230,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 233,
@@ -1861,7 +2093,8 @@
     "icon": "🍶",
     "price": 415,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 234,
@@ -1869,7 +2102,8 @@
     "icon": "🍫",
     "price": 345,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 235,
@@ -1877,7 +2111,8 @@
     "icon": "🍞",
     "price": 455,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 236,
@@ -1885,7 +2120,8 @@
     "icon": "🍓",
     "price": 240,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 237,
@@ -1893,7 +2129,8 @@
     "icon": "🥝",
     "price": 220,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 238,
@@ -1901,7 +2138,8 @@
     "icon": "🍉",
     "price": 435,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 239,
@@ -1909,7 +2147,8 @@
     "icon": "🍊",
     "price": 215,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 240,
@@ -1917,7 +2156,8 @@
     "icon": "🍎",
     "price": 385,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 241,
@@ -1925,7 +2165,8 @@
     "icon": "🧅",
     "price": 170,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 242,
@@ -1933,7 +2174,8 @@
     "icon": "🥒",
     "price": 350,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 243,
@@ -1941,7 +2183,8 @@
     "icon": "🍉",
     "price": 500,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 244,
@@ -1949,7 +2192,8 @@
     "icon": "🍇",
     "price": 360,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 245,
@@ -1957,7 +2201,8 @@
     "icon": "🍊",
     "price": 45,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 246,
@@ -1965,7 +2210,8 @@
     "icon": "🍊",
     "price": 435,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 247,
@@ -1973,7 +2219,8 @@
     "icon": "🍬",
     "price": 230,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 248,
@@ -1981,7 +2228,8 @@
     "icon": "🍓",
     "price": 390,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 249,
@@ -1989,7 +2237,8 @@
     "icon": "🍉",
     "price": 425,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 250,
@@ -1997,7 +2246,8 @@
     "icon": "🍌",
     "price": 295,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 251,
@@ -2005,7 +2255,8 @@
     "icon": "🌭",
     "price": 310,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 252,
@@ -2013,7 +2264,8 @@
     "icon": "🍑",
     "price": 180,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 253,
@@ -2021,7 +2273,8 @@
     "icon": "🍑",
     "price": 220,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 254,
@@ -2029,7 +2282,8 @@
     "icon": "🍇",
     "price": 455,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 255,
@@ -2037,7 +2291,8 @@
     "icon": "🌽",
     "price": 455,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 256,
@@ -2045,7 +2300,8 @@
     "icon": "🍐",
     "price": 315,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 257,
@@ -2053,7 +2309,8 @@
     "icon": "🍍",
     "price": 190,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 258,
@@ -2061,7 +2318,8 @@
     "icon": "🍉",
     "price": 305,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 259,
@@ -2069,7 +2327,8 @@
     "icon": "🍋",
     "price": 120,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 260,
@@ -2077,7 +2336,8 @@
     "icon": "🍉",
     "price": 345,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 261,
@@ -2085,7 +2345,8 @@
     "icon": "🍓",
     "price": 445,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 262,
@@ -2093,7 +2354,8 @@
     "icon": "🥭",
     "price": 190,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 263,
@@ -2101,7 +2363,8 @@
     "icon": "🥝",
     "price": 200,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 264,
@@ -2109,7 +2372,8 @@
     "icon": "🍕",
     "price": 400,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 265,
@@ -2117,7 +2381,8 @@
     "icon": "🍶",
     "price": 125,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 266,
@@ -2125,7 +2390,8 @@
     "icon": "🍎",
     "price": 295,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 267,
@@ -2133,7 +2399,8 @@
     "icon": "🍌",
     "price": 325,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 268,
@@ -2141,7 +2408,8 @@
     "icon": "🍑",
     "price": 25,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 269,
@@ -2149,7 +2417,8 @@
     "icon": "🥝",
     "price": 485,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 270,
@@ -2157,7 +2426,8 @@
     "icon": "🥕",
     "price": 25,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 271,
@@ -2165,7 +2435,8 @@
     "icon": "🍐",
     "price": 370,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 272,
@@ -2173,7 +2444,8 @@
     "icon": "🍍",
     "price": 480,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 273,
@@ -2181,7 +2453,8 @@
     "icon": "🥥",
     "price": 190,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 274,
@@ -2189,7 +2462,8 @@
     "icon": "🥭",
     "price": 455,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 275,
@@ -2197,7 +2471,8 @@
     "icon": "🫐",
     "price": 300,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 276,
@@ -2205,7 +2480,8 @@
     "icon": "🍓",
     "price": 45,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 277,
@@ -2213,7 +2489,8 @@
     "icon": "🫐",
     "price": 390,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 278,
@@ -2221,7 +2498,8 @@
     "icon": "🫐",
     "price": 55,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 279,
@@ -2229,7 +2507,8 @@
     "icon": "🥜",
     "price": 120,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 280,
@@ -2237,7 +2516,8 @@
     "icon": "🍓",
     "price": 240,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 281,
@@ -2245,7 +2525,8 @@
     "icon": "🥥",
     "price": 90,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 282,
@@ -2253,7 +2534,8 @@
     "icon": "🍓",
     "price": 170,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 283,
@@ -2261,7 +2543,8 @@
     "icon": "🍍",
     "price": 405,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 284,
@@ -2269,7 +2552,8 @@
     "icon": "🍷",
     "price": 315,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 285,
@@ -2277,7 +2561,8 @@
     "icon": "🍇",
     "price": 35,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 286,
@@ -2285,7 +2570,8 @@
     "icon": "🍊",
     "price": 90,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 287,
@@ -2293,7 +2579,8 @@
     "icon": "🥕",
     "price": 35,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 288,
@@ -2301,7 +2588,8 @@
     "icon": "🍑",
     "price": 235,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 289,
@@ -2309,7 +2597,8 @@
     "icon": "🥐",
     "price": 260,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 290,
@@ -2317,7 +2606,8 @@
     "icon": "🍌",
     "price": 220,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 291,
@@ -2325,7 +2615,8 @@
     "icon": "🍑",
     "price": 120,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 292,
@@ -2333,7 +2624,8 @@
     "icon": "🍊",
     "price": 70,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 293,
@@ -2341,7 +2633,8 @@
     "icon": "🌽",
     "price": 230,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 294,
@@ -2349,7 +2642,8 @@
     "icon": "🍍",
     "price": 355,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 295,
@@ -2357,7 +2651,8 @@
     "icon": "🍌",
     "price": 260,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 296,
@@ -2365,7 +2660,8 @@
     "icon": "🥥",
     "price": 350,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 297,
@@ -2373,7 +2669,8 @@
     "icon": "🥥",
     "price": 35,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 298,
@@ -2381,7 +2678,8 @@
     "icon": "🍓",
     "price": 210,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 299,
@@ -2389,7 +2687,8 @@
     "icon": "🫐",
     "price": 15,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 300,
@@ -2397,7 +2696,8 @@
     "icon": "🍇",
     "price": 165,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 301,
@@ -2405,7 +2705,8 @@
     "icon": "🍉",
     "price": 400,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 302,
@@ -2413,7 +2714,8 @@
     "icon": "🍌",
     "price": 400,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 303,
@@ -2421,7 +2723,8 @@
     "icon": "🥝",
     "price": 160,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 304,
@@ -2429,7 +2732,8 @@
     "icon": "🍌",
     "price": 70,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 305,
@@ -2437,7 +2741,8 @@
     "icon": "🥥",
     "price": 265,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 306,
@@ -2445,7 +2750,8 @@
     "icon": "🍌",
     "price": 75,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 307,
@@ -2453,7 +2759,8 @@
     "icon": "🍊",
     "price": 280,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 308,
@@ -2461,7 +2768,8 @@
     "icon": "🥛",
     "price": 265,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 309,
@@ -2469,7 +2777,8 @@
     "icon": "🥭",
     "price": 350,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 310,
@@ -2477,7 +2786,8 @@
     "icon": "🍓",
     "price": 45,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 311,
@@ -2485,7 +2795,8 @@
     "icon": "🍞",
     "price": 450,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 312,
@@ -2493,7 +2804,8 @@
     "icon": "🍹",
     "price": 20,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 313,
@@ -2501,7 +2813,8 @@
     "icon": "🫐",
     "price": 50,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 314,
@@ -2509,7 +2822,8 @@
     "icon": "🍐",
     "price": 305,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 315,
@@ -2517,7 +2831,8 @@
     "icon": "🥝",
     "price": 305,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 316,
@@ -2525,7 +2840,8 @@
     "icon": "🍐",
     "price": 375,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 317,
@@ -2533,7 +2849,8 @@
     "icon": "🍇",
     "price": 160,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 318,
@@ -2541,7 +2858,8 @@
     "icon": "🧅",
     "price": 215,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 319,
@@ -2549,7 +2867,8 @@
     "icon": "🍑",
     "price": 95,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 320,
@@ -2557,7 +2876,8 @@
     "icon": "🍊",
     "price": 245,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 321,
@@ -2565,7 +2885,8 @@
     "icon": "🍑",
     "price": 235,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 322,
@@ -2573,7 +2894,8 @@
     "icon": "🌮",
     "price": 135,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 323,
@@ -2581,7 +2903,8 @@
     "icon": "🍇",
     "price": 215,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 324,
@@ -2589,7 +2912,8 @@
     "icon": "🍑",
     "price": 50,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 325,
@@ -2597,7 +2921,8 @@
     "icon": "🍋",
     "price": 455,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 326,
@@ -2605,7 +2930,8 @@
     "icon": "🍊",
     "price": 390,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 327,
@@ -2613,7 +2939,8 @@
     "icon": "☕",
     "price": 125,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 328,
@@ -2621,7 +2948,8 @@
     "icon": "🥩",
     "price": 95,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 329,
@@ -2629,7 +2957,8 @@
     "icon": "🥓",
     "price": 335,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 330,
@@ -2637,7 +2966,8 @@
     "icon": "🍓",
     "price": 270,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 331,
@@ -2645,7 +2975,8 @@
     "icon": "🍐",
     "price": 475,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 332,
@@ -2653,7 +2984,8 @@
     "icon": "🍓",
     "price": 190,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 333,
@@ -2661,7 +2993,8 @@
     "icon": "🍐",
     "price": 130,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 334,
@@ -2669,7 +3002,8 @@
     "icon": "🫐",
     "price": 85,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 335,
@@ -2677,7 +3011,8 @@
     "icon": "🥝",
     "price": 100,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 336,
@@ -2685,7 +3020,8 @@
     "icon": "🍐",
     "price": 90,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 337,
@@ -2693,7 +3029,8 @@
     "icon": "🍐",
     "price": 100,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 338,
@@ -2701,7 +3038,8 @@
     "icon": "🍑",
     "price": 245,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 339,
@@ -2709,7 +3047,8 @@
     "icon": "🍐",
     "price": 400,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 340,
@@ -2717,7 +3056,8 @@
     "icon": "🍎",
     "price": 240,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 341,
@@ -2725,7 +3065,8 @@
     "icon": "🍇",
     "price": 340,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 342,
@@ -2733,7 +3074,8 @@
     "icon": "🍊",
     "price": 175,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 343,
@@ -2741,7 +3083,8 @@
     "icon": "🍇",
     "price": 85,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 344,
@@ -2749,7 +3092,8 @@
     "icon": "🍿",
     "price": 250,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 345,
@@ -2757,7 +3101,8 @@
     "icon": "🍓",
     "price": 165,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 346,
@@ -2765,7 +3110,8 @@
     "icon": "🍇",
     "price": 310,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 347,
@@ -2773,7 +3119,8 @@
     "icon": "🍋",
     "price": 190,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 348,
@@ -2781,7 +3128,8 @@
     "icon": "🫐",
     "price": 45,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 349,
@@ -2789,7 +3137,8 @@
     "icon": "🍌",
     "price": 245,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 350,
@@ -2797,7 +3146,8 @@
     "icon": "🍋",
     "price": 30,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 351,
@@ -2805,7 +3155,8 @@
     "icon": "🍋",
     "price": 200,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 352,
@@ -2813,7 +3164,8 @@
     "icon": "🥭",
     "price": 50,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 353,
@@ -2821,7 +3173,8 @@
     "icon": "🍋",
     "price": 325,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 354,
@@ -2829,7 +3182,8 @@
     "icon": "🧀",
     "price": 270,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 355,
@@ -2837,7 +3191,8 @@
     "icon": "🥭",
     "price": 305,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 356,
@@ -2845,7 +3200,8 @@
     "icon": "🍊",
     "price": 500,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 357,
@@ -2853,7 +3209,8 @@
     "icon": "🍎",
     "price": 240,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 358,
@@ -2861,7 +3218,8 @@
     "icon": "🥝",
     "price": 345,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 359,
@@ -2869,7 +3227,8 @@
     "icon": "🥭",
     "price": 175,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 360,
@@ -2877,7 +3236,8 @@
     "icon": "🍊",
     "price": 255,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 361,
@@ -2885,7 +3245,8 @@
     "icon": "🥥",
     "price": 85,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 362,
@@ -2893,7 +3254,8 @@
     "icon": "🥤",
     "price": 240,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 363,
@@ -2901,7 +3263,8 @@
     "icon": "🍍",
     "price": 470,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 364,
@@ -2909,7 +3272,8 @@
     "icon": "🍋",
     "price": 375,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 365,
@@ -2917,7 +3281,8 @@
     "icon": "🥭",
     "price": 270,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 366,
@@ -2925,7 +3290,8 @@
     "icon": "🍎",
     "price": 30,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 367,
@@ -2933,7 +3299,8 @@
     "icon": "🥥",
     "price": 370,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 368,
@@ -2941,7 +3308,8 @@
     "icon": "🍐",
     "price": 235,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 369,
@@ -2949,7 +3317,8 @@
     "icon": "🍐",
     "price": 275,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 370,
@@ -2957,7 +3326,8 @@
     "icon": "🥒",
     "price": 90,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 371,
@@ -2965,7 +3335,8 @@
     "icon": "🌶️",
     "price": 480,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 372,
@@ -2973,7 +3344,8 @@
     "icon": "🍎",
     "price": 220,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 373,
@@ -2981,7 +3353,8 @@
     "icon": "🍐",
     "price": 355,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 374,
@@ -2989,7 +3362,8 @@
     "icon": "🍇",
     "price": 35,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 375,
@@ -2997,7 +3371,8 @@
     "icon": "🍌",
     "price": 180,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 376,
@@ -3005,7 +3380,8 @@
     "icon": "🌽",
     "price": 295,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 377,
@@ -3013,7 +3389,8 @@
     "icon": "🍋",
     "price": 140,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 378,
@@ -3021,7 +3398,8 @@
     "icon": "🫐",
     "price": 455,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 379,
@@ -3029,7 +3407,8 @@
     "icon": "🥥",
     "price": 180,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 380,
@@ -3037,7 +3416,8 @@
     "icon": "🍐",
     "price": 310,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 381,
@@ -3045,7 +3425,8 @@
     "icon": "🫐",
     "price": 480,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 382,
@@ -3053,7 +3434,8 @@
     "icon": "🍐",
     "price": 170,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 383,
@@ -3061,7 +3443,8 @@
     "icon": "🍋",
     "price": 315,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 384,
@@ -3069,7 +3452,8 @@
     "icon": "🍑",
     "price": 170,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 385,
@@ -3077,7 +3461,8 @@
     "icon": "🧃",
     "price": 200,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 386,
@@ -3085,7 +3470,8 @@
     "icon": "🍓",
     "price": 75,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 387,
@@ -3093,7 +3479,8 @@
     "icon": "🥩",
     "price": 55,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 388,
@@ -3101,7 +3488,8 @@
     "icon": "🫐",
     "price": 195,
     "description": "Alimento delicioso que a capivara adora!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 389,
@@ -3109,7 +3497,8 @@
     "icon": "🥥",
     "price": 195,
     "description": "Ingrediente premium para receitas incríveis.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 390,
@@ -3117,7 +3506,8 @@
     "icon": "🥔",
     "price": 100,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 391,
@@ -3125,7 +3515,8 @@
     "icon": "🍍",
     "price": 495,
     "description": "Petisco saudável para qualquer hora do dia.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 392,
@@ -3133,7 +3524,8 @@
     "icon": "🥥",
     "price": 110,
     "description": "Sabor inconfundível que dá energia extra.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 393,
@@ -3141,7 +3533,8 @@
     "icon": "🍇",
     "price": 80,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 394,
@@ -3149,7 +3542,8 @@
     "icon": "🥥",
     "price": 160,
     "description": "Comida fresca e saborosa para energizar.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 395,
@@ -3157,7 +3551,8 @@
     "icon": "🍉",
     "price": 270,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 396,
@@ -3165,7 +3560,8 @@
     "icon": "🍍",
     "price": 435,
     "description": "Sabor tropical refrescante e energético.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 397,
@@ -3173,7 +3569,8 @@
     "icon": "🍷",
     "price": 30,
     "description": "Fruta madura e suculenta — irresistível!",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 398,
@@ -3181,7 +3578,8 @@
     "icon": "🍐",
     "price": 400,
     "description": "Comida orgânica direto da natureza.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 399,
@@ -3189,7 +3587,8 @@
     "icon": "🥝",
     "price": 315,
     "description": "Comida caseira feita com carinho.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 400,
@@ -3197,7 +3596,8 @@
     "icon": "🥛",
     "price": 95,
     "description": "Um petisco natural cheio de vitaminas.",
-    "category": "Comida"
+    "category": "Comida",
+    "slug": ""
   },
   {
     "id": 401,
@@ -3205,7 +3605,8 @@
     "icon": "🚀",
     "price": 1520,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 402,
@@ -3213,7 +3614,8 @@
     "icon": "🚀",
     "price": 1755,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 403,
@@ -3221,7 +3623,8 @@
     "icon": "🚀",
     "price": 1575,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 404,
@@ -3229,7 +3632,8 @@
     "icon": "🚀",
     "price": 190,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 405,
@@ -3237,7 +3641,8 @@
     "icon": "🚀",
     "price": 845,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 406,
@@ -3245,7 +3650,8 @@
     "icon": "🚀",
     "price": 1010,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 407,
@@ -3253,7 +3659,8 @@
     "icon": "🚀",
     "price": 685,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 408,
@@ -3261,7 +3668,8 @@
     "icon": "🚀",
     "price": 580,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 409,
@@ -3269,7 +3677,8 @@
     "icon": "🚀",
     "price": 590,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 410,
@@ -3277,7 +3686,8 @@
     "icon": "🚀",
     "price": 1755,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 411,
@@ -3285,7 +3695,8 @@
     "icon": "⭐",
     "price": 1950,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 412,
@@ -3293,7 +3704,8 @@
     "icon": "⭐",
     "price": 855,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 413,
@@ -3301,7 +3713,8 @@
     "icon": "⭐",
     "price": 1000,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 414,
@@ -3309,7 +3722,8 @@
     "icon": "⭐",
     "price": 1675,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 415,
@@ -3317,7 +3731,8 @@
     "icon": "⭐",
     "price": 1695,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 416,
@@ -3325,7 +3740,8 @@
     "icon": "⭐",
     "price": 1130,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 417,
@@ -3333,7 +3749,8 @@
     "icon": "⭐",
     "price": 955,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 418,
@@ -3341,7 +3758,8 @@
     "icon": "⭐",
     "price": 1770,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 419,
@@ -3349,7 +3767,8 @@
     "icon": "🪙",
     "price": 1740,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 420,
@@ -3357,7 +3776,8 @@
     "icon": "🪙",
     "price": 385,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 421,
@@ -3365,7 +3785,8 @@
     "icon": "🪙",
     "price": 205,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 422,
@@ -3373,7 +3794,8 @@
     "icon": "🪙",
     "price": 1890,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 423,
@@ -3381,7 +3803,8 @@
     "icon": "🪙",
     "price": 1235,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 424,
@@ -3389,7 +3812,8 @@
     "icon": "🪙",
     "price": 1555,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 425,
@@ -3397,7 +3821,8 @@
     "icon": "🪙",
     "price": 1845,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 426,
@@ -3405,7 +3830,8 @@
     "icon": "🪙",
     "price": 685,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 427,
@@ -3413,7 +3839,8 @@
     "icon": "🦘",
     "price": 1660,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 428,
@@ -3421,7 +3848,8 @@
     "icon": "🦘",
     "price": 660,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 429,
@@ -3429,7 +3857,8 @@
     "icon": "🦘",
     "price": 1955,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 430,
@@ -3437,7 +3866,8 @@
     "icon": "🛡️",
     "price": 400,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 431,
@@ -3445,7 +3875,8 @@
     "icon": "🛡️",
     "price": 285,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 432,
@@ -3453,7 +3884,8 @@
     "icon": "🛡️",
     "price": 1770,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 433,
@@ -3461,7 +3893,8 @@
     "icon": "🛡️",
     "price": 1910,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 434,
@@ -3469,7 +3902,8 @@
     "icon": "🛡️",
     "price": 155,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 435,
@@ -3477,7 +3911,8 @@
     "icon": "🛡️",
     "price": 210,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 436,
@@ -3485,7 +3920,8 @@
     "icon": "💚",
     "price": 1130,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 437,
@@ -3493,7 +3929,8 @@
     "icon": "💚",
     "price": 580,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 438,
@@ -3501,7 +3938,8 @@
     "icon": "💚",
     "price": 265,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 439,
@@ -3509,7 +3947,8 @@
     "icon": "⚔️",
     "price": 560,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 440,
@@ -3517,7 +3956,8 @@
     "icon": "⚔️",
     "price": 750,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 441,
@@ -3525,7 +3965,8 @@
     "icon": "⚔️",
     "price": 1820,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 442,
@@ -3533,7 +3974,8 @@
     "icon": "🛡️",
     "price": 1720,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 443,
@@ -3541,7 +3983,8 @@
     "icon": "🛡️",
     "price": 380,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 444,
@@ -3549,7 +3992,8 @@
     "icon": "🛡️",
     "price": 685,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 445,
@@ -3557,7 +4001,8 @@
     "icon": "🍀",
     "price": 1525,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 446,
@@ -3565,7 +4010,8 @@
     "icon": "🍀",
     "price": 1655,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 447,
@@ -3573,7 +4019,8 @@
     "icon": "🍀",
     "price": 1020,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 448,
@@ -3581,7 +4028,8 @@
     "icon": "🪨",
     "price": 110,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 449,
@@ -3589,7 +4037,8 @@
     "icon": "🪨",
     "price": 140,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 450,
@@ -3597,7 +4046,8 @@
     "icon": "🪨",
     "price": 540,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 451,
@@ -3605,7 +4055,8 @@
     "icon": "💨",
     "price": 1225,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 452,
@@ -3613,7 +4064,8 @@
     "icon": "💨",
     "price": 1180,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 453,
@@ -3621,7 +4073,8 @@
     "icon": "💨",
     "price": 325,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 454,
@@ -3629,7 +4082,8 @@
     "icon": "💪",
     "price": 585,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 455,
@@ -3637,7 +4091,8 @@
     "icon": "💪",
     "price": 350,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 456,
@@ -3645,7 +4100,8 @@
     "icon": "💪",
     "price": 590,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 457,
@@ -3653,7 +4109,8 @@
     "icon": "🧠",
     "price": 1410,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 458,
@@ -3661,7 +4118,8 @@
     "icon": "🧠",
     "price": 1035,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 459,
@@ -3669,7 +4127,8 @@
     "icon": "🧠",
     "price": 325,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 460,
@@ -3677,7 +4136,8 @@
     "icon": "✨",
     "price": 1320,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 461,
@@ -3685,7 +4145,8 @@
     "icon": "✨",
     "price": 135,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 462,
@@ -3693,7 +4154,8 @@
     "icon": "✨",
     "price": 1275,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 463,
@@ -3701,7 +4163,8 @@
     "icon": "⏰",
     "price": 1570,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 464,
@@ -3709,7 +4172,8 @@
     "icon": "⏰",
     "price": 695,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 465,
@@ -3717,7 +4181,8 @@
     "icon": "⏰",
     "price": 105,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 466,
@@ -3725,7 +4190,8 @@
     "icon": "⏰",
     "price": 820,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 467,
@@ -3733,7 +4199,8 @@
     "icon": "⏰",
     "price": 1270,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 468,
@@ -3741,7 +4208,8 @@
     "icon": "⏰",
     "price": 485,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 469,
@@ -3749,7 +4217,8 @@
     "icon": "⏰",
     "price": 1170,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 470,
@@ -3757,7 +4226,8 @@
     "icon": "⏰",
     "price": 240,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 471,
@@ -3765,7 +4235,8 @@
     "icon": "⏰",
     "price": 1215,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 472,
@@ -3773,7 +4244,8 @@
     "icon": "⏰",
     "price": 1710,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 473,
@@ -3781,7 +4253,8 @@
     "icon": "📏",
     "price": 1235,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 474,
@@ -3789,7 +4262,8 @@
     "icon": "📏",
     "price": 900,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 475,
@@ -3797,7 +4271,8 @@
     "icon": "📏",
     "price": 190,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 476,
@@ -3805,7 +4280,8 @@
     "icon": "📏",
     "price": 865,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 477,
@@ -3813,7 +4289,8 @@
     "icon": "📏",
     "price": 1630,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 478,
@@ -3821,7 +4298,8 @@
     "icon": "📏",
     "price": 830,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 479,
@@ -3829,7 +4307,8 @@
     "icon": "🕊️",
     "price": 805,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 480,
@@ -3837,7 +4316,8 @@
     "icon": "👻",
     "price": 1600,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 481,
@@ -3845,7 +4325,8 @@
     "icon": "🌀",
     "price": 1680,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 482,
@@ -3853,7 +4334,8 @@
     "icon": "⏳",
     "price": 1605,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 483,
@@ -3861,7 +4343,8 @@
     "icon": "❄️",
     "price": 375,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 484,
@@ -3869,7 +4352,8 @@
     "icon": "🧲",
     "price": 820,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 485,
@@ -3877,7 +4361,8 @@
     "icon": "⭐",
     "price": 795,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 486,
@@ -3885,7 +4370,8 @@
     "icon": "🔫",
     "price": 1800,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 487,
@@ -3893,7 +4379,8 @@
     "icon": "🌪️",
     "price": 1525,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 488,
@@ -3901,7 +4388,8 @@
     "icon": "🌋",
     "price": 1395,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 489,
@@ -3909,7 +4397,8 @@
     "icon": "🌊",
     "price": 1760,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 490,
@@ -3917,7 +4406,8 @@
     "icon": "🌋",
     "price": 230,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 491,
@@ -3925,7 +4415,8 @@
     "icon": "🪨",
     "price": 175,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 492,
@@ -3933,7 +4424,8 @@
     "icon": "🛡️",
     "price": 510,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 493,
@@ -3941,7 +4433,8 @@
     "icon": "🪙",
     "price": 1720,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 494,
@@ -3949,7 +4442,8 @@
     "icon": "🛡️",
     "price": 1915,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 495,
@@ -3957,7 +4451,8 @@
     "icon": "🪙",
     "price": 745,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 496,
@@ -3965,7 +4460,8 @@
     "icon": "🪨",
     "price": 1155,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 497,
@@ -3973,7 +4469,8 @@
     "icon": "🛡️",
     "price": 1770,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 498,
@@ -3981,7 +4478,8 @@
     "icon": "⭐",
     "price": 1070,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 499,
@@ -3989,7 +4487,8 @@
     "icon": "🚀",
     "price": 175,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 500,
@@ -3997,7 +4496,8 @@
     "icon": "🚀",
     "price": 685,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 501,
@@ -4005,7 +4505,8 @@
     "icon": "🛡️",
     "price": 1865,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 502,
@@ -4013,7 +4514,8 @@
     "icon": "🪨",
     "price": 1875,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 503,
@@ -4021,7 +4523,8 @@
     "icon": "🛡️",
     "price": 660,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 504,
@@ -4029,7 +4532,8 @@
     "icon": "⚔️",
     "price": 1735,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 505,
@@ -4037,7 +4541,8 @@
     "icon": "⭐",
     "price": 995,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 506,
@@ -4045,7 +4550,8 @@
     "icon": "🛡️",
     "price": 1620,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 507,
@@ -4053,7 +4559,8 @@
     "icon": "⭐",
     "price": 1930,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 508,
@@ -4061,7 +4568,8 @@
     "icon": "🛡️",
     "price": 795,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 509,
@@ -4069,7 +4577,8 @@
     "icon": "🪨",
     "price": 1115,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 510,
@@ -4077,7 +4586,8 @@
     "icon": "🪨",
     "price": 850,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 511,
@@ -4085,7 +4595,8 @@
     "icon": "⭐",
     "price": 645,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 512,
@@ -4093,7 +4604,8 @@
     "icon": "🍀",
     "price": 1590,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 513,
@@ -4101,7 +4613,8 @@
     "icon": "🛡️",
     "price": 260,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 514,
@@ -4109,7 +4622,8 @@
     "icon": "💚",
     "price": 1335,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 515,
@@ -4117,7 +4631,8 @@
     "icon": "🚀",
     "price": 1215,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 516,
@@ -4125,7 +4640,8 @@
     "icon": "🚀",
     "price": 755,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 517,
@@ -4133,7 +4649,8 @@
     "icon": "🛡️",
     "price": 265,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 518,
@@ -4141,7 +4658,8 @@
     "icon": "💚",
     "price": 1455,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 519,
@@ -4149,7 +4667,8 @@
     "icon": "🪙",
     "price": 725,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 520,
@@ -4157,7 +4676,8 @@
     "icon": "⚔️",
     "price": 1335,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 521,
@@ -4165,7 +4685,8 @@
     "icon": "🦘",
     "price": 440,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 522,
@@ -4173,7 +4694,8 @@
     "icon": "🦘",
     "price": 820,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 523,
@@ -4181,7 +4703,8 @@
     "icon": "🪨",
     "price": 185,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 524,
@@ -4189,7 +4712,8 @@
     "icon": "🦘",
     "price": 1360,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 525,
@@ -4197,7 +4721,8 @@
     "icon": "🪨",
     "price": 660,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 526,
@@ -4205,7 +4730,8 @@
     "icon": "⚔️",
     "price": 255,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 527,
@@ -4213,7 +4739,8 @@
     "icon": "🪨",
     "price": 845,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 528,
@@ -4221,7 +4748,8 @@
     "icon": "🛡️",
     "price": 1740,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 529,
@@ -4229,7 +4757,8 @@
     "icon": "⭐",
     "price": 165,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 530,
@@ -4237,7 +4766,8 @@
     "icon": "🚀",
     "price": 1840,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 531,
@@ -4245,7 +4775,8 @@
     "icon": "⭐",
     "price": 1490,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 532,
@@ -4253,7 +4784,8 @@
     "icon": "🪙",
     "price": 170,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 533,
@@ -4261,7 +4793,8 @@
     "icon": "🛡️",
     "price": 235,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 534,
@@ -4269,7 +4802,8 @@
     "icon": "🚀",
     "price": 1695,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 535,
@@ -4277,7 +4811,8 @@
     "icon": "⭐",
     "price": 840,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 536,
@@ -4285,7 +4820,8 @@
     "icon": "🍀",
     "price": 1260,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 537,
@@ -4293,7 +4829,8 @@
     "icon": "🍀",
     "price": 1340,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 538,
@@ -4301,7 +4838,8 @@
     "icon": "🚀",
     "price": 1490,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 539,
@@ -4309,7 +4847,8 @@
     "icon": "🦘",
     "price": 860,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 540,
@@ -4317,7 +4856,8 @@
     "icon": "🛡️",
     "price": 1010,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 541,
@@ -4325,7 +4865,8 @@
     "icon": "🦘",
     "price": 1275,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 542,
@@ -4333,7 +4874,8 @@
     "icon": "⭐",
     "price": 1185,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 543,
@@ -4341,7 +4883,8 @@
     "icon": "🪙",
     "price": 915,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 544,
@@ -4349,7 +4892,8 @@
     "icon": "🍀",
     "price": 1430,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 545,
@@ -4357,7 +4901,8 @@
     "icon": "🪨",
     "price": 610,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 546,
@@ -4365,7 +4910,8 @@
     "icon": "🪙",
     "price": 155,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 547,
@@ -4373,7 +4919,8 @@
     "icon": "🚀",
     "price": 1120,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 548,
@@ -4381,7 +4928,8 @@
     "icon": "🪙",
     "price": 890,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 549,
@@ -4389,7 +4937,8 @@
     "icon": "🦘",
     "price": 340,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 550,
@@ -4397,7 +4946,8 @@
     "icon": "🪨",
     "price": 1685,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 551,
@@ -4405,7 +4955,8 @@
     "icon": "⚔️",
     "price": 1540,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 552,
@@ -4413,7 +4964,8 @@
     "icon": "🛡️",
     "price": 540,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 553,
@@ -4421,7 +4973,8 @@
     "icon": "⭐",
     "price": 685,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 554,
@@ -4429,7 +4982,8 @@
     "icon": "🛡️",
     "price": 510,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 555,
@@ -4437,7 +4991,8 @@
     "icon": "🪙",
     "price": 375,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 556,
@@ -4445,7 +5000,8 @@
     "icon": "🛡️",
     "price": 1025,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 557,
@@ -4453,7 +5009,8 @@
     "icon": "🍀",
     "price": 1940,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 558,
@@ -4461,7 +5018,8 @@
     "icon": "🛡️",
     "price": 280,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 559,
@@ -4469,7 +5027,8 @@
     "icon": "⚔️",
     "price": 1465,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 560,
@@ -4477,7 +5036,8 @@
     "icon": "🚀",
     "price": 1555,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 561,
@@ -4485,7 +5045,8 @@
     "icon": "💚",
     "price": 1225,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 562,
@@ -4493,7 +5054,8 @@
     "icon": "🛡️",
     "price": 695,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 563,
@@ -4501,7 +5063,8 @@
     "icon": "🚀",
     "price": 1845,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 564,
@@ -4509,7 +5072,8 @@
     "icon": "🚀",
     "price": 1555,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 565,
@@ -4517,7 +5081,8 @@
     "icon": "⭐",
     "price": 1725,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 566,
@@ -4525,7 +5090,8 @@
     "icon": "⭐",
     "price": 1140,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 567,
@@ -4533,7 +5099,8 @@
     "icon": "🪙",
     "price": 350,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 568,
@@ -4541,7 +5108,8 @@
     "icon": "🛡️",
     "price": 1720,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 569,
@@ -4549,7 +5117,8 @@
     "icon": "🪙",
     "price": 585,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 570,
@@ -4557,7 +5126,8 @@
     "icon": "⭐",
     "price": 155,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 571,
@@ -4565,7 +5135,8 @@
     "icon": "⭐",
     "price": 1235,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 572,
@@ -4573,7 +5144,8 @@
     "icon": "🛡️",
     "price": 855,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 573,
@@ -4581,7 +5153,8 @@
     "icon": "🪨",
     "price": 1745,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 574,
@@ -4589,7 +5162,8 @@
     "icon": "🚀",
     "price": 365,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 575,
@@ -4597,7 +5171,8 @@
     "icon": "⭐",
     "price": 1910,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 576,
@@ -4605,7 +5180,8 @@
     "icon": "🪨",
     "price": 235,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 577,
@@ -4613,7 +5189,8 @@
     "icon": "🪨",
     "price": 915,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 578,
@@ -4621,7 +5198,8 @@
     "icon": "⭐",
     "price": 1175,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 579,
@@ -4629,7 +5207,8 @@
     "icon": "🚀",
     "price": 1675,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 580,
@@ -4637,7 +5216,8 @@
     "icon": "🚀",
     "price": 1785,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 581,
@@ -4645,7 +5225,8 @@
     "icon": "🚀",
     "price": 250,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 582,
@@ -4653,7 +5234,8 @@
     "icon": "🛡️",
     "price": 750,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 583,
@@ -4661,7 +5243,8 @@
     "icon": "💚",
     "price": 1020,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 584,
@@ -4669,7 +5252,8 @@
     "icon": "🛡️",
     "price": 1490,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 585,
@@ -4677,7 +5261,8 @@
     "icon": "🪨",
     "price": 805,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 586,
@@ -4685,7 +5270,8 @@
     "icon": "⭐",
     "price": 1900,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 587,
@@ -4693,7 +5279,8 @@
     "icon": "⚔️",
     "price": 1410,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 588,
@@ -4701,7 +5288,8 @@
     "icon": "🪨",
     "price": 470,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 589,
@@ -4709,7 +5297,8 @@
     "icon": "🪙",
     "price": 985,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 590,
@@ -4717,7 +5306,8 @@
     "icon": "💚",
     "price": 1965,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 591,
@@ -4725,7 +5315,8 @@
     "icon": "🪙",
     "price": 1800,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 592,
@@ -4733,7 +5324,8 @@
     "icon": "🛡️",
     "price": 1160,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 593,
@@ -4741,7 +5333,8 @@
     "icon": "🪙",
     "price": 720,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 594,
@@ -4749,7 +5342,8 @@
     "icon": "🚀",
     "price": 430,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 595,
@@ -4757,7 +5351,8 @@
     "icon": "🍀",
     "price": 1550,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 596,
@@ -4765,7 +5360,8 @@
     "icon": "🚀",
     "price": 810,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 597,
@@ -4773,7 +5369,8 @@
     "icon": "🛡️",
     "price": 1930,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 598,
@@ -4781,7 +5378,8 @@
     "icon": "🚀",
     "price": 1830,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 599,
@@ -4789,7 +5387,8 @@
     "icon": "🚀",
     "price": 615,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 600,
@@ -4797,7 +5396,8 @@
     "icon": "🛡️",
     "price": 1400,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 601,
@@ -4805,7 +5405,8 @@
     "icon": "🛡️",
     "price": 660,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 602,
@@ -4813,7 +5414,8 @@
     "icon": "🚀",
     "price": 1380,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 603,
@@ -4821,7 +5423,8 @@
     "icon": "🛡️",
     "price": 1360,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 604,
@@ -4829,7 +5432,8 @@
     "icon": "🚀",
     "price": 290,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 605,
@@ -4837,7 +5441,8 @@
     "icon": "🛡️",
     "price": 1410,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 606,
@@ -4845,7 +5450,8 @@
     "icon": "🦘",
     "price": 1310,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 607,
@@ -4853,7 +5459,8 @@
     "icon": "⚔️",
     "price": 415,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 608,
@@ -4861,7 +5468,8 @@
     "icon": "🍀",
     "price": 1450,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 609,
@@ -4869,7 +5477,8 @@
     "icon": "🦘",
     "price": 1575,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 610,
@@ -4877,7 +5486,8 @@
     "icon": "🍀",
     "price": 790,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 611,
@@ -4885,7 +5495,8 @@
     "icon": "🛡️",
     "price": 185,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 612,
@@ -4893,7 +5504,8 @@
     "icon": "⚔️",
     "price": 265,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 613,
@@ -4901,7 +5513,8 @@
     "icon": "🪨",
     "price": 1415,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 614,
@@ -4909,7 +5522,8 @@
     "icon": "🛡️",
     "price": 640,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 615,
@@ -4917,7 +5531,8 @@
     "icon": "🍀",
     "price": 1670,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 616,
@@ -4925,7 +5540,8 @@
     "icon": "⭐",
     "price": 955,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 617,
@@ -4933,7 +5549,8 @@
     "icon": "⭐",
     "price": 1410,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 618,
@@ -4941,7 +5558,8 @@
     "icon": "⭐",
     "price": 1120,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 619,
@@ -4949,7 +5567,8 @@
     "icon": "⭐",
     "price": 695,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 620,
@@ -4957,7 +5576,8 @@
     "icon": "💚",
     "price": 1090,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 621,
@@ -4965,7 +5585,8 @@
     "icon": "🛡️",
     "price": 1750,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 622,
@@ -4973,7 +5594,8 @@
     "icon": "🪙",
     "price": 710,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 623,
@@ -4981,7 +5603,8 @@
     "icon": "🛡️",
     "price": 250,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 624,
@@ -4989,7 +5612,8 @@
     "icon": "⭐",
     "price": 425,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 625,
@@ -4997,7 +5621,8 @@
     "icon": "⭐",
     "price": 950,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 626,
@@ -5005,7 +5630,8 @@
     "icon": "⭐",
     "price": 1050,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 627,
@@ -5013,7 +5639,8 @@
     "icon": "⭐",
     "price": 795,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 628,
@@ -5021,7 +5648,8 @@
     "icon": "🍀",
     "price": 395,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 629,
@@ -5029,7 +5657,8 @@
     "icon": "💚",
     "price": 1865,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 630,
@@ -5037,7 +5666,8 @@
     "icon": "🛡️",
     "price": 1605,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 631,
@@ -5045,7 +5675,8 @@
     "icon": "🚀",
     "price": 915,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 632,
@@ -5053,7 +5684,8 @@
     "icon": "🍀",
     "price": 1655,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 633,
@@ -5061,7 +5693,8 @@
     "icon": "🛡️",
     "price": 1155,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 634,
@@ -5069,7 +5702,8 @@
     "icon": "🪨",
     "price": 315,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 635,
@@ -5077,7 +5711,8 @@
     "icon": "🍀",
     "price": 595,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 636,
@@ -5085,7 +5720,8 @@
     "icon": "🛡️",
     "price": 350,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 637,
@@ -5093,7 +5729,8 @@
     "icon": "🦘",
     "price": 1020,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 638,
@@ -5101,7 +5738,8 @@
     "icon": "🚀",
     "price": 390,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 639,
@@ -5109,7 +5747,8 @@
     "icon": "⭐",
     "price": 205,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 640,
@@ -5117,7 +5756,8 @@
     "icon": "🍀",
     "price": 885,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 641,
@@ -5125,7 +5765,8 @@
     "icon": "🪙",
     "price": 955,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 642,
@@ -5133,7 +5774,8 @@
     "icon": "🪙",
     "price": 1870,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 643,
@@ -5141,7 +5783,8 @@
     "icon": "💚",
     "price": 1765,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 644,
@@ -5149,7 +5792,8 @@
     "icon": "🪙",
     "price": 1285,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 645,
@@ -5157,7 +5801,8 @@
     "icon": "🪨",
     "price": 490,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 646,
@@ -5165,7 +5810,8 @@
     "icon": "🪙",
     "price": 1120,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 647,
@@ -5173,7 +5819,8 @@
     "icon": "🍀",
     "price": 1055,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 648,
@@ -5181,7 +5828,8 @@
     "icon": "⭐",
     "price": 1900,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 649,
@@ -5189,7 +5837,8 @@
     "icon": "⭐",
     "price": 1120,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 650,
@@ -5197,7 +5846,8 @@
     "icon": "🚀",
     "price": 285,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 651,
@@ -5205,7 +5855,8 @@
     "icon": "🪙",
     "price": 1135,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 652,
@@ -5213,7 +5864,8 @@
     "icon": "🪨",
     "price": 595,
     "description": "Aumenta atributos por alguns minutos.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 653,
@@ -5221,7 +5873,8 @@
     "icon": "🪨",
     "price": 1295,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 654,
@@ -5229,7 +5882,8 @@
     "icon": "⭐",
     "price": 200,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 655,
@@ -5237,7 +5891,8 @@
     "icon": "🪨",
     "price": 675,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 656,
@@ -5245,7 +5900,8 @@
     "icon": "⭐",
     "price": 1325,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 657,
@@ -5253,7 +5909,8 @@
     "icon": "🪨",
     "price": 685,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 658,
@@ -5261,7 +5918,8 @@
     "icon": "⚔️",
     "price": 115,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 659,
@@ -5269,7 +5927,8 @@
     "icon": "🚀",
     "price": 980,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 660,
@@ -5277,7 +5936,8 @@
     "icon": "🪙",
     "price": 1905,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 661,
@@ -5285,7 +5945,8 @@
     "icon": "🪙",
     "price": 1590,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 662,
@@ -5293,7 +5954,8 @@
     "icon": "🪙",
     "price": 1665,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 663,
@@ -5301,7 +5963,8 @@
     "icon": "🍀",
     "price": 850,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 664,
@@ -5309,7 +5972,8 @@
     "icon": "🚀",
     "price": 920,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 665,
@@ -5317,7 +5981,8 @@
     "icon": "🚀",
     "price": 1265,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 666,
@@ -5325,7 +5990,8 @@
     "icon": "💚",
     "price": 500,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 667,
@@ -5333,7 +5999,8 @@
     "icon": "🍀",
     "price": 1235,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 668,
@@ -5341,7 +6008,8 @@
     "icon": "⚔️",
     "price": 250,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 669,
@@ -5349,7 +6017,8 @@
     "icon": "🚀",
     "price": 1130,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 670,
@@ -5357,7 +6026,8 @@
     "icon": "💚",
     "price": 1665,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 671,
@@ -5365,7 +6035,8 @@
     "icon": "🛡️",
     "price": 670,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 672,
@@ -5373,7 +6044,8 @@
     "icon": "🦘",
     "price": 1495,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 673,
@@ -5381,7 +6053,8 @@
     "icon": "⭐",
     "price": 345,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 674,
@@ -5389,7 +6062,8 @@
     "icon": "⭐",
     "price": 300,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 675,
@@ -5397,7 +6071,8 @@
     "icon": "🚀",
     "price": 865,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 676,
@@ -5405,7 +6080,8 @@
     "icon": "🪙",
     "price": 1240,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 677,
@@ -5413,7 +6089,8 @@
     "icon": "🚀",
     "price": 1645,
     "description": "Ativa poderes especiais para a capivara.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 678,
@@ -5421,7 +6098,8 @@
     "icon": "⚔️",
     "price": 505,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 679,
@@ -5429,7 +6107,8 @@
     "icon": "🚀",
     "price": 1140,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 680,
@@ -5437,7 +6116,8 @@
     "icon": "💚",
     "price": 1125,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 681,
@@ -5445,7 +6125,8 @@
     "icon": "🚀",
     "price": 190,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 682,
@@ -5453,7 +6134,8 @@
     "icon": "🚀",
     "price": 380,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 683,
@@ -5461,7 +6143,8 @@
     "icon": "🪨",
     "price": 1745,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 684,
@@ -5469,7 +6152,8 @@
     "icon": "⚔️",
     "price": 1165,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 685,
@@ -5477,7 +6161,8 @@
     "icon": "⚔️",
     "price": 405,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 686,
@@ -5485,7 +6170,8 @@
     "icon": "🪨",
     "price": 1930,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 687,
@@ -5493,7 +6179,8 @@
     "icon": "🪙",
     "price": 385,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 688,
@@ -5501,7 +6188,8 @@
     "icon": "🦘",
     "price": 1355,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 689,
@@ -5509,7 +6197,8 @@
     "icon": "💚",
     "price": 430,
     "description": "Bônus exclusivo para capivaras corajosas.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 690,
@@ -5517,7 +6206,8 @@
     "icon": "🪙",
     "price": 1360,
     "description": "Melhoria temporária de desempenho.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 691,
@@ -5525,7 +6215,8 @@
     "icon": "⚔️",
     "price": 1315,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 692,
@@ -5533,7 +6224,8 @@
     "icon": "⚔️",
     "price": 1140,
     "description": "Energia concentrada em um item só!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 693,
@@ -5541,7 +6233,8 @@
     "icon": "🪨",
     "price": 1190,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 694,
@@ -5549,7 +6242,8 @@
     "icon": "⚔️",
     "price": 1550,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 695,
@@ -5557,7 +6251,8 @@
     "icon": "⭐",
     "price": 715,
     "description": "Upgrade instantâneo de habilidades.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 696,
@@ -5565,7 +6260,8 @@
     "icon": "⭐",
     "price": 1770,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 697,
@@ -5573,7 +6269,8 @@
     "icon": "⭐",
     "price": 855,
     "description": "Efeito poderoso que muda o jogo!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 698,
@@ -5581,7 +6278,8 @@
     "icon": "🚀",
     "price": 1480,
     "description": "Dá um boost poderoso na sua jornada.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 699,
@@ -5589,7 +6287,8 @@
     "icon": "🚀",
     "price": 955,
     "description": "Buff raro com efeito devastador.",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 700,
@@ -5597,7 +6296,8 @@
     "icon": "🦘",
     "price": 730,
     "description": "Potencialize suas habilidades por tempo limitado!",
-    "category": "Boost"
+    "category": "Boost",
+    "slug": ""
   },
   {
     "id": 701,
