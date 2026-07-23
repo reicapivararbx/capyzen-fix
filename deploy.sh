@@ -16,6 +16,7 @@ rsync -avz --delete \
   --exclude '.git' \
   --exclude '.omo' \
   --exclude '.manus-logs' \
+  --exclude 'uploads' \
   ./ ${SERVER}:${REMOTE_DIR}/
 
 echo "📦 Installing/updating dependencies on server..."

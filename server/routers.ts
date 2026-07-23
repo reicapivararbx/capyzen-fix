@@ -5,7 +5,8 @@ import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getA
 import { systemRouter } from "./_core/systemRouter";
 import { authRouter } from "./_core/authRouter";
 import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
-import { storagePut } from "./storage";
+import fs from "fs";
+import path from "path";
 import { listAllUsers, updateUserRole } from "./db";
 import type { GameState } from "../client/src/types/game";
 
@@ -243,12 +244,14 @@ export const appRouter = router({
 
         const safeFileName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
         const ext = safeFileName.split(".").pop() || "bin";
-        const key = `chat-media/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-        const result = await storagePut(key, buffer, input.contentType);
+        const uploadsDir = path.resolve(process.cwd(), "uploads");
+        fs.mkdirSync(uploadsDir, { recursive: true });
+        fs.writeFileSync(path.join(uploadsDir, fileName), buffer);
 
         return {
-          url: result.url,
+          url: `/uploads/${fileName}`,
           mediaType: input.contentType,
           mediaName: safeFileName,
         };
