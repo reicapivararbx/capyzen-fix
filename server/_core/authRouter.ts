@@ -46,7 +46,7 @@ function getSessionSecret() {
 async function signSession(userId: number, username: string): Promise<string> {
   const issuedAt = Date.now();
   const expirationSeconds = Math.floor((issuedAt + ONE_YEAR_MS) / 1000);
-  return new SignJWT({ userId, username })
+  return new SignJWT({ userId, username, openId: `user_${username}`, appId: ENV.appId, name: username })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setExpirationTime(expirationSeconds)
     .sign(getSessionSecret());
