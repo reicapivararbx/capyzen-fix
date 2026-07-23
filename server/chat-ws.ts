@@ -1,11 +1,12 @@
 import { WebSocketServer, WebSocket } from "ws";
 import type { Server } from "http";
-import { getChatMessages, sendChatMessage } from "./db";
+import { getChatMessages, sendChatMessage, getClanByMember } from "./db";
 
 interface ChatConnection {
   ws: WebSocket;
   username: string;
   userId: number | null;
+  channel: string;
   connectedAt: Date;
 }
 
@@ -48,23 +49,27 @@ function checkRateLimit(ws: WebSocket): boolean {
   return recentTimestamps.length < MAX_MESSAGES_PER_WINDOW;
 }
 
-function broadcastToAll(message: ChatMessage, excludeWs?: WebSocket) {
+function broadcastToChannel(channel: string, message: ChatMessage, excludeWs?: WebSocket) {
   const payload = JSON.stringify(message);
   connections.forEach((conn, ws) => {
-    if (ws !== excludeWs && ws.readyState === WebSocket.OPEN) {
+    if (conn.channel === channel && ws !== excludeWs && ws.readyState === WebSocket.OPEN) {
       ws.send(payload);
     }
   });
 }
 
-function broadcastUserCount() {
+function broadcastUserCountToChannel(channel: string) {
+  let count = 0;
+  connections.forEach((conn) => {
+    if (conn.channel === channel) count++;
+  });
   const countMessage: ChatMessage = {
     type: "message",
-    data: { content: `__USER_COUNT__:${connections.size}` },
+    data: { content: `__USER_COUNT__:${count}` },
   };
   const payload = JSON.stringify(countMessage);
   connections.forEach((conn, ws) => {
-    if (ws.readyState === WebSocket.OPEN) {
+    if (conn.channel === channel && ws.readyState === WebSocket.OPEN) {
       ws.send(payload);
     }
   });
@@ -97,17 +102,30 @@ export function setupWebSocketChat(server: Server) {
         if (parsed.type === "auth") {
           const username = parsed.data?.username?.trim() || "Anônimo";
           const userId = parsed.data?.userId ?? null;
+          const requestedChannel = (parsed.data as { channel?: string }).channel?.trim() || "global";
+
+          let channel = "global";
+          if (requestedChannel.startsWith("clan:") && userId) {
+            const clanId = parseInt(requestedChannel.split(":")[1], 10);
+            if (!isNaN(clanId) && clanId > 0) {
+              const memberData = await getClanByMember(userId);
+              if (memberData && memberData.clan.id === clanId) {
+                channel = `clan:${clanId}`;
+              }
+            }
+          }
 
           connections.set(ws, {
             ws,
             username,
             userId,
+            channel,
             connectedAt: new Date(),
           });
 
           messageTimestamps.set(ws, []);
 
-          logChat("AUTH", `User "${username}" (ID: ${userId ?? "anon"}) authenticated`);
+          logChat("AUTH", `User "${username}" (ID: ${userId ?? "anon"}) on channel "${channel}"`);
 
           const authResponse: ChatMessage = {
             type: "message",
@@ -115,7 +133,8 @@ export function setupWebSocketChat(server: Server) {
           };
           ws.send(JSON.stringify(authResponse));
 
-          broadcastToAll(
+          broadcastToChannel(
+            channel,
             {
               type: "message",
               data: {
@@ -126,9 +145,9 @@ export function setupWebSocketChat(server: Server) {
             ws,
           );
 
-          broadcastUserCount();
+          broadcastUserCountToChannel(channel);
 
-          const recentMessages = await getChatMessages(50);
+          const recentMessages = await getChatMessages(50, channel);
           ws.send(
             JSON.stringify({
               type: "message",
@@ -203,11 +222,11 @@ export function setupWebSocketChat(server: Server) {
           messageTimestamps.get(ws)!.push(Date.now());
 
           try {
-            const savedMessage = await sendChatMessage(content, conn.username, conn.userId);
+            const savedMessage = await sendChatMessage(content, conn.username, conn.userId, null, conn.channel);
 
-            logChat("MESSAGE", `"${conn.username}": "${content.substring(0, 50)}..."`);
+            logChat("MESSAGE", `"${conn.username}" on "${conn.channel}": "${content.substring(0, 50)}..."`);
 
-            broadcastToAll({
+            broadcastToChannel(conn.channel, {
               type: "message",
               data: {
                 id: savedMessage.id,
@@ -265,11 +284,12 @@ export function setupWebSocketChat(server: Server) {
               conn.username,
               conn.userId,
               { url: mediaUrl, type: mediaType, name: mediaName || "arquivo" },
+              conn.channel,
             );
 
-            logChat("MEDIA", `"${conn.username}" sent media: ${mediaType} (${mediaName})`);
+            logChat("MEDIA", `"${conn.username}" on "${conn.channel}" sent media: ${mediaType} (${mediaName})`);
 
-            broadcastToAll({
+            broadcastToChannel(conn.channel, {
               type: "message_media",
               data: {
                 id: savedMessage.id,
@@ -325,11 +345,12 @@ export function setupWebSocketChat(server: Server) {
               conn.username,
               conn.userId,
               { url: `item://${itemData}`, type: "application/x-capygame-item", name: itemType },
+              conn.channel,
             );
 
-            logChat("ITEM_GIFT", `"${conn.username}" gifted item: ${itemQuantity}x ${itemType}`);
+            logChat("ITEM_GIFT", `"${conn.username}" on "${conn.channel}" gifted item: ${itemQuantity}x ${itemType}`);
 
-            broadcastToAll({
+            broadcastToChannel(conn.channel, {
               type: "message_item",
               data: {
                 id: savedMessage.id,
@@ -359,8 +380,10 @@ export function setupWebSocketChat(server: Server) {
     ws.on("close", () => {
       const conn = connections.get(ws);
       if (conn) {
-        logChat("DISCONNECT", `User "${conn.username}" disconnected`);
-        broadcastToAll(
+        logChat("DISCONNECT", `User "${conn.username}" disconnected from "${conn.channel}"`);
+        const channel = conn.channel;
+        broadcastToChannel(
+          channel,
           {
             type: "message",
             data: {
@@ -371,7 +394,7 @@ export function setupWebSocketChat(server: Server) {
         );
         connections.delete(ws);
         messageTimestamps.delete(ws);
-        broadcastUserCount();
+        broadcastUserCountToChannel(channel);
       }
     });
 

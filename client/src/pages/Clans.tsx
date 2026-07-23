@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,10 +7,153 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useWebSocketChat, type ChatMessage } from "@/hooks/useWebSocketChat";
 import { trpc } from "@/lib/trpc";
 
+interface ClanChatMessage {
+  id?: number;
+  senderName: string;
+  content: string;
+  createdAt: Date;
+}
+
+function formatClanTimestamp(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 1) return "agora";
+  if (diffMin < 60) return `${diffMin}min`;
+  const diffHours = Math.floor(diffMin / 60);
+  if (diffHours < 24) return `${diffHours}h`;
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" });
+}
+
+function ClanChat({ clanId, user }: { clanId: number; user: { name?: string | null; id?: number } | null }) {
+  const [messages, setMessages] = useState<ClanChatMessage[]>([]);
+  const [content, setContent] = useState("");
+  const [userCount, setUserCount] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const channel = `clan:${clanId}`;
+  const username = user?.name || "Jogador";
+  const userId = user?.id;
+
+  const handleWsMessage = useCallback((msg: ChatMessage) => {
+    const msgContent = msg.content;
+    if (msgContent?.startsWith("__USER_COUNT__:")) {
+      const count = parseInt(msgContent.split(":")[1], 10);
+      if (!isNaN(count)) setUserCount(count);
+      return;
+    }
+    if (msgContent === "__AUTH_OK__" || msgContent === "__HISTORY__") return;
+    if (msgContent?.startsWith("__JOIN__") || msgContent?.startsWith("__LEAVE__")) {
+      setMessages((prev) => [...prev, {
+        id: msg.id ?? Math.random(),
+        senderName: "Sistema",
+        content: msgContent.replace(/^__(JOIN|LEAVE)__/, ""),
+        createdAt: msg.createdAt ? new Date(msg.createdAt) : new Date(),
+      }]);
+      return;
+    }
+    setMessages((prev) => [...prev, {
+      id: msg.id ?? Math.random(),
+      senderName: msg.senderName || "Anônimo",
+      content: msgContent ?? "",
+      createdAt: msg.createdAt ? new Date(msg.createdAt) : new Date(),
+    }]);
+  }, []);
+
+  const { connected, sendMessage } = useWebSocketChat({
+    username,
+    userId,
+    channel,
+    onMessage: handleWsMessage,
+    onUserCount: setUserCount,
+    enabled: !!user,
+  });
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const handleSend = () => {
+    const trimmed = content.trim();
+    if (!trimmed || !connected) return;
+    sendMessage(trimmed);
+    setContent("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  return (
+    <Card className="bg-gray-800 border-purple-400/30">
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base text-gray-300">💬 Chat do Clã</CardTitle>
+          <div className="flex items-center gap-2">
+            <span className={`inline-block w-2 h-2 rounded-full ${connected ? "bg-green-400" : "bg-red-400"}`} />
+            <span className="text-xs text-gray-400">{connected ? `${userCount} online` : "..."}</span>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col h-[300px]">
+          <div className="flex-1 overflow-hidden" ref={scrollRef}>
+            <ScrollArea className="h-full">
+              {messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-24 text-gray-500 gap-1">
+                  <span className="text-3xl">💬</span>
+                  <span className="text-xs">Nenhuma mensagem ainda</span>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {messages.map((msg, i) => (
+                    <div key={msg.id ?? i} className="flex flex-col">
+                      <div className="flex items-baseline gap-2">
+                        <span className={`font-semibold text-sm ${msg.senderName === "Sistema" ? "text-yellow-400" : "text-purple-300"}`}>
+                          {msg.senderName}
+                        </span>
+                        <span className="text-xs text-gray-500">{formatClanTimestamp(msg.createdAt)}</span>
+                      </div>
+                      {msg.content && <p className="text-sm break-words whitespace-pre-wrap text-gray-200">{msg.content}</p>}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </ScrollArea>
+          </div>
+          <div className="border-t border-gray-700 pt-2 mt-2 flex gap-2">
+            <Input
+              placeholder={connected ? "Mensagem..." : "Conectando..."}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              onKeyDown={handleKeyDown}
+              maxLength={500}
+              className="bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 min-h-[40px] flex-1"
+              disabled={!connected}
+            />
+            <Button
+              onClick={handleSend}
+              disabled={!connected || !content.trim()}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 min-h-[40px] shrink-0"
+            >
+              Enviar
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function Clans() {
-  const { isAuthenticated } = useAuth({});
+  const { user, isAuthenticated, loading } = useAuth({});
   const utils = trpc.useUtils();
 
   const { data: myClanData, isLoading: loadingMine } = trpc.clans.mine.useQuery(undefined, { enabled: isAuthenticated });
@@ -139,6 +282,17 @@ export default function Clans() {
       minLevel: settingsForm.minLevel,
     });
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-purple-400" />
+          <p className="text-sm text-gray-400">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
@@ -281,6 +435,8 @@ export default function Clans() {
                       </div>
                     </CardContent>
                   </Card>
+
+                  <ClanChat clanId={clanId} user={user as { name?: string | null; id?: number } | null} />
                 </>
               ) : (
                 <>

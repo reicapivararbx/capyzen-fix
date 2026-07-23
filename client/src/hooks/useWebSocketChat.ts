@@ -16,6 +16,7 @@ export interface ChatMessage {
 interface UseWebSocketChatOptions {
   username: string;
   userId?: number;
+  channel?: string;
   onMessage?: (msg: ChatMessage) => void;
   onConnectionChange?: (connected: boolean) => void;
   onUserCount?: (count: number) => void;
@@ -29,6 +30,7 @@ const RECONNECT_MAX_ATTEMPTS = 50;
 export function useWebSocketChat({
   username,
   userId,
+  channel = "global",
   onMessage,
   onConnectionChange,
   onUserCount,
@@ -44,12 +46,14 @@ export function useWebSocketChat({
   const onUserCountRef = useRef(onUserCount);
   const usernameRef = useRef(username);
   const userIdRef = useRef(userId);
+  const channelRef = useRef(channel);
 
   onMessageRef.current = onMessage;
   onConnectionChangeRef.current = onConnectionChange;
   onUserCountRef.current = onUserCount;
   usernameRef.current = username;
   userIdRef.current = userId;
+  channelRef.current = channel;
 
   const cleanup = useCallback(() => {
     if (reconnectTimerRef.current) {
@@ -87,6 +91,7 @@ export function useWebSocketChat({
           data: {
             username: usernameRef.current,
             userId: userIdRef.current ?? null,
+            channel: channelRef.current,
           },
         }),
       );

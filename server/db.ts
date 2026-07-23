@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ne, or } from "drizzle-orm";
+import { and, count, desc, eq, gte, ne, or } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
 import { achievements, gameSaves, users, globalChatMessages, friendRequests, loginAttempts, userBlocks, clans, clanMembers, clanInvites } from "../drizzle/schema";
@@ -98,18 +98,18 @@ function toGameState(save: GameSave): GameState {
     colorChanges: save.colorChanges,
     size: save.size,
     inventory: parseInventory(save.inventory),
-    energy: 100,
-    thirst: 100,
-    hygiene: 100,
-    health: 100,
+    energy: Number.isFinite(save.energy) ? save.energy : 100,
+    thirst: Number.isFinite(save.thirst) ? save.thirst : 100,
+    hygiene: Number.isFinite(save.hygiene) ? save.hygiene : 100,
+    health: Number.isFinite(save.health) ? save.health : 100,
     equippedItems: parseStringArray(save.equippedItems),
     ownedClothing: parseStringArray(save.ownedClothing),
-    playerName: '',
-    capyName: '',
-    age: 0,
-    fnfSongsCompleted: 0,
-    fnfHighestCombo: 0,
-    millionRewardClaimed: false,
+    playerName: save.playerName ?? '',
+    capyName: save.capyName ?? '',
+    age: Number.isFinite(save.age) ? save.age : 0,
+    fnfSongsCompleted: Number.isFinite(save.fnfSongsCompleted) ? save.fnfSongsCompleted : 0,
+    fnfHighestCombo: Number.isFinite(save.fnfHighestCombo) ? save.fnfHighestCombo : 0,
+    millionRewardClaimed: save.millionRewardClaimed === 1,
     xpBoost: Number.isFinite(save.xpBoost) ? save.xpBoost : 0,
     coinBoost: Number.isFinite(save.coinBoost) ? save.coinBoost : 0,
     speedBoost: Number.isFinite(save.speedBoost) ? save.speedBoost : 0,
@@ -152,6 +152,16 @@ function toGameSaveValues(userId: number, state: GameState, lastSaved: Date): In
     luckBoost: Number.isFinite(state.luckBoost) ? Math.trunc(state.luckBoost) : 0,
     ownedClothing: JSON.stringify(state.ownedClothing ?? []),
     equippedItems: JSON.stringify(state.equippedItems ?? []),
+    playerName: state.playerName ?? '',
+    capyName: state.capyName ?? '',
+    age: Number.isFinite(state.age) ? Math.trunc(state.age) : 0,
+    energy: Number.isFinite(state.energy) ? Math.trunc(state.energy) : 100,
+    thirst: Number.isFinite(state.thirst) ? Math.trunc(state.thirst) : 100,
+    hygiene: Number.isFinite(state.hygiene) ? Math.trunc(state.hygiene) : 100,
+    health: Number.isFinite(state.health) ? Math.trunc(state.health) : 100,
+    fnfSongsCompleted: Number.isFinite(state.fnfSongsCompleted) ? Math.trunc(state.fnfSongsCompleted) : 0,
+    fnfHighestCombo: Number.isFinite(state.fnfHighestCombo) ? Math.trunc(state.fnfHighestCombo) : 0,
+    millionRewardClaimed: state.millionRewardClaimed ? 1 : 0,
     lastSaved,
   };
 }
@@ -162,12 +172,47 @@ function normalizeLeaderboardLimit(limit: number): number {
 }
 
 let _db: ReturnType<typeof drizzle> | null = null;
+let _sqlite: Database.Database | null = null;
+
+function runMigrations(sqlite: Database.Database) {
+  // migration 0003_add_chat_channel.sql
+  const chatCols = sqlite.pragma("table_info(global_chat_messages)") as { name: string }[];
+  const hasChannel = chatCols.some((c) => c.name === "channel");
+  if (!hasChannel) {
+    sqlite.exec("ALTER TABLE `global_chat_messages` ADD COLUMN `channel` text DEFAULT 'global' NOT NULL;");
+    console.log("[Migration] Added 'channel' column to global_chat_messages");
+  }
+  sqlite.exec("CREATE INDEX IF NOT EXISTS `global_chat_messages_channel_idx` ON `global_chat_messages` (`channel`);");
+
+  const saveCols = sqlite.pragma("table_info(game_saves)") as { name: string }[];
+  const saveColNames = new Set(saveCols.map((c) => c.name));
+
+  const addColIfMissing = (name: string, definition: string) => {
+    if (!saveColNames.has(name)) {
+      sqlite.exec(`ALTER TABLE \`game_saves\` ADD COLUMN \`${name}\` ${definition};`);
+      console.log(`[Migration] Added '${name}' column to game_saves`);
+    }
+  };
+
+  addColIfMissing("playerName", "text DEFAULT '' NOT NULL");
+  addColIfMissing("capyName", "text DEFAULT '' NOT NULL");
+  addColIfMissing("age", "integer DEFAULT 0 NOT NULL");
+  addColIfMissing("energy", "integer DEFAULT 100 NOT NULL");
+  addColIfMissing("thirst", "integer DEFAULT 100 NOT NULL");
+  addColIfMissing("hygiene", "integer DEFAULT 100 NOT NULL");
+  addColIfMissing("health", "integer DEFAULT 100 NOT NULL");
+  addColIfMissing("fnfSongsCompleted", "integer DEFAULT 0 NOT NULL");
+  addColIfMissing("fnfHighestCombo", "integer DEFAULT 0 NOT NULL");
+  addColIfMissing("millionRewardClaimed", "integer DEFAULT 0 NOT NULL");
+}
 
 // Lazily create the drizzle instance so local tooling can run without a DB.
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
       const sqlite = new Database(process.env.DATABASE_URL);
+      _sqlite = sqlite;
+      runMigrations(sqlite);
       _db = drizzle(sqlite);
     } catch (error) {
       console.warn("[Database] Failed to connect:", error);
@@ -294,6 +339,16 @@ export async function saveGame(userId: number, state: GameState): Promise<void> 
         luckBoost: Number.isFinite(state.luckBoost) ? Math.trunc(state.luckBoost) : 0,
         ownedClothing: JSON.stringify(state.ownedClothing ?? []),
         equippedItems: JSON.stringify(state.equippedItems ?? []),
+        playerName: state.playerName ?? '',
+        capyName: state.capyName ?? '',
+        age: Number.isFinite(state.age) ? Math.trunc(state.age) : 0,
+        energy: Number.isFinite(state.energy) ? Math.trunc(state.energy) : 100,
+        thirst: Number.isFinite(state.thirst) ? Math.trunc(state.thirst) : 100,
+        hygiene: Number.isFinite(state.hygiene) ? Math.trunc(state.hygiene) : 100,
+        health: Number.isFinite(state.health) ? Math.trunc(state.health) : 100,
+        fnfSongsCompleted: Number.isFinite(state.fnfSongsCompleted) ? Math.trunc(state.fnfSongsCompleted) : 0,
+        fnfHighestCombo: Number.isFinite(state.fnfHighestCombo) ? Math.trunc(state.fnfHighestCombo) : 0,
+        millionRewardClaimed: state.millionRewardClaimed ? 1 : 0,
         lastSaved,
       },
     });
@@ -409,7 +464,7 @@ function normalizeChatLimit(limit: number): number {
   return Math.max(1, Math.min(200, Math.trunc(limit)));
 }
 
-export async function getChatMessages(limit = 50): Promise<ChatMessage[]> {
+export async function getChatMessages(limit = 50, channel = "global"): Promise<ChatMessage[]> {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get chat messages: database not available");
@@ -427,6 +482,7 @@ export async function getChatMessages(limit = 50): Promise<ChatMessage[]> {
       createdAt: globalChatMessages.createdAt,
     })
     .from(globalChatMessages)
+    .where(eq(globalChatMessages.channel, channel))
     .orderBy(desc(globalChatMessages.createdAt))
     .limit(normalizeChatLimit(limit));
 
@@ -438,6 +494,7 @@ export async function sendChatMessage(
   senderName: string,
   userId: number | null,
   media?: { url: string; type: string; name: string } | null,
+  channel = "global",
 ): Promise<ChatMessage> {
   const trimmed = content.trim();
 
@@ -460,6 +517,7 @@ export async function sendChatMessage(
     mediaUrl: media?.url ?? null,
     mediaType: media?.type ?? null,
     mediaName: media?.name ?? null,
+    channel,
   };
 
   const result = await db
@@ -767,17 +825,9 @@ export async function countRecentLoginAttempts(username: string, since: Date) {
   if (!db) return 0;
   const result = await db.$count(
     loginAttempts,
-    and(eq(loginAttempts.username, username), eq(loginAttempts.createdAt, since)),
+    and(eq(loginAttempts.username, username), gte(loginAttempts.createdAt, since)),
   );
-  const rows = await db
-    .select()
-    .from(loginAttempts)
-    .where(
-      and(
-        eq(loginAttempts.username, username),
-      ),
-    );
-  return rows.filter(r => r.createdAt >= since).length;
+  return result;
 }
 
 // ── User Blocks ─────────────────────────────────────────────────────
@@ -958,16 +1008,24 @@ export async function searchClans(): Promise<Array<Clan & { memberCount: number 
   const db = await getDb();
   if (!db) return [];
 
-  const allClans = await db.select().from(clans).orderBy(desc(clans.createdAt));
-  const result: Array<Clan & { memberCount: number }> = [];
-
-  for (const clan of allClans) {
-    const c = await db
-      .select({ value: count() })
-      .from(clanMembers)
-      .where(eq(clanMembers.clanId, clan.id));
-    result.push({ ...clan, memberCount: c[0].value });
-  }
+  const result = await db
+    .select({
+      id: clans.id,
+      name: clans.name,
+      tag: clans.tag,
+      description: clans.description,
+      leaderId: clans.leaderId,
+      coins: clans.coins,
+      emblem: clans.emblem,
+      isPublic: clans.isPublic,
+      minLevel: clans.minLevel,
+      createdAt: clans.createdAt,
+      memberCount: count(),
+    })
+    .from(clans)
+    .leftJoin(clanMembers, eq(clans.id, clanMembers.clanId))
+    .orderBy(desc(clans.createdAt))
+    .groupBy(clans.id);
 
   return result;
 }
@@ -1241,5 +1299,30 @@ export async function joinClanPublic(clanId: number, userId: number): Promise<vo
   const existing = await db.select().from(clanMembers).where(eq(clanMembers.userId, userId)).limit(1);
   if (existing.length > 0) throw new Error("Você já está em um clan");
 
+  const gameSave = await db.select({ level: gameSaves.level }).from(gameSaves).where(eq(gameSaves.userId, userId)).limit(1);
+  const userLevel = gameSave.length > 0 ? gameSave[0].level : 1;
+  if (userLevel < clan[0].minLevel) {
+    throw new Error(`Nível insuficiente. Nível mínimo: ${clan[0].minLevel}`);
+  }
+
   await db.insert(clanMembers).values({ clanId, userId, role: "member" });
+}
+
+export async function listAllUsers() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select({
+    id: users.id,
+    username: users.username,
+    name: users.name,
+    role: users.role,
+    createdAt: users.createdAt,
+    lastSignedIn: users.lastSignedIn,
+  }).from(users).orderBy(desc(users.createdAt));
+}
+
+export async function updateUserRole(userId: number, role: "user" | "admin") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(users).set({ role }).where(eq(users.id, userId));
 }
