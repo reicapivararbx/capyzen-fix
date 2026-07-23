@@ -113,8 +113,13 @@ export const authRouter = router({
 
       const user = await getUserByUsername(input.username);
       if (!user || !user.passwordHash || !verifyPassword(input.password, user.passwordHash)) {
-        const ip = ctx.req?.ip ?? ctx.req?.headers["x-forwarded-for"] ?? "unknown";
-        await recordLoginAttempt(input.username, typeof ip === "string" ? ip : undefined);
+        const forwardedFor = ctx.req?.headers["x-forwarded-for"];
+        let ip: string | undefined;
+        if (typeof forwardedFor === "string") {
+          ip = forwardedFor.split(",")[0]?.trim() || undefined;
+        }
+        ip = ip ?? ctx.req?.ip ?? "unknown";
+        await recordLoginAttempt(input.username, ip);
         throw new TRPCError({ code: "UNAUTHORIZED", message: "Usuário ou senha incorretos" });
       }
 
@@ -142,7 +147,7 @@ export const authRouter = router({
       }
 
       console.log(`[AUTH] Password reset token for ${input.username}: ${token}`);
-      return { success: true, resetToken: token };
+      return { success: true };
     }),
 
   resetPassword: publicProcedure

@@ -15,6 +15,11 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const [showForgot, setShowForgot] = useState(false);
   const [forgotUsername, setForgotUsername] = useState('');
   const [forgotMessage, setForgotMessage] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState(false);
 
   const [createUsername, setCreateUsername] = useState('');
   const [createPassword, setCreatePassword] = useState('');
@@ -26,8 +31,8 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const utils = trpc.useUtils();
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: (data) => {
-      utils.auth.me.setData(undefined, { id: data.userId, username: data.username });
+    onSuccess: () => {
+      utils.auth.me.invalidate();
       setLoginError('');
       setLoginUsername('');
       setLoginPassword('');
@@ -39,8 +44,8 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   });
 
   const registerMutation = trpc.auth.register.useMutation({
-    onSuccess: (data) => {
-      utils.auth.me.setData(undefined, { id: data.userId, username: data.username });
+    onSuccess: () => {
+      utils.auth.me.invalidate();
       setCreateError('');
       setCreateUsername('');
       setCreatePassword('');
@@ -55,15 +60,21 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   });
 
   const forgotMutation = trpc.auth.forgotPassword.useMutation({
-    onSuccess: (data) => {
-      if (data.resetToken) {
-        setForgotMessage(`Token de recuperação: ${data.resetToken}`);
-      } else {
-        setForgotMessage('Se a conta existir, um token foi gerado.');
-      }
+    onSuccess: () => {
+      setForgotMessage('Se a conta existir, um email foi enviado com o token de recuperação.');
     },
     onError: (error) => {
       setForgotMessage(error.message || 'Erro ao solicitar recuperação!');
+    },
+  });
+
+  const resetMutation = trpc.auth.resetPassword.useMutation({
+    onSuccess: () => {
+      setResetSuccess(true);
+      setResetError('');
+    },
+    onError: (error) => {
+      setResetError(error.message || 'Erro ao redefinir senha!');
     },
   });
 
@@ -131,6 +142,19 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
       return;
     }
     forgotMutation.mutate({ username: forgotUsername });
+  };
+
+  const handleResetPassword = () => {
+    const error = validatePassword(newPassword);
+    if (error) {
+      setResetError(error);
+      return;
+    }
+    if (newPassword !== confirmNewPassword) {
+      setResetError('Senhas não coincidem!');
+      return;
+    }
+    resetMutation.mutate({ token: resetToken, password: newPassword, confirmPassword: confirmNewPassword });
   };
 
   if (isCreatingUser) {
@@ -214,47 +238,114 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   }
 
   if (showForgot) {
+    const showResetForm = resetToken !== '' || resetSuccess;
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 flex items-center justify-center p-4">
         <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full border-4 border-pink-400">
           <div className="text-center mb-6">
-            <div className="text-6xl mb-2">🔑</div>
-            <h1 className="text-4xl font-bold text-pink-600 mb-2">Esqueci a Senha</h1>
-            <p className="text-gray-700">Digite seu usuário para recuperar a senha</p>
+            <div className="text-6xl mb-2">{showResetForm ? '🔐' : '🔑'}</div>
+            <h1 className="text-4xl font-bold text-pink-600 mb-2">{showResetForm ? 'Redefinir Senha' : 'Esqueci a Senha'}</h1>
+            <p className="text-gray-700">{showResetForm ? 'Digite sua nova senha' : 'Digite seu usuário para recuperar a senha'}</p>
           </div>
 
-          <div className="space-y-4">
-            <div>
-              <label className="block text-blue-600 font-bold mb-2">👤 Usuário:</label>
-              <input
-                type="text"
-                placeholder="Digite seu usuário"
-                value={forgotUsername}
-                onChange={(e) => setForgotUsername(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
-              />
-            </div>
-
-            {forgotMessage && (
-              <div className="bg-blue-100 border-2 border-blue-400 rounded-xl p-3 text-blue-700 text-sm break-all">
-                {forgotMessage}
+          {resetSuccess ? (
+            <div className="space-y-4">
+              <div className="bg-green-100 border-2 border-green-400 rounded-xl p-4 text-green-700 text-center font-bold text-lg">
+                ✅ Senha redefinida com sucesso!
               </div>
-            )}
+              <p className="text-gray-600 text-center">Agora você pode fazer login com sua nova senha.</p>
+              <button
+                onClick={() => { setShowForgot(false); setResetToken(''); setNewPassword(''); setConfirmNewPassword(''); setResetSuccess(false); setForgotUsername(''); }}
+                className="w-full bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition"
+              >
+                ← Voltar para o login
+              </button>
+            </div>
+          ) : showResetForm ? (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-blue-600 font-bold mb-2">🎯 Token:</label>
+                <input
+                  type="text"
+                  value={resetToken}
+                  onChange={(e) => setResetToken(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500 font-mono text-sm break-all"
+                />
+              </div>
+              <div>
+                <label className="block text-yellow-600 font-bold mb-2">🔐 Nova Senha:</label>
+                <input
+                  type="password"
+                  placeholder="Digite a nova senha"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+                />
+              </div>
+              <div>
+                <label className="block text-yellow-600 font-bold mb-2">🔐 Confirmar Senha:</label>
+                <input
+                  type="password"
+                  placeholder="Confirme a nova senha"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+                />
+              </div>
+              {resetError && (
+                <div className="bg-red-100 border-2 border-red-400 rounded-xl p-3 text-red-700 text-sm">
+                  {resetError}
+                </div>
+              )}
+              <button
+                onClick={handleResetPassword}
+                disabled={resetMutation.isPending}
+                className="w-full bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 text-white font-bold py-3 rounded-xl transition"
+              >
+                {resetMutation.isPending ? 'Redefinindo...' : '✅ Redefinir Senha'}
+              </button>
+              <button
+                onClick={() => { setResetToken(''); setNewPassword(''); setConfirmNewPassword(''); setResetError(''); setForgotUsername(''); }}
+                className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-xl transition"
+              >
+                ← Voltar
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-blue-600 font-bold mb-2">👤 Usuário:</label>
+                <input
+                  type="text"
+                  placeholder="Digite seu usuário"
+                  value={forgotUsername}
+                  onChange={(e) => setForgotUsername(e.target.value)}
+                  className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:outline-none focus:border-pink-500"
+                />
+              </div>
 
-            <button
-              onClick={handleForgotPassword}
-              disabled={forgotMutation.isPending}
-              className="w-full bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition"
-            >
-              {forgotMutation.isPending ? 'Enviando...' : '📧 Solicitar Recuperação'}
-            </button>
-            <button
-              onClick={() => { setShowForgot(false); setForgotMessage(''); }}
-              className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-xl transition"
-            >
-              ← Voltar
-            </button>
-          </div>
+              {forgotMessage && (
+                <div className="bg-blue-100 border-2 border-blue-400 rounded-xl p-3 text-blue-700 text-sm break-all">
+                  {forgotMessage}
+                </div>
+              )}
+
+              <button
+                onClick={handleForgotPassword}
+                disabled={forgotMutation.isPending}
+                className="w-full bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-purple-600 text-white font-bold py-3 rounded-xl transition"
+              >
+                {forgotMutation.isPending ? 'Enviando...' : '🔑 Solicitar Recuperação'}
+              </button>
+              <button
+                onClick={() => { setShowForgot(false); setForgotMessage(''); setForgotUsername(''); }}
+                className="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 rounded-xl transition"
+              >
+                ← Voltar
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );
