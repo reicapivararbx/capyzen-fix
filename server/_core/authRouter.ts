@@ -90,7 +90,7 @@ export const authRouter = router({
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Falha ao criar conta" });
       }
 
-      return { success: true, userId: user.id };
+      return { success: true, userId: user.id, username: user.username };
     }),
 
   login: publicProcedure

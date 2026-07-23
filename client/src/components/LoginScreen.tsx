@@ -26,8 +26,8 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   const utils = trpc.useUtils();
 
   const loginMutation = trpc.auth.login.useMutation({
-    onSuccess: () => {
-      utils.auth.me.invalidate();
+    onSuccess: (data) => {
+      utils.auth.me.setData(undefined, { id: data.userId, username: data.username });
       setLoginError('');
       setLoginUsername('');
       setLoginPassword('');
@@ -39,7 +39,8 @@ export function LoginScreen({ onLogin, onCreateUser }: LoginScreenProps) {
   });
 
   const registerMutation = trpc.auth.register.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
+      utils.auth.me.setData(undefined, { id: data.userId, username: data.username });
       setCreateError('');
       setCreateUsername('');
       setCreatePassword('');

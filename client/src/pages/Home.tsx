@@ -425,12 +425,8 @@ export default function Home() {
   if (!isAuthenticated) {
     return (
       <LoginScreen
-        onLogin={() => {
-          utils.auth.me.invalidate();
-        }}
-        onCreateUser={() => {
-          utils.auth.me.invalidate();
-        }}
+        onLogin={() => {}}
+        onCreateUser={() => {}}
       />
     );
   }
