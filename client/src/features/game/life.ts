@@ -95,7 +95,7 @@ export function calculateAgeFromGameState(gameState?: unknown): number {
     const start = maybe['capyzen_start'];
     if (typeof start === 'number' && Number.isFinite(start) && start > 0) {
       const ageMs = Date.now() - start;
-      if (ageMs > 0) return Math.floor(ageMs / 60000);
+      if (ageMs > 0) return Math.floor(ageMs / (24 * 60 * 60 * 1000));
     }
   }
   try {
@@ -105,7 +105,7 @@ export function calculateAgeFromGameState(gameState?: unknown): number {
     if (!Number.isFinite(birthTime) || birthTime <= 0) return 0;
     const ageMs = Date.now() - birthTime;
     if (ageMs <= 0) return 0;
-    return Math.floor(ageMs / 60000);
+    return Math.floor(ageMs / (24 * 60 * 60 * 1000));
   } catch {
     return 0;
   }
