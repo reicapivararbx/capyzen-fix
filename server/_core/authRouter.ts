@@ -16,6 +16,7 @@ import {
 } from "../db";
 import { TRPCError } from "@trpc/server";
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { parse as parseCookies } from "cookie";
 import { sendPasswordResetEmail } from "./emailService";
 
 const MAX_LOGIN_ATTEMPTS = 5;
@@ -174,7 +175,8 @@ export const authRouter = router({
     }),
 
   me: publicProcedure.query(async ({ ctx }) => {
-    const session = await verifySession(ctx.req?.cookies?.[COOKIE_NAME]);
+    const cookies = parseCookies(ctx.req?.headers.cookie ?? "");
+    const session = await verifySession(cookies[COOKIE_NAME]);
     if (!session) return null;
 
     const user = await getUserByUsername(session.username);
