@@ -4,8 +4,9 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { saveGame, loadGame, deleteGame, getLeaderboard, unlockAchievement, getAchievements, getChatMessages, sendChatMessage, sendFriendRequest, updateFriendRequest, listFriendRequests, listOutgoingRequests, listFriends, removeFriend, getUserByName, getUserById, blockUser, unblockUser, listBlockedUsers, createClan, getClanById, getClanByMember, listClanMembers, searchClans, disbandClan, leaveClan, kickClanMember, updateClanRole, transferClanLeadership, updateClanSettings, createClanInvite, acceptClanInvite, declineClanInvite, listClanInvites, joinClanPublic } from "./db";
 import { systemRouter } from "./_core/systemRouter";
 import { authRouter } from "./_core/authRouter";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { storagePut } from "./storage";
+import { listAllUsers, updateUserRole } from "./db";
 import type { GameState } from "../client/src/types/game";
 
 const inventorySchema = z.object({
@@ -406,6 +407,25 @@ export const appRouter = router({
       .mutation(({ input, ctx }) => {
         const userId = ctx.user!.id;
         return joinClanPublic(input.clanId, userId);
+      }),
+  }),
+
+  admin: router({
+    listUsers: adminProcedure.query(async () => {
+      return listAllUsers();
+    }),
+
+    setUserRole: adminProcedure
+      .input(z.object({ userId: z.number(), role: z.enum(["user", "admin"]) }))
+      .mutation(async ({ input }) => {
+        await updateUserRole(input.userId, input.role);
+        return { success: true };
+      }),
+
+    getUserGame: adminProcedure
+      .input(z.object({ targetUserId: z.number() }))
+      .query(async ({ input }) => {
+        return loadGame(input.targetUserId);
       }),
   }),
 });

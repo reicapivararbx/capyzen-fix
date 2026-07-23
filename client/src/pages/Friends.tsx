@@ -23,7 +23,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 }
 
 export default function Friends() {
-  const { user, isAuthenticated } = useAuth({});
+  const { user, isAuthenticated, loading } = useAuth({});
   const [target, setTarget] = useState("");
   const [blockTarget, setBlockTarget] = useState("");
   const [sendError, setSendError] = useState("");
@@ -120,7 +120,7 @@ export default function Friends() {
     }
   };
 
-  const isLoading = loadingIncoming || loadingOutgoing || loadingFriends;
+  const isLoading = loading || loadingIncoming || loadingOutgoing || loadingFriends;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col">
@@ -139,7 +139,11 @@ export default function Friends() {
         <div className="flex-1 overflow-hidden min-h-0">
           <ScrollArea className="h-full">
             <div className="space-y-4 pb-4">
-              {!isAuthenticated ? (
+              {loading ? (
+                <div className="flex items-center justify-center py-16">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400" />
+                </div>
+              ) : !isAuthenticated ? (
                 <Card className="bg-gray-800 border-purple-400/30">
                   <CardContent className="pt-6 pb-6 text-center">
                     <p className="text-lg font-semibold text-gray-200 mb-2">

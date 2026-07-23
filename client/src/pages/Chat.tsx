@@ -123,7 +123,7 @@ function GiftCard({ itemType, itemQuantity }: { itemType: string; itemQuantity: 
 }
 
 export default function Chat() {
-  const { user, isAuthenticated } = useAuth({});
+  const { user, isAuthenticated, loading } = useAuth({});
   const [messages, setMessages] = useState<DisplayMessage[]>([]);
   const [content, setContent] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -187,7 +187,7 @@ export default function Chat() {
     userId,
     onMessage: handleWsMessage,
     onUserCount: setUserCount,
-    enabled: isAuthenticated || displayName.trim().length > 0,
+    enabled: !loading && (isAuthenticated || displayName.trim().length > 0),
   });
 
   useEffect(() => {

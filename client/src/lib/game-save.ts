@@ -265,5 +265,6 @@ export function updateGameState(partial: Partial<GameState>): GameState {
     merged.ownedClothing = [...currentOwned, ...newItems];
   }
   saveGameState(merged);
+  globalThis.dispatchEvent(new CustomEvent("game-state-updated", { detail: merged }));
   return merged;
 }

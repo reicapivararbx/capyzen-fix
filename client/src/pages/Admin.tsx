@@ -3,101 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "wouter";
 import { loadGameState, saveGameState, updateGameState, DEFAULT_GAME_STATE } from "@/lib/game-save";
+import { useAuth } from "@/_core/hooks/useAuth";
 import type { GameState } from "@/types/game";
 
-interface AdminSession {
-  username: string;
-  role: "admin" | "player";
-  token: string;
-}
-
-function getAdminSession(): AdminSession | null {
-  try {
-    const raw = localStorage.getItem("capyzen_admin_session");
-    if (!raw) return null;
-    const session = JSON.parse(raw) as AdminSession;
-    if (session.role !== "admin") return null;
-    return session;
-  } catch {
-    return null;
-  }
-}
-
-function saveAdminSession(session: AdminSession) {
-  localStorage.setItem("capyzen_admin_session", JSON.stringify(session));
-}
-
-function clearAdminSession() {
-  localStorage.removeItem("capyzen_admin_session");
-}
-
-function generateToken(): string {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
-}
-
 export default function Admin() {
-  const [session, setSession] = useState<AdminSession | null>(null);
-  const [loginUsername, setLoginUsername] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
+  const { user, loading } = useAuth();
   const [allGames, setAllGames] = useState<GameState[]>([]);
 
   useEffect(() => {
-    const existing = getAdminSession();
-    if (existing) {
-      setSession(existing);
+    if (user?.role === "admin") {
       loadAllGames();
     }
-  }, []);
-
-  const handleLogin = () => {
-    setLoginError("");
-
-    if (!loginUsername.trim() || !loginPassword.trim()) {
-      setLoginError("Usuário e senha são obrigatórios!");
-      return;
-    }
-
-    try {
-      const users = JSON.parse(localStorage.getItem("capyzen_users") || "{}");
-      if (!users[loginUsername]) {
-        setLoginError("Usuário não encontrado!");
-        return;
-      }
-      if (users[loginUsername] !== loginPassword) {
-        setLoginError("Senha incorreta!");
-        setLoginPassword("");
-        return;
-      }
-
-      const adminUsers = JSON.parse(localStorage.getItem("capyzen_admin_users") || "[]");
-      const isAdmin = adminUsers.includes(loginUsername);
-
-      if (!isAdmin) {
-        setLoginError("Você não tem permissão de administrador!");
-        return;
-      }
-
-      const newSession: AdminSession = {
-        username: loginUsername,
-        role: "admin",
-        token: generateToken(),
-      };
-      saveAdminSession(newSession);
-      setSession(newSession);
-      setLoginUsername("");
-      setLoginPassword("");
-      loadAllGames();
-    } catch {
-      setLoginError("Erro ao verificar credenciais!");
-    }
-  };
-
-  const handleLogout = () => {
-    clearAdminSession();
-    setSession(null);
-    setAllGames([]);
-  };
+  }, [user]);
 
   const loadAllGames = () => {
     const state = loadGameState();
@@ -157,50 +74,30 @@ export default function Admin() {
     alert("Nível aumentado!");
   };
 
-  if (!session) {
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+        <p className="text-slate-400">Carregando...</p>
+      </div>
+    );
+  }
+
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md p-8 bg-slate-800 border-slate-700">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl mb-2">⚙️ Painel Admin</h1>
-            <p className="text-slate-400">Acesse com sua conta de administrador</p>
-          </div>
-
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Usuário"
-              value={loginUsername}
-              onChange={(e) => setLoginUsername(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
-            <input
-              type="password"
-              placeholder="Senha"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-              className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
-
-            {loginError && (
-              <p className="text-red-400 text-sm text-center">{loginError}</p>
-            )}
-
-            <Button
-              onClick={handleLogin}
-              className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700"
-            >
-              🔓 Entrar
+        <Card className="w-full max-w-md p-8 bg-slate-800 border-slate-700 text-center">
+          <h1 className="text-3xl mb-4">⚠️ Acesso Negado</h1>
+          <p className="text-slate-400 mb-6">
+            Você não tem permissão de administrador.
+          </p>
+          <p className="text-slate-500 text-sm mb-6">
+            {user ? `Logado como: ${user.username} (${user.role ?? "sem role"})` : "Não autenticado."}
+          </p>
+          <Link href="/">
+            <Button variant="outline" className="w-full">
+              🐹 Voltar ao Jogo
             </Button>
-
-            <Link href="/">
-              <Button variant="outline" className="w-full">
-                🐹 Voltar ao Jogo
-              </Button>
-            </Link>
-          </div>
+          </Link>
         </Card>
       </div>
     );
@@ -212,16 +109,16 @@ export default function Admin() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-4xl font-bold mb-2">⚙️ Painel Admin</h1>
-            <p className="text-slate-400">Logado como: {session.username}</p>
+            <p className="text-slate-400">Logado como: {user.username}</p>
           </div>
           <nav className="flex gap-4">
             <Button variant="outline" onClick={() => window.location.href = "/"}>🐹 Jogo</Button>
             <Link href="/loja">
               <Button variant="outline">🛍️ Loja</Button>
             </Link>
-            <Button onClick={handleLogout} variant="destructive">
-              🚺 Sair
-            </Button>
+            <Link href="/">
+              <Button variant="outline">💬 Chat</Button>
+            </Link>
           </nav>
         </div>
       </header>
@@ -293,9 +190,8 @@ export default function Admin() {
         <Card className="bg-slate-800 border-slate-700 p-6">
           <h3 className="font-bold mb-2">ℹ️ Informações</h3>
           <p className="text-slate-400 text-sm">
-            Painel de administração para controlar o jogo CapyZen. Apenas usuários
-            com permissão de administrador podem acessar este painel. Para solicitar
-            acesso, entre em contato com o desenvolvedor.
+            Painel de administração para controlar o jogo CapyZen. Acesso validado
+            via role no servidor. Operações locais afetam apenas o estado do navegador.
           </p>
         </Card>
       </div>

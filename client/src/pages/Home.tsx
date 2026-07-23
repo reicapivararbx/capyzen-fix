@@ -28,15 +28,6 @@ const NAV_BUTTONS = [
     shadow: 'shadow-orange-500/25',
   },
   {
-    href: '/admin',
-    icon: '⚙️',
-    label: 'ADMIN',
-    subtitle: 'Painel Administrativo',
-    gradient: 'from-indigo-500 to-purple-500',
-    hoverGradient: 'from-indigo-600 to-purple-600',
-    shadow: 'shadow-indigo-500/25',
-  },
-  {
     href: '/chat',
     icon: '💬',
     label: 'CHAT',
@@ -44,6 +35,33 @@ const NAV_BUTTONS = [
     gradient: 'from-teal-500 to-green-500',
     hoverGradient: 'from-teal-600 to-green-600',
     shadow: 'shadow-teal-500/25',
+  },
+  {
+    href: '/amigos',
+    icon: '👥',
+    label: 'AMIGOS',
+    subtitle: 'Adicionar amigos',
+    gradient: 'from-blue-500 to-cyan-500',
+    hoverGradient: 'from-blue-600 to-cyan-600',
+    shadow: 'shadow-blue-500/25',
+  },
+  {
+    href: '/clans',
+    icon: '🏰',
+    label: 'CLÃS',
+    subtitle: 'Criar ou entrar em clãs',
+    gradient: 'from-purple-500 to-pink-500',
+    hoverGradient: 'from-purple-600 to-pink-600',
+    shadow: 'shadow-purple-500/25',
+  },
+  {
+    href: '/admin',
+    icon: '⚙️',
+    label: 'ADMIN',
+    subtitle: 'Painel Administrativo',
+    gradient: 'from-indigo-500 to-purple-500',
+    hoverGradient: 'from-indigo-600 to-purple-600',
+    shadow: 'shadow-indigo-500/25',
   },
 ] as const;
 
@@ -62,7 +80,7 @@ export default function Home() {
     hunger: 100, happiness: 100, poop: 0, energy: 100, thirst: 100, hygiene: 100, health: 100, equippedItems: [], ownedClothing: [],
     food: 0, sus: 0, x: 0, y: 0, speed: 0, alive: true, capyColor: '#8B7355', capySize: 50,
     totalScore: 0, totalXP: 0, foodEaten: 0, gamesPlayed: 0, workCount: 0, affectionCount: 0,
-    bathroomCount: 0, colorChanges: 0, size: 50, inventory: {} as any,
+    bathroomCount: 0, colorChanges: 0, size: 50, inventory: { ...DEFAULT_GAME_STATE.inventory },
     fnfSongsCompleted: 0, fnfHighestCombo: 0, millionRewardClaimed: false,
     speedBoost: 0, shieldActive: false, luckBoost: 0, xpBoost: 0, coinBoost: 0,
   });
@@ -111,6 +129,18 @@ export default function Home() {
       saveToDbMutation.mutate(state);
     }
   }, [isAuthenticated, saveToDbMutation]);
+
+  useEffect(() => {
+    const handleExternalUpdate = (e: Event) => {
+      const newState = (e as CustomEvent<GameState>).detail;
+      if (newState && typeof newState === 'object') {
+        setGameState(newState);
+        latestGameStateRef.current = newState;
+      }
+    };
+    globalThis.addEventListener('game-state-updated', handleExternalUpdate);
+    return () => globalThis.removeEventListener('game-state-updated', handleExternalUpdate);
+  }, []);
 
   // Start game
   const startGame = () => {
